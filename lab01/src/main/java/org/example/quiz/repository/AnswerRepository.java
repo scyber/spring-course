@@ -30,7 +30,11 @@ import org.springframework.stereotype.Repository;
 
 public class AnswerRepository implements QuizRepository<Answer> {
 
-    @Autowired
+    public void setAnswerResource(AnswerResourceImpl answerResource) {
+        this.answerResource = answerResource;
+    }
+
+    //@Autowired
     private AnswerResourceImpl answerResource;
 
     private Map<Long,Answer> answers = new HashMap<>();

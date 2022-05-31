@@ -19,7 +19,11 @@ public class QuestionRepository implements QuizRepository<Question>{
 
     private Map<Long,Question> questionMap = new HashMap<>();
 
-    @Autowired
+    public void setQuestionResource(QuestionResourceImpl questionResource) {
+        this.questionResource = questionResource;
+    }
+
+    //@Autowired
     private QuestionResourceImpl questionResource;
 
     public QuestionRepository() {

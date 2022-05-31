@@ -10,26 +10,26 @@ import org.example.quiz.resources.QuestionResourceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class QuizConfiguration {
 
 
-    @Bean
+    //@Bean
     public QuestionResourceImpl questionResource() {
         return new QuestionResourceImpl();
     }
 
-    @Bean
+    //@Bean
     public AnswerResourceImpl answerResource() {
         return new AnswerResourceImpl();
     }
 
-    @Bean
+    //@Bean
     public AnswerRepository answerRepository() {
         return new AnswerRepository();
     }
 
-    @Bean
+    //@Bean
     public QuestionRepository questionRepository() throws IOException {
         return new QuestionRepository();
     }

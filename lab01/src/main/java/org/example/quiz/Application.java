@@ -11,14 +11,17 @@ import org.example.quiz.repository.QuestionRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-@ComponentScan(basePackages = "org.example.quiz org.example.quiz.resources org.example.quiz.repository org.example.quiz.domain org.example.quiz.config")
+
+@ComponentScan
 public class Application {
 
 
     public static void main(String args[]) throws IOException {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(QuizConfiguration.class);
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+
         AnswerRepository answerRepository = context.getBean(AnswerRepository.class);
         QuestionRepository questionRepository = context.getBean(QuestionRepository.class);
         Map<Long,Question> rawQuestions = questionRepository.getQuestions();
