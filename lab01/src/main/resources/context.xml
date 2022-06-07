@@ -14,11 +14,13 @@
     <bean name="questions" class="org.example.quiz.resources.QuestionResourceImpl"/>
 
     <bean class="org.example.quiz.repository.AnswerRepository">
-        <property name="answerResource" ref="answerers"/>
+        <constructor-arg name="answerResource" ref="answerers"/>
+
     </bean>
 
     <bean class="org.example.quiz.repository.QuestionRepository">
-        <property name="questionResource" ref="questions"/>
+        <constructor-arg name="questionResource" ref="questions"/>
+
     </bean>
 
     <context:annotation-config />

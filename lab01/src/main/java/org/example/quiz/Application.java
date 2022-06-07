@@ -25,6 +25,7 @@ public class Application {
         AnswerRepository answerRepository = context.getBean(AnswerRepository.class);
         QuestionRepository questionRepository = context.getBean(QuestionRepository.class);
         Map<Long,Question> rawQuestions = questionRepository.getQuestions();
+
         rawQuestions.values().forEach(q -> {
             System.out.println("Question " + q.getContext());
             System.out.println("-- Answers --");

@@ -12,40 +12,27 @@ import java.util.List;
 import java.util.Map;
 import org.example.quiz.domain.Question;
 import org.example.quiz.resources.QuestionResourceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
 public class QuestionRepository implements QuizRepository<Question>{
 
     private Map<Long,Question> questionMap = new HashMap<>();
+    private QuestionResourceImpl questionResource;
 
     public void setQuestionResource(QuestionResourceImpl questionResource) {
         this.questionResource = questionResource;
     }
-
-    //@Autowired
-    private QuestionResourceImpl questionResource;
-
     public QuestionRepository() {
 
+    }
+    public QuestionRepository(QuestionResourceImpl questionResource) {
+        this.questionResource = questionResource;
     }
 
     public Map<Long,Question> getQuestions() throws IOException {
         processQuestions();
         return this.questionMap;
     }
-
-
-    private void processQuestions() throws IOException {
-        Resource resource = questionResource.getResource();
-        Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()));;
-        final ColumnPositionMappingStrategy<Question> strategy = new ColumnPositionMappingStrategy<>();
-        strategy.setType(Question.class);
-        strategy.setColumnMapping(new String[]{"id","context","answersList", "correctAnswers"});
-        CsvToBean<Question> rawquestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
-        rawquestions.forEach(x -> questionMap.put(x.getId(),x));
-    }
-
     @Override
     public Question findById(Long id) throws IOException {
         return getQuestions().get(id);
@@ -55,5 +42,15 @@ public class QuestionRepository implements QuizRepository<Question>{
     @Override
     public List<Question> findByQuestionId(Long id) {
         return null;
+    }
+
+    private void processQuestions() throws IOException {
+        Resource resource = questionResource.getResource();
+        Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()));;
+        final ColumnPositionMappingStrategy<Question> strategy = new ColumnPositionMappingStrategy<>();
+        strategy.setType(Question.class);
+        strategy.setColumnMapping(new String[]{"id","context","answersList", "correctAnswers"});
+        CsvToBean<Question> rawquestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
+        rawquestions.forEach(x -> questionMap.put(x.getId(),x));
     }
 }

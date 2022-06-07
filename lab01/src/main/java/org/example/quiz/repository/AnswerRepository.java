@@ -12,20 +12,12 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.example.quiz.domain.Answer;
 import org.example.quiz.resources.AnswerResourceImpl;
-import org.example.quiz.resources.QuizResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 
 public class AnswerRepository implements QuizRepository<Answer> {
@@ -34,12 +26,14 @@ public class AnswerRepository implements QuizRepository<Answer> {
         this.answerResource = answerResource;
     }
 
-    //@Autowired
     private AnswerResourceImpl answerResource;
 
     private Map<Long,Answer> answers = new HashMap<>();
 
     public AnswerRepository() {
+    }
+    public AnswerRepository(AnswerResourceImpl answerResource) {
+        this.answerResource = answerResource;
     }
 
     public Map<Long,Answer> getAnswers() throws IOException {
