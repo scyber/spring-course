@@ -1,1 +1,1 @@
-# spring-course
+# Starting Spring Framework course
