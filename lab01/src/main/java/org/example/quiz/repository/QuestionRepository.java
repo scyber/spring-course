@@ -1,56 +1,38 @@
 package org.example.quiz.repository;
 
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.example.quiz.domain.Question;
-import org.example.quiz.resources.QuestionResourceImpl;
-import org.springframework.core.io.Resource;
 
 public class QuestionRepository implements QuizRepository<Question>{
 
     private Map<Long,Question> questionMap = new HashMap<>();
-    private QuestionResourceImpl questionResource;
 
-    public void setQuestionResource(QuestionResourceImpl questionResource) {
-        this.questionResource = questionResource;
-    }
-    public QuestionRepository() {
 
-    }
-    public QuestionRepository(QuestionResourceImpl questionResource) {
-        this.questionResource = questionResource;
+    private QuestionTransfer questionTransfer;
+
+
+    public QuestionRepository(QuestionTransfer questionTransfer) {
+        List<Question> questions = questionTransfer.transfer();
+        questions.forEach(q -> questionMap.put(q.getId(),q));
+        this.questionTransfer = questionTransfer;
     }
 
-    public Map<Long,Question> getQuestions() throws IOException {
-        processQuestions();
+
+    public Map<Long,Question> getQuestions(){
         return this.questionMap;
     }
-    @Override
-    public Question findById(Long id) throws IOException {
-        return getQuestions().get(id);
-
-    }
 
     @Override
-    public List<Question> findByQuestionId(Long id) {
-        return null;
+    public Optional<Question> findById(Long id){
+        List<Question> filteredQuestion = questionMap.values().stream().filter(q -> q.getId() == id).collect(Collectors.toList());
+        return filteredQuestion.stream().findAny();
     }
 
-    private void processQuestions() throws IOException {
-        Resource resource = questionResource.getResource();
-        Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()));;
-        final ColumnPositionMappingStrategy<Question> strategy = new ColumnPositionMappingStrategy<>();
-        strategy.setType(Question.class);
-        strategy.setColumnMapping(new String[]{"id","context","answersList", "correctAnswers"});
-        CsvToBean<Question> rawquestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
-        rawquestions.forEach(x -> questionMap.put(x.getId(),x));
-    }
+
 }

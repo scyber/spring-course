@@ -1,68 +1,44 @@
 package org.example.quiz.repository;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.example.quiz.domain.Answer;
 import org.example.quiz.resources.AnswerResourceImpl;
-import org.springframework.core.io.Resource;
+
 
 
 public class AnswerRepository implements QuizRepository<Answer> {
 
-    public void setAnswerResource(AnswerResourceImpl answerResource) {
-        this.answerResource = answerResource;
-    }
 
-    private AnswerResourceImpl answerResource;
-
+    private AnswerTransfer answerTransfer;
     private Map<Long,Answer> answers = new HashMap<>();
 
-    public AnswerRepository() {
-    }
-    public AnswerRepository(AnswerResourceImpl answerResource) {
-        this.answerResource = answerResource;
+    public AnswerRepository(AnswerTransfer answerTransfer) {
+        List<Answer> answersTransferred = answerTransfer.transfer();
+        answersTransferred.forEach(a -> answers.put(a.getId(),a));
+        this.answerTransfer = answerTransfer;
     }
 
-    public Map<Long,Answer> getAnswers() throws IOException {
-        processAnswers();
+    public Map<Long,Answer> getAnswers() {
         return this.answers;
     }
 
-    private void processAnswers() throws IOException {
-        Resource resource = answerResource.getResource();
-        Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()));;
-        final ColumnPositionMappingStrategy<Answer> strategy = new ColumnPositionMappingStrategy<>();
-        strategy.setType(Answer.class);
-        strategy.setColumnMapping(new String[]{"id","context"});
-        CsvToBean<Answer> rawanswers = new CsvToBeanBuilder<Answer>(reader).withSeparator(',').withMappingStrategy(strategy).build();
-        rawanswers.forEach(x -> answers.put(x.getId(),x));
-    }
-
-
 
     @Override
-    public Answer findById(Long id) throws IOException {
-       return getAnswers().get(id);
+    public Optional<Answer> findById(Long id) throws IOException {
+        List<Answer> filteredAnswer = answers.values().stream().filter(a -> a.getId() == id).collect(Collectors.toList());
+        return filteredAnswer.stream().findAny();
     }
 
-    @Override
-    public List<Answer> findByQuestionId(Long id) {
-        return null;
-    }
 
+    public Optional<Answer> findByContext(String context) {
+       List<Answer> filteredByContext = answers.values().stream().filter(a -> a.getContext().equals(context)).collect(Collectors.toList());
+       return filteredByContext.stream().findAny();
+    }
 
 
 }
