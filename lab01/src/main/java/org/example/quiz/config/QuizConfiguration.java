@@ -11,10 +11,14 @@ import org.example.quiz.resources.QuestionResourceImpl;
 
 import org.example.quiz.services.ConsoleIOService;
 import org.example.quiz.services.QuizService;
+import org.example.quiz.services.ScorePropertiesService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class QuizConfiguration {
 
 
@@ -50,9 +54,19 @@ public class QuizConfiguration {
         return new ConsoleIOService();
     }
     @Bean
+    public ScorePropertiesService scorePropertiesService(){
+        return new ScorePropertiesService();
+    }
+    @Bean
+    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(){
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+    @Bean
     public QuizService quizService(QuestionRepository questionRepository,
                                    AnswerRepository answerRepository,
-                                   ConsoleIOService consoleIOService){
-      return new QuizService(questionRepository,answerRepository,consoleIOService);
+                                   ConsoleIOService consoleIOService,
+                                   ScorePropertiesService scorePropertiesService){
+      return new QuizService(questionRepository,answerRepository,consoleIOService,scorePropertiesService);
     }
+
 }

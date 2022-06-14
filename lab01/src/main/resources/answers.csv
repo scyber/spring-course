@@ -5,6 +5,6 @@
 5,false
 6,hashCode
 7,notify
-8,nofifyAll
+8,notifyAll
 9,instanceOf
 10,toString

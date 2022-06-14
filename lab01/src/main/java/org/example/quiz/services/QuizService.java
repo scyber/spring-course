@@ -17,15 +17,18 @@ public class QuizService {
     private ValidateService validateService;
     private ConsoleIOService consoleIOService;
     private AnswerRepository answerRepository;
+    private ScorePropertiesService scorePropertiesService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QuizService.class);
 
     public QuizService(QuestionRepository questionRepository,
                        AnswerRepository answerRepository,
-                       ConsoleIOService consoleIOService) {
+                       ConsoleIOService consoleIOService,
+                       ScorePropertiesService scorePropertiesService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.consoleIOService = consoleIOService;
+        this.scorePropertiesService = scorePropertiesService;
         this.aggregateAnswerService = new AggregateAnswerService(answerRepository);
         this.validateService = new ValidateService(questionRepository,consoleIOService);
     }
@@ -49,8 +52,11 @@ public class QuizService {
             aggregateAnswerService.mapResults(question.getId(), rawAnswers);
         }
         validateService.validate(aggregateAnswerService.getAggResultsMap());
-        consoleIOService.outputString( student.getFirstName() + " " + student.getLastName() + " Your score is ");
-        validateService.outputScore();
+        if(validateService.provideResults() >= scorePropertiesService.getScoreValue()) {
+            consoleIOService.outputString(student.getFirstName() + " " + student.getLastName() + " You have passed and your score " + validateService.provideResults() );
+        } else {
+            consoleIOService.outputString(" You have not passed your score  " + validateService.provideResults() + " below  " + scorePropertiesService.getScoreValue() );
+        }
 
     }
 }

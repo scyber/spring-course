@@ -22,13 +22,13 @@ public class ValidateService {
     public void validate(Map<Long,List<Long>> incomingResults){
         incomingResults.forEach((k,v) -> {
             List<Long> correctValues = questionRepository.getQuestions().get(k).getCorrectAnswers();
-            if(correctValues.containsAll(v) && correctValues.size() == v.size()){
+            if(correctValues.containsAll(v) & correctValues.size() == v.size()){
                 validResults.put(k,true);
             }
         });
 
     }
-    private double provideResults(){
+    public double provideResults(){
         return (double) validResults.size()/questionRepository.getQuestions().size();
     }
     public void outputScore(){
