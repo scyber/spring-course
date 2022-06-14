@@ -6,8 +6,9 @@ import org.example.quiz.repository.AnswerRepository;
 import org.example.quiz.repository.QuestionRepository;
 import org.example.quiz.resources.AnswerResourceImpl;
 import org.example.quiz.resources.QuestionResourceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestApplication.TestConfiguration.class})
 public class TestApplication {
 
@@ -30,11 +31,13 @@ public class TestApplication {
     @Autowired
     QuestionRepository questionRepository;
 
-    @Autowired
-    AnswerRepository answerRepository;
+
 
     @Test
-    public void testAnswersRepository() throws IOException {
+    public void testAnswersRepository(){
+
+        AnswerRepository answerRepository = Mockito.mock(AnswerRepository.class);
+
         Answer answer = new Answer();
         answer.setId(1L);
         answer.setContext("Test Answer");
@@ -45,7 +48,6 @@ public class TestApplication {
         answerMap.put(1L,answer);
         answerMap.put(2L, answer1);
         Mockito.when(answerRepository.getAnswers()).thenReturn(answerMap);
-
     }
 
    @Configuration
@@ -61,10 +63,7 @@ public class TestApplication {
             return Mockito.mock(AnswerResourceImpl.class);
         }
 
-        @Bean
-        public AnswerRepository answerRepository() {
-            return Mockito.mock(AnswerRepository.class);
-        }
+
 
         @Bean
         public QuestionRepository questionRepository() {
