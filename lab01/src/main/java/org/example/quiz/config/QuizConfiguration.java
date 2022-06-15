@@ -51,7 +51,7 @@ public class QuizConfiguration {
     }
     @Bean
     public ConsoleIOService consoleIOService(){
-        return new ConsoleIOService();
+        return new ConsoleIOService(System.in,System.out);
     }
     @Bean
     public ScorePropertiesService scorePropertiesService(){

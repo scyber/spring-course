@@ -48,7 +48,7 @@ public class QuizService {
                 }
             });
 
-            List<String> rawAnswers = consoleIOService.readResultsWithPrompt("Please Enter Correct Answers with space ");
+            List<String> rawAnswers = consoleIOService.readListWithPrompt("Please Enter Correct Answers with space ");
             aggregateAnswerService.mapResults(question.getId(), rawAnswers);
         }
         validateService.validate(aggregateAnswerService.getAggResultsMap());
