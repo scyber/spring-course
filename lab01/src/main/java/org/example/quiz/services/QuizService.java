@@ -15,7 +15,7 @@ public class QuizService {
     private QuestionRepository questionRepository;
     private AggregateAnswerService aggregateAnswerService;
     private ValidateService validateService;
-    private ConsoleIOService consoleIOService;
+    private ConsoleIOServiceI consoleIOService;
     private AnswerRepository answerRepository;
     private ScorePropertiesService scorePropertiesService;
 
@@ -23,7 +23,7 @@ public class QuizService {
 
     public QuizService(QuestionRepository questionRepository,
                        AnswerRepository answerRepository,
-                       ConsoleIOService consoleIOService,
+                       ConsoleIOServiceI consoleIOService,
                        ScorePropertiesService scorePropertiesService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;

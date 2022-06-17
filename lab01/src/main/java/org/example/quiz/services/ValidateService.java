@@ -10,11 +10,11 @@ import java.util.Map;
 public class ValidateService {
 
     private QuestionRepository questionRepository;
-    private ConsoleIOService ioService;
+    private ConsoleIOServiceI ioService;
     private static final DecimalFormat df = new DecimalFormat("0.00");
     private Map<Long,Boolean> validResults = new HashMap<>();
 
-    public ValidateService(QuestionRepository questionRepository, ConsoleIOService consoleIOService) {
+    public ValidateService(QuestionRepository questionRepository, ConsoleIOServiceI consoleIOService) {
         this.questionRepository = questionRepository;
         this.ioService = consoleIOService;
     }

@@ -1,7 +1,5 @@
 package org.example.quiz.config;
 
-import java.io.IOException;
-
 import org.example.quiz.repository.AnswerRepository;
 import org.example.quiz.repository.AnswerTransfer;
 import org.example.quiz.repository.QuestionRepository;
@@ -9,7 +7,7 @@ import org.example.quiz.repository.QuestionTransfer;
 import org.example.quiz.resources.AnswerResourceImpl;
 import org.example.quiz.resources.QuestionResourceImpl;
 
-import org.example.quiz.services.ConsoleIOService;
+import org.example.quiz.services.ConsoleIOServiceI;
 import org.example.quiz.services.QuizService;
 import org.example.quiz.services.ScorePropertiesService;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +48,8 @@ public class QuizConfiguration {
         return new QuestionTransfer(questionResource);
     }
     @Bean
-    public ConsoleIOService consoleIOService(){
-        return new ConsoleIOService(System.in,System.out);
+    public ConsoleIOServiceI consoleIOService(){
+        return new ConsoleIOServiceI(System.in,System.out);
     }
     @Bean
     public ScorePropertiesService scorePropertiesService(){
@@ -64,7 +62,7 @@ public class QuizConfiguration {
     @Bean
     public QuizService quizService(QuestionRepository questionRepository,
                                    AnswerRepository answerRepository,
-                                   ConsoleIOService consoleIOService,
+                                   ConsoleIOServiceI consoleIOService,
                                    ScorePropertiesService scorePropertiesService){
       return new QuizService(questionRepository,answerRepository,consoleIOService,scorePropertiesService);
     }

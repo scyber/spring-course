@@ -1,5 +1,5 @@
 package org.example.quiz.services;
 
-public interface OuptutService {
+public interface IOuptutService {
     void outputString(String s);
 }
