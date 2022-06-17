@@ -7,20 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.quiz.domain.Answer;
-import org.example.quiz.resources.AnswerResourceImpl;
 
 
 
 public class AnswerRepository implements QuizRepository<Answer> {
 
-
-    private AnswerTransfer answerTransfer;
     private Map<Long,Answer> answers = new HashMap<>();
 
     public AnswerRepository(AnswerTransfer answerTransfer) {
-        List<Answer> answersTransferred = answerTransfer.transfer();
+        List<Answer> answersTransferred = answerTransfer.getAnswers();
         answersTransferred.forEach(a -> answers.put(a.getId(),a));
-        this.answerTransfer = answerTransfer;
     }
 
     public Map<Long,Answer> getAnswers() {

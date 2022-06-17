@@ -14,13 +14,10 @@ public class QuestionRepository implements QuizRepository<Question>{
     private Map<Long,Question> questionMap = new HashMap<>();
 
 
-    private QuestionTransfer questionTransfer;
-
 
     public QuestionRepository(QuestionTransfer questionTransfer) {
-        List<Question> questions = questionTransfer.transfer();
+        List<Question> questions = questionTransfer.getQuestions();
         questions.forEach(q -> questionMap.put(q.getId(),q));
-        this.questionTransfer = questionTransfer;
     }
 
 

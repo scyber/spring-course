@@ -20,11 +20,14 @@ import java.util.stream.Collectors;
 public class AnswerTransfer implements TransferService<Answer>{
     private Resource answerResource;
     private static final Logger LOGGER = LoggerFactory.getLogger(AnswerTransfer.class);
+    private List<Answer> answers;
 
     public AnswerTransfer(AnswerResourceImpl answerResource) {
         this.answerResource = answerResource.getResource();
+        this.answers = transfer();
     }
 
+    public List<Answer> getAnswers(){return this.answers;}
 
     @Override
     public List<Answer> transfer() {
@@ -34,8 +37,8 @@ public class AnswerTransfer implements TransferService<Answer>{
         strategy.setColumnMapping(new String[]{"id","context"});
 
         try(Reader reader = Files.newBufferedReader(Paths.get(answerResource.getURI()))) {
-            CsvToBean<Answer> rawanswers = new CsvToBeanBuilder<Answer>(reader).withSeparator(',').withMappingStrategy(strategy).build();
-            result = rawanswers.stream().collect(Collectors.toList());
+            CsvToBean<Answer> rawAnswers = new CsvToBeanBuilder<Answer>(reader).withSeparator(',').withMappingStrategy(strategy).build();
+            result = rawAnswers.stream().collect(Collectors.toList());
         } catch (Exception e){
             LOGGER.error("Could not get Resource path ", answerResource, e);
         }

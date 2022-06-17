@@ -19,9 +19,15 @@ import java.util.stream.Collectors;
 public class QuestionTransfer implements TransferService<Question>{
     private static final Logger LOGGER = LoggerFactory.getLogger(QuestionTransfer.class);
     private Resource resource;
+    private List<Question> questions;
 
     public QuestionTransfer(QuestionResourceImpl questionResource) {
         this.resource = questionResource.getResource();
+        this.questions = transfer();
+    }
+
+    public List<Question> getQuestions() {
+        return this.questions;
     }
 
     @Override
@@ -31,8 +37,8 @@ public class QuestionTransfer implements TransferService<Question>{
         strategy.setType(Question.class);
         strategy.setColumnMapping(new String[]{"id","context","answersList", "correctAnswers"});
         try (Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()))) {
-            CsvToBean<Question> rawquestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
-            result = rawquestions.stream().collect(Collectors.toList());
+            CsvToBean<Question> rawQuestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
+            result = rawQuestions.stream().collect(Collectors.toList());
         } catch (Exception e){
             LOGGER.error("Could not get reade from resource ", resource, e);
         }
