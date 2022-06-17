@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.quiz.domain.Answer;
+import org.springframework.stereotype.Component;
 
 
-
+@Component
 public class AnswerRepository implements QuizRepository<Answer> {
 
     private Map<Long,Answer> answers = new HashMap<>();

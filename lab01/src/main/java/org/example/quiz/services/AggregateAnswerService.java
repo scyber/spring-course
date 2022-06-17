@@ -2,12 +2,14 @@ package org.example.quiz.services;
 
 import org.example.quiz.domain.Answer;
 import org.example.quiz.repository.AnswerRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class AggregateAnswerService {
 
     private AnswerRepository answerRepository;

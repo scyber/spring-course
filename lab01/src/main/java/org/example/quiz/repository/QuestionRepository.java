@@ -8,7 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.example.quiz.domain.Question;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuestionRepository implements QuizRepository<Question>{
 
     private Map<Long,Question> questionMap = new HashMap<>();

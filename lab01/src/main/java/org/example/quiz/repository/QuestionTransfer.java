@@ -8,6 +8,7 @@ import org.example.quiz.resources.QuestionResourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import java.io.Reader;
 import java.nio.file.Files;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class QuestionTransfer implements TransferService<Question>{
     private static final Logger LOGGER = LoggerFactory.getLogger(QuestionTransfer.class);
     private Resource resource;
