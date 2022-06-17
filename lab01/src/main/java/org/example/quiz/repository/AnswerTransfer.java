@@ -4,6 +4,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.example.quiz.domain.Answer;
+import org.example.quiz.exceptions.TransferException;
 import org.example.quiz.resources.AnswerResourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public class AnswerTransfer implements TransferService<Answer>{
             result = rawAnswers.stream().collect(Collectors.toList());
         } catch (Exception e){
             LOGGER.error("Could not get Resource path ", answerResource, e);
+            throw new TransferException("Could not get resource path ", e);
         }
         return result;
     }

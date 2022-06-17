@@ -4,6 +4,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.example.quiz.domain.Question;
+import org.example.quiz.exceptions.TransferException;
 import org.example.quiz.resources.QuestionResourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,8 @@ public class QuestionTransfer implements TransferService<Question>{
             CsvToBean<Question> rawQuestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
             result = rawQuestions.stream().collect(Collectors.toList());
         } catch (Exception e){
-            LOGGER.error("Could not get reade from resource ", resource, e);
+            LOGGER.error("Could not get read from resource ", resource, e);
+            throw new TransferException("Could not read from resource ", e);
         }
         return result;
     }
