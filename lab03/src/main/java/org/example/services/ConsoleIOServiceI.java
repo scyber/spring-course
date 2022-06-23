@@ -1,5 +1,7 @@
 package org.example.services;
 
+import lombok.AllArgsConstructor;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;

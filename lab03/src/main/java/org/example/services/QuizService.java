@@ -20,7 +20,7 @@ public class QuizService {
     private ValidateService validateService;
     private ConsoleIOServiceI consoleIOService;
     private AnswerRepository answerRepository;
-    private PropertiesService scorePropertiesService;
+    private PropertiesService propertiesService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QuizService.class);
 
@@ -31,7 +31,7 @@ public class QuizService {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.consoleIOService = consoleIOService;
-        this.scorePropertiesService = scorePropertiesService;
+        this.propertiesService = scorePropertiesService;
         this.aggregateAnswerService = new AggregateAnswerService(answerRepository);
         this.validateService = new ValidateService(questionRepository,consoleIOService);
     }
@@ -51,15 +51,16 @@ public class QuizService {
                 }
             });
 
-            List<String> rawAnswers = consoleIOService.readListWithPrompt("Please Enter Correct Answers with space ");
+            List<String> rawAnswers = consoleIOService.readListWithPrompt(propertiesService.getPromptAnswer());
             aggregateAnswerService.mapResults(question.getId(), rawAnswers);
         }
         validateService.validate(aggregateAnswerService.getAggResultsMap());
-        if(validateService.provideResults() >= scorePropertiesService.getScoreValue()) {
-            consoleIOService.outputString(student.getFirstName() + " " + student.getLastName() + " You have passed and your score " + validateService.provideResults() );
+        if(validateService.provideResults() >= propertiesService.getScoreValue()) {
+            consoleIOService.outputString(student.getFirstName() + " " + student.getLastName() + " " + propertiesService.getScoreGreeting()  + "  " + validateService.provideResults() );
         } else {
-            consoleIOService.outputString(" You have not passed your score  " + validateService.provideResults() + " below  " + scorePropertiesService.getScoreValue() );
+            consoleIOService.outputString(propertiesService.getFailGreeting() + " " + validateService.provideResults() + " " + propertiesService.getScoreBelow() + " " + propertiesService.getScoreValue() );
         }
 
     }
+
 }
