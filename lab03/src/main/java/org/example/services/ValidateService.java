@@ -3,12 +3,14 @@ package org.example.services;
 
 
 import org.example.repository.QuestionRepository;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class ValidateService {
 
     private QuestionRepository questionRepository;

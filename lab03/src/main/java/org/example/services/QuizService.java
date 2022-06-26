@@ -9,11 +9,12 @@ import org.example.repository.QuestionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 
-@Component
+@Service
 public class QuizService {
 
     private QuestionRepository questionRepository;
@@ -28,13 +29,15 @@ public class QuizService {
     public QuizService(QuestionRepository questionRepository,
                        AnswerRepository answerRepository,
                        ConsoleIOServiceI consoleIOService,
-                       PropertiesService scorePropertiesService) {
+                       PropertiesService scorePropertiesService,
+                       AggregateAnswerService aggregateAnswerService,
+                       ValidateService validateService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.consoleIOService = consoleIOService;
         this.propertiesService = scorePropertiesService;
-        this.aggregateAnswerService = new AggregateAnswerService(answerRepository);
-        this.validateService = new ValidateService(questionRepository,consoleIOService);
+        this.aggregateAnswerService = aggregateAnswerService;
+        this.validateService = validateService;
     }
 
     public void run(){
