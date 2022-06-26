@@ -18,9 +18,6 @@ public class Question {
     @CsvBindAndSplitByPosition(position = 3, elementType = Long.class, collectionType = List.class)
     private List<Long> correctAnswers;
 
-//    private Question() {
-//
-//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -55,39 +52,4 @@ public class Question {
         return correctAnswers;
     }
 
-    public static QuestionBuilder newQuestionBuilder() {
-        return new Question().new QuestionBuilder();
-    }
-    public class QuestionBuilder{
-
-        private QuestionBuilder(){
-
-        }
-        public Question build(){
-            Question question = new Question();
-            question.id = Question.this.id;
-            question.answersList = Question.this.answersList;
-            question.context = Question.this.context;
-            question.correctAnswers = Question.this.correctAnswers;
-            return question;
-        }
-        public QuestionBuilder withId(long id){
-            Question.this.id = id;
-            return this;
-        }
-        public QuestionBuilder withAnswerList(List<Answer> answerList ){
-            Question.this.answersList = answersList;
-            return this;
-        }
-        public QuestionBuilder withCorrectAnswers(List<Long> correctAnswers){
-            Question.this.correctAnswers = correctAnswers;
-            return this;
-        }
-        public QuestionBuilder withContext(String context){
-            Question.this.context = context;
-            return this;
-        }
-
-
-    }
 }
