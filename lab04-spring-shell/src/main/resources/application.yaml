@@ -1,0 +1,7 @@
+score:
+    pass: 0.5
+
+spring:
+    main:
+      allow-circular-references: true
+
