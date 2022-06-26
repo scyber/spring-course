@@ -18,8 +18,8 @@ public class QuestionRepository implements QuizRepository<Question>{
         this.questions = questionTransfer.getQuestions();
     }
 
-
-    public Map<Long,Question> getQuestions(){
+    @Override
+    public Map<Long,Question> getItems(){
         return this.questions;
     }
 
@@ -27,6 +27,7 @@ public class QuestionRepository implements QuizRepository<Question>{
     public Optional<Question> findById(Long id){
         return Optional.of(questions.get(id));
     }
+
 
 
 }

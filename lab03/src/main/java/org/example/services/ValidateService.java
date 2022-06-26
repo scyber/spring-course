@@ -23,7 +23,7 @@ public class ValidateService {
 
     public void validate(Map<Long,List<Long>> incomingResults){
         incomingResults.forEach((k,v) -> {
-            List<Long> correctValues = questionRepository.getQuestions().get(k).getCorrectAnswers();
+            List<Long> correctValues = questionRepository.getItems().get(k).getCorrectAnswers();
             if(correctValues.containsAll(v) & correctValues.size() == v.size()){
                 validResults.put(k,true);
             }
@@ -31,7 +31,7 @@ public class ValidateService {
 
     }
     public double provideResults(){
-        return (double) validResults.size()/questionRepository.getQuestions().size();
+        return (double) validResults.size()/questionRepository.getItems().size();
     }
     public void outputScore(){
         ioService.outputString(df.format(provideResults()));

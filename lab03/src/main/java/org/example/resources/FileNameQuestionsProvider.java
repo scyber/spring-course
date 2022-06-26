@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @Component
-public class FileNameQuestionsProvider {
+public class FileNameQuestionsProvider implements ItmeProvider{
     private MessageSource messageSource;
     private Locale locale;
 
@@ -15,6 +15,7 @@ public class FileNameQuestionsProvider {
         this.messageSource = messageSource;
         this.locale = locale.orElse(Locale.getDefault());
     }
+    @Override
     public String provide(){
         String questions = messageSource.getMessage("questions", null, locale);
         return questions;

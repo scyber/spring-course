@@ -3,8 +3,7 @@ package org.example.repository;
 import org.example.domain.Answer;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,13 +19,14 @@ public class AnswerRepository implements QuizRepository<Answer> {
         this.answers = answerTransfer.getAnswers();
     }
 
-    public Map<Long,Answer> getAnswers() {
+    @Override
+    public Map<Long,Answer> getItems() {
         return this.answers;
     }
 
 
     @Override
-    public Optional<Answer> findById(Long id) throws IOException {
+    public Optional<Answer> findById(Long id) {
         return Optional.of(answers.get(id));
     }
 

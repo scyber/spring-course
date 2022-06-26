@@ -1,9 +1,10 @@
 package org.example.repository;
 
-import java.io.IOException;
+
+import java.util.Map;
 import java.util.Optional;
 
 public interface QuizRepository<T> {
-    Optional<T> findById(Long id) throws IOException;
-
+    Optional<T> findById(Long id);
+    Map<Long,T> getItems();
 }

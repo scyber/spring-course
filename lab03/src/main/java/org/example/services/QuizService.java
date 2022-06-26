@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.domain.Question;
 import org.example.domain.Student;
+import org.example.exceptions.QuizRuntimExecption;
 import org.example.repository.AnswerRepository;
 import org.example.repository.QuestionRepository;
 
@@ -40,14 +41,14 @@ public class QuizService {
         var firstName = consoleIOService.resStringWithPrompt("Enter First Name");
         var lastName = consoleIOService.resStringWithPrompt("Enter Last Name");
         var student = new Student(firstName,lastName);
-        for(Question question: questionRepository.getQuestions().values()) {
+        for(Question question: questionRepository.getItems().values()) {
             consoleIOService.outputString(question.getContext());
             question.getAnswersList().forEach(a -> {
                 try {
                     consoleIOService.outputString(answerRepository.findById(a).get().getContext());
-                } catch (IOException e) {
+                } catch (Exception e) {
                     LOGGER.warn("Could not find Answer by ID {}",a);
-                    e.printStackTrace();
+                    throw new QuizRuntimExecption("Could not find Answer by ID {} " , e);
                 }
             });
 
