@@ -1,5 +1,5 @@
 package org.example.resources;
 
-public interface ItmeProvider {
+public interface ItemProvider {
     String provide();
 }

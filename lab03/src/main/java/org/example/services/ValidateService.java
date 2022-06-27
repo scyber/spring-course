@@ -3,14 +3,14 @@ package org.example.services;
 
 
 import org.example.repository.QuestionRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service
 public class ValidateService {
 
     private QuestionRepository questionRepository;
@@ -34,8 +34,5 @@ public class ValidateService {
     }
     public double provideResults(){
         return (double) validResults.size()/questionRepository.getItems().size();
-    }
-    public void outputScore(){
-        ioService.outputString(df.format(provideResults()));
     }
 }

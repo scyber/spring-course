@@ -16,7 +16,7 @@ public class AnswerRepository implements QuizRepository<Answer> {
     private Map<Long,Answer> answers;
 
     public AnswerRepository(AnswerTransfer answerTransfer) {
-        this.answers = answerTransfer.getAnswers();
+        this.answers = answerTransfer.transfer();
     }
 
     @Override

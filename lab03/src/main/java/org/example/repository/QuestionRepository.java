@@ -15,7 +15,7 @@ public class QuestionRepository implements QuizRepository<Question>{
 
 
     public QuestionRepository(QuestionTransfer questionTransfer) {
-        this.questions = questionTransfer.getQuestions();
+        this.questions = questionTransfer.transfer();
     }
 
     @Override

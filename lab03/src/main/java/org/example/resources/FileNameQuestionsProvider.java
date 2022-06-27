@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @Component
-public class FileNameQuestionsProvider implements ItmeProvider{
+public class FileNameQuestionsProvider implements ItemProvider {
     private MessageSource messageSource;
     private Locale locale;
 

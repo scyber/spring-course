@@ -27,7 +27,6 @@ public class QuestionTransfer implements TransferService<Question>{
 
     public QuestionTransfer(QuestionResourceImpl questionResource) {
         this.resource = questionResource.getResource();
-        this.questions = transfer();
     }
 
     public Map<Long,Question> getQuestions() {
@@ -41,12 +40,12 @@ public class QuestionTransfer implements TransferService<Question>{
         final ColumnPositionMappingStrategy<Question> strategy = new ColumnPositionMappingStrategy<>();
         strategy.setType(Question.class);
         strategy.setColumnMapping(new String[]{"id","context","answersList", "correctAnswers"});
-        try (Reader reader = Files.newBufferedReader(Paths.get(resource.getURI()))) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(this.resource.getURI()))) {
             CsvToBean<Question> rawQuestions = new CsvToBeanBuilder<Question>(reader).withSeparator(',').withMappingStrategy(strategy).build();
             rawQuestions.stream().collect(Collectors.toList()).stream().forEach(question -> result.put(question.getId(),question
             ));
         } catch (Exception e){
-            LOGGER.error("Could not get read from resource ", resource, e);
+            LOGGER.error("Could not get read from resource ", this.resource, e);
             throw new TransferException("Could not read from resource ", e);
         }
         return result;
