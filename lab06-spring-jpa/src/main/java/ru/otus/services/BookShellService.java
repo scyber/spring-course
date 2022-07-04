@@ -64,10 +64,9 @@ public class BookShellService {
         Long authorId = ioService.readLongWithPrompt(authorIdPrompt);
         String genreIdPrompt = messageSource.getMessage("genre.id", null, Locale.getDefault());
         Long genreId = ioService.readLongWithPrompt(genreIdPrompt);
-        Book book = new Book();
-        book.setName(bookName);
-        book.setAuthorId(authorId);
-        book.setGenreId(genreId);
+        Author author = new Author();//toDo get from ID
+        Genre genre = new Genre(); //toDo get from id
+        Book book = new Book(bookName,author,genre);
         Long bookId = bookDao.save(book);
         String doneMessage = messageSource.getMessage("book.done", null, Locale.getDefault());
         ioService.outputString(bookName + " " + doneMessage + " "+ bookId);
