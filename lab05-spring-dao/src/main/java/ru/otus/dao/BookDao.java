@@ -21,17 +21,17 @@ import java.util.Map;
 @Repository
 public class BookDao {
 
-    private static final String SQL_INSERT = "INSERT INTO BOOKS (name, author_id, genre_id )" +
+    private final String sql_insert = "INSERT INTO BOOKS (name, author_id, genre_id )" +
             "values (:name, :author_id, :genre_id)";
-    private static final String SQL_QUERY_FIND_ALL = "SELECT b.id, b.name, " +
+    private final String sql_query_find_all = "SELECT b.id, b.name, " +
             " b.author_id, a.name author_name," +
             " b.genre_id, g.name genre_name FROM BOOKS b " +
             " left join authors a on b.author_id = a.id " +
             " left join genres g on b.genre_id = g.id ";
 
-    private static final String SQL_QUERY_FIND_BY_ID = SQL_QUERY_FIND_ALL + " WHERE b.id = :id";
-    private static final String SQL_UPDATE = "UPDATE BOOKS SET name = :name, author_id = :author_id, genre_id = :genre_id where ID =:id";
-    private static final String SQL_DELETE = "DELETE FROM BOOKS WHERE ID = :id";
+    private final String sql_query_find_by_id = sql_query_find_all + " WHERE b.id = :id";
+    private final String sql_update = "UPDATE BOOKS SET name = :name, author_id = :author_id, genre_id = :genre_id where ID =:id";
+    private final String sql_delete = "DELETE FROM BOOKS WHERE ID = :id";
 
     private final JdbcOperations jdbc;
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -48,30 +48,27 @@ public class BookDao {
             book.setName(domain.getName());
             book.setAuthor(domain.getAuthor());
             book.setGenre(domain.getGenre());
-            return update(book,SQL_UPDATE);
+            return update(book,sql_update);
         }
-        return update(domain,SQL_INSERT);
+        return update(domain,sql_insert);
     }
 
     public void delete(Long id) {
         Map<String,Object> mappedParameters = Collections.singletonMap("id", id);
-        this.jdbcTemplate.update(SQL_DELETE, mappedParameters);
+        this.jdbcTemplate.update(sql_delete, mappedParameters);
     }
 
     public Book findById(Long id) {
         try {
          Map<String,Object> mappedParameters = Collections.singletonMap("id",id);
-         return  this.jdbcTemplate.queryForObject(SQL_QUERY_FIND_BY_ID, mappedParameters, bookRowMapper);
+         return  this.jdbcTemplate.queryForObject(sql_query_find_by_id, mappedParameters, bookRowMapper);
         } catch (EmptyResultDataAccessException e){
             throw new FindItemExecption("Could not find book by id " + id, e);
         }
     }
 
     public List<Book> findAll() {
-//       Map<Long,Book> bookMap = jdbc.query(SQL_QUERY_FIND_ALL, new BookResultSetExtractor());
-//       return bookMap.values().stream().collect(Collectors.toList());
-       return jdbc.query(SQL_QUERY_FIND_ALL, bookRowMapper);
-
+       return jdbc.query(sql_query_find_all, bookRowMapper);
     }
 
     private RowMapper<Book> bookRowMapper = (ResultSet rs, int rowNum) -> {

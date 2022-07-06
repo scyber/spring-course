@@ -18,11 +18,11 @@ import java.util.Map;
 public class GenreDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static String SQL_SELECT_ALL = "select id, name from genres";
-    private static String SQL_SELECT_BY_ID = SQL_SELECT_ALL + " where id = :id ";
-    private static String SQL_DELETE_GENRE = " delete from genres where id = :id ";
-    private static String SQL_INSERT_GENRE = " insert into genres ( name ) values( :name) ";
-    private static String SQL_UPDATE_GENRE = " update genres set name = :name where id = :id ";
+    private String sql_select_all = "select id, name from genres";
+    private String sql_select_by_id = sql_select_all + " where id = :id ";
+    private String sql_delete_genre = " delete from genres where id = :id ";
+    private String sql_insert_genre = " insert into genres ( name ) values( :name) ";
+    private String sql_update_genre = " update genres set name = :name where id = :id ";
 
     public GenreDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -33,20 +33,20 @@ public class GenreDao {
             Genre genre = new Genre();
             genre.setId(domain.getId());
             genre.setGenreName(domain.getGenreName());
-           return update(domain, SQL_UPDATE_GENRE);
+           return update(domain, sql_update_genre);
         } else {
-           return update(domain, SQL_INSERT_GENRE);
+           return update(domain, sql_insert_genre);
         }
     }
 
     public void delete(Long id) {
         Map<String,Object> mapperParameters = Collections.singletonMap("id",id);
-        this.namedParameterJdbcTemplate.update(SQL_DELETE_GENRE,mapperParameters);
+        this.namedParameterJdbcTemplate.update(sql_delete_genre,mapperParameters);
     }
     public Genre findById(Long id) {
         try {
             Map<String,Object> mappedParameters = Collections.singletonMap("id",id);
-            return this.namedParameterJdbcTemplate.queryForObject(SQL_SELECT_BY_ID, mappedParameters,genreRowMapper);
+            return this.namedParameterJdbcTemplate.queryForObject(sql_select_by_id, mappedParameters,genreRowMapper);
         } catch (Exception e) {
             throw new FindItemExecption("Could find Genre by ID " + id, e);
         }
@@ -54,7 +54,7 @@ public class GenreDao {
     }
 
     public List<Genre> findAll() {
-        return this.namedParameterJdbcTemplate.query(SQL_SELECT_ALL, genreRowMapper);
+        return this.namedParameterJdbcTemplate.query(sql_select_all, genreRowMapper);
     }
 
     private RowMapper<Genre> genreRowMapper = (ResultSet rs, int numRow) -> {
