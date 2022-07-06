@@ -1,6 +1,5 @@
 package ru.otus.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;

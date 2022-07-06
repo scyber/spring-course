@@ -1,8 +1,6 @@
 package ru.otus.converters;
 
 import org.springframework.stereotype.Component;
-import ru.otus.dao.AuthorDao;
-import ru.otus.dao.GenreDao;
 import ru.otus.domain.Book;
 
 @Component
