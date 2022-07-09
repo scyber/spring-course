@@ -21,17 +21,17 @@ import java.util.Map;
 @Repository
 public class BookDao {
 
-    private final String sql_insert = "INSERT INTO BOOKS (name, author_id, genre_id )" +
+    private final String sqlInsert = "INSERT INTO BOOKS (name, author_id, genre_id )" +
             "values (:name, :author_id, :genre_id)";
-    private final String sql_query_find_all = "SELECT b.id, b.name, " +
+    private final String sqlQueryFindAll = "SELECT b.id, b.name, " +
             " b.author_id, a.name author_name," +
             " b.genre_id, g.name genre_name FROM BOOKS b " +
             " left join authors a on b.author_id = a.id " +
             " left join genres g on b.genre_id = g.id ";
 
-    private final String sql_query_find_by_id = sql_query_find_all + " WHERE b.id = :id";
-    private final String sql_update = "UPDATE BOOKS SET name = :name, author_id = :author_id, genre_id = :genre_id where ID =:id";
-    private final String sql_delete = "DELETE FROM BOOKS WHERE ID = :id";
+    private final String sqlQueryFindById = sqlQueryFindAll + " WHERE b.id = :id";
+    private final String sqlUpdate = "UPDATE BOOKS SET name = :name, author_id = :author_id, genre_id = :genre_id where ID =:id";
+    private final String sqlDelete = "DELETE FROM BOOKS WHERE ID = :id";
 
     private final JdbcOperations jdbc;
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -48,27 +48,27 @@ public class BookDao {
             book.setName(domain.getName());
             book.setAuthor(domain.getAuthor());
             book.setGenre(domain.getGenre());
-            return update(book,sql_update);
+            return update(book, sqlUpdate);
         }
-        return update(domain,sql_insert);
+        return update(domain, sqlInsert);
     }
 
     public void delete(Long id) {
         Map<String,Object> mappedParameters = Collections.singletonMap("id", id);
-        this.jdbcTemplate.update(sql_delete, mappedParameters);
+        this.jdbcTemplate.update(sqlDelete, mappedParameters);
     }
 
     public Book findById(Long id) {
         try {
          Map<String,Object> mappedParameters = Collections.singletonMap("id",id);
-         return  this.jdbcTemplate.queryForObject(sql_query_find_by_id, mappedParameters, bookRowMapper);
+         return  this.jdbcTemplate.queryForObject(sqlQueryFindById, mappedParameters, bookRowMapper);
         } catch (EmptyResultDataAccessException e){
             throw new FindItemExecption("Could not find book by id " + id, e);
         }
     }
 
     public List<Book> findAll() {
-       return jdbc.query(sql_query_find_all, bookRowMapper);
+       return jdbc.query(sqlQueryFindAll, bookRowMapper);
     }
 
     private RowMapper<Book> bookRowMapper = (ResultSet rs, int rowNum) -> {

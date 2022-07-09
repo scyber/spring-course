@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.dao;
 
 
 import org.junit.jupiter.api.Assertions;
@@ -15,27 +15,31 @@ import java.util.stream.Collectors;
 
 @JdbcTest
 @Import(GenreDao.class)
-public class GenreTest {
+public class GenreDaoTest {
     private static final String TEST_GENRE = "Тестовый жанр";
+    private static final String TEST_GENRE_DEL = "Тестовый жанр на создание и удаление";
+
     @Autowired
     private GenreDao genreDao;
-    private long genreId;
+
 
     @Test
     @DisplayName("Тест создания и поиска жанра")
-    @Order(1)
     void testAddGenre(){
         Genre genre = new Genre();
         genre.setGenreName(TEST_GENRE);
-        genreId = genreDao.save(genre);
-        Genre genreFromDao = genreDao.findById(genreId);
+        long genreId = genreDao.save(genre);
+        Genre genreFromDao = genreDao.findById(genreId).get();
         Assertions.assertEquals(genre.getGenreName(),genreFromDao.getGenreName());
     }
     @Test
     @DisplayName("Тест удаление жанра")
     @Order(2)
     void deleteGenre(){
+        Genre genre = new Genre();
+        genre.setGenreName(TEST_GENRE_DEL);
+        long genreId = genreDao.save(genre);
         genreDao.delete(genreId);
-        Assertions.assertTrue(!genreDao.findAll().stream().map(genre -> genre.getId()).collect(Collectors.toList()).contains(genreId));
+        Assertions.assertTrue(!genreDao.findAll().stream().map(g -> g.getId()).collect(Collectors.toList()).contains(genreId));
     }
 }

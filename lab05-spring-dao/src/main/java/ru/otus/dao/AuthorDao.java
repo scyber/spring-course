@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Author;
 import ru.otus.exeptions.FindItemExecption;
 import java.sql.ResultSet;
@@ -17,11 +18,11 @@ import java.util.Optional;
 @Repository
 public class AuthorDao {
 
-    private final String sql_query_for_all = "select id, name from authors a ";
-    private final String sql_query_author_by_id = sql_query_for_all + " where id = :id";
-    private final String sql_insert_authors = "insert into authors ( name ) values ( :name)";
-    private final String sql_update_authors = "update authors set name = :name where id = :id";
-    private final String sql_delete = "delete from authors where id = :id";
+    private final String sqlQueryForAll = "select id, name from authors a ";
+    private final String sqlQueryAuthorById = sqlQueryForAll + " where id = :id";
+    private final String sqlInsertAuthor = "insert into authors ( name ) values ( :name)";
+    private final String sqlUpdateAuthor = "update authors set name = :name where id = :id";
+    private final String sqlDelete = "delete from authors where id = :id";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -32,33 +33,30 @@ public class AuthorDao {
 
     public Long save(Author domain) {
         if(domain.getId() != null){
-            Author author = new Author();
-            author.setName(domain.getName());
-            return update(author,sql_update_authors);
+            return update(domain, sqlUpdateAuthor);
         } else {
-            return update(domain,sql_insert_authors);
+            return update(domain, sqlInsertAuthor);
         }
     }
 
     public void delete(Long id) {
         Map<String,Object> mappedParameters = Collections.singletonMap("id", id);
-        this.namedParameterJdbcTemplate.update(sql_delete,mappedParameters);
+        this.namedParameterJdbcTemplate.update(sqlDelete,mappedParameters);
     }
     public Optional<Author> findById(Long id) {
         Map<String,Object> mapperParameters = Collections.singletonMap("id", id);
         try {
-            return Optional.ofNullable(this.namedParameterJdbcTemplate.queryForObject(sql_query_author_by_id, mapperParameters, authorRowMapper));
+            return Optional.ofNullable(this.namedParameterJdbcTemplate.queryForObject(sqlQueryAuthorById, mapperParameters, authorRowMapper));
         } catch (Exception e){
             throw new FindItemExecption("Could not find Author by ID " + id, e);
         }
     }
+    @Transactional
     public List<Author> findAll() {
-        return this.namedParameterJdbcTemplate.query(sql_query_for_all, authorRowMapper);
+        return this.namedParameterJdbcTemplate.query(sqlQueryForAll, authorRowMapper);
     }
 
-    RowMapper<Author> authorRowMapper = (ResultSet rs, int rowNum) -> {
-        return new Author(rs.getLong(1), rs.getString(2));
-    };
+    RowMapper<Author> authorRowMapper = (ResultSet rs, int rowNum) -> new Author(rs.getLong("id"), rs.getString("name"));
 
     private Long update(Author author, String sql){
         KeyHolder keyHolder = new GeneratedKeyHolder();
