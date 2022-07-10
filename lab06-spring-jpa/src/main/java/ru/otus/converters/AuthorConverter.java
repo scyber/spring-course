@@ -7,8 +7,6 @@ import ru.otus.domain.Author;
 public class AuthorConverter {
 
     public String convert(Author author){
-        return  author.getId() + " " + author.getFirstName() + " "
-                + author.getSecondName() + " "
-                + author.getLastName();
+        return  author.getId() + " | " + author.getName();
     }
 }

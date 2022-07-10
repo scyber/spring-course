@@ -1,7 +1,5 @@
 package ru.otus.services;
 
-import org.springframework.stereotype.Component;
-
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
