@@ -11,8 +11,8 @@ public class LibraryController {
     private final BookService bookService;
     private final IOService ioService;
 
-    public LibraryController(BookService bookShellProcessor, IOService ioService) {
-        this.bookService = bookShellProcessor;
+    public LibraryController(BookService bookService, IOService ioService) {
+        this.bookService = bookService;
         this.ioService = ioService;
     }
 
@@ -23,7 +23,7 @@ public class LibraryController {
     @ShellMethod(value = "showById", key = {"show_b_id"})
     public void showById(){
         long bookId = ioService.readLongWithPrompt("Please enter book Id");
-        ioService.outputString(bookService.showById(bookId));
+        ioService.outputString(bookService.showBookById(bookId));
     }
 
     @ShellMethod(value = "addBook", key = {"add_b"})

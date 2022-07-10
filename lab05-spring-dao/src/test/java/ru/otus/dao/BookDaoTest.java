@@ -2,23 +2,18 @@ package ru.otus.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import ru.otus.dao.AuthorDao;
-import ru.otus.dao.BookDao;
-import ru.otus.dao.GenreDao;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
-import ru.otus.services.IOServiceStreams;
+
 import java.util.stream.Collectors;
 
 @JdbcTest
-@Import({BookDao.class,GenreDao.class,AuthorDao.class})
+@Import({BookDaoJdbc.class, GenreDaoJdbc.class, AuthorDaoJdbc.class})
 public class BookDaoTest {
     private static final String BOOK_NAME = "Приключения Васи Пупкина";
     private static final Long GENRE_ID = 5L;
@@ -26,11 +21,11 @@ public class BookDaoTest {
     private static final String BOOK_NAME_DEL = "Книга на удаление";
 
     @Autowired
-    private BookDao bookDao;
+    private BookDaoJdbc bookDao;
     @Autowired
-    private GenreDao genreDao;
+    private GenreDaoJdbc genreDao;
     @Autowired
-    private AuthorDao authorDao;
+    private AuthorDaoJdbc authorDao;
 
 
     @Test
@@ -45,7 +40,7 @@ public class BookDaoTest {
         book.setGenre(genre);
         book.setName(BOOK_NAME);
         long bookId = bookDao.save(book);
-		Book savedBook = bookDao.findById(bookId);
+		Book savedBook = bookDao.findById(bookId).orElseThrow();
 		Assertions.assertEquals(book.getName(),savedBook.getName());
     }
     @Test
