@@ -9,12 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
-import ru.otus.dao.AuthorDao;
-import ru.otus.dao.BookDao;
-import ru.otus.dao.GenreDao;
+
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
+import ru.otus.repository.AuthorRepositoryJpa;
+import ru.otus.repository.BookRepositoryJpa;
+import ru.otus.repository.GenreRepositoryJpa;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookServiceTest {
 
     @Autowired
-    private BookDao bookDao;
+    private BookRepositoryJpa bookRepositoryJpa;
     @Autowired
-    private AuthorDao authorDao;
+    private GenreRepositoryJpa genreRepositoryJpa;
     @Autowired
-    private GenreDao genreDao;
+    private AuthorRepositoryJpa authorRepository;
     @Autowired
     private GenreConverter genreConverter;
     @Autowired
@@ -47,10 +48,10 @@ class BookServiceTest {
     @DisplayName("Тестирование вызовов Авторов")
     @Transactional
     void testAuthorCalls(){
-        long authorFromService = bookService.addAuthor(AUTHOR_NAME);
-        String authorNameFromDao = authorDao.findById(authorFromService).get().getName();
+        Author authorFromService = bookService.addAuthor(AUTHOR_NAME);
+        Author authorNameFromDao = authorRepository.findById(authorFromService.getId()).get();
         assertEquals(AUTHOR_NAME, authorNameFromDao);
-        bookService.delAuthor(authorFromService);
+        bookService.delAuthor(authorFromService.getId());
         assertFalse(bookService.getAllAuthors().contains(AUTHOR_NAME));
     }
 
@@ -58,8 +59,8 @@ class BookServiceTest {
     @DisplayName("Тестирование вызова жанров")
     @Transactional
     void testGenreCalls(){
-        long genreFromService = bookService.addGenre(GENRE_NAME);
-        String genreFromDao = genreDao.findById(genreFromService).get().getGenreName();
+        long genreFromService = bookService.addGenre(GENRE_NAME).getId();
+        String genreFromDao = genreRepositoryJpa.findById(genreFromService).get().getName();
         assertEquals(GENRE_NAME, genreFromDao);
         bookService.delGenre(genreFromService);
         assertFalse(bookService.getAllGenres().contains(GENRE_NAME));
@@ -68,10 +69,10 @@ class BookServiceTest {
     @DisplayName("Тестирование вызовов сервиса книги в комплексе")
     @Transactional
     void testBookCalls(){
-        long authorId = bookService.addAuthor(AUTHOR_NAME);
-        long genreId = bookService.addGenre(GENRE_NAME);
+        long authorId = bookService.addAuthor(AUTHOR_NAME).getId();
+        long genreId = bookService.addGenre(GENRE_NAME).getId();
         long bookId = bookService.addBook(BOOK_NAME,authorId,genreId);
-        assertEquals(bookId, bookDao.findById(bookId).getId());
+        assertEquals(bookId, bookRepositoryJpa.findById(bookId));
         bookService.delBook(bookId);
         assertFalse(bookService.getAllBooks().contains(bookId));
     }

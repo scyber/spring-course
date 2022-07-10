@@ -2,6 +2,7 @@ package ru.otus.controllers;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import ru.otus.domain.Author;
 import ru.otus.services.BookService;
 import ru.otus.services.IOService;
 
@@ -50,8 +51,8 @@ public class LibraryController {
     @ShellMethod(value = "add_author", key = {"add_a"})
     public void addAuthor(){
         String authorName = ioService.readStringWithPrompt("Please enter Author Name");
-        long authorId = bookService.addAuthor(authorName);
-        ioService.outputString("Author with added with id " + authorId);
+        Author author = bookService.addAuthor(authorName);
+        ioService.outputString("Author with added with id " + author.getId());
     }
 
     @ShellMethod(value = "deleteAuthor", key = {"del_a"})
@@ -69,7 +70,7 @@ public class LibraryController {
     @ShellMethod(value = "add_genre", key = {"add_g"})
     public void addGenre(){
         String genreName = ioService.readStringWithPrompt("Please enter Genre name");
-        long genreId = bookService.addGenre(genreName);
+        long genreId = bookService.addGenre(genreName).getId();
         ioService.outputString("Genre with was added with id " + genreId);
     }
 
