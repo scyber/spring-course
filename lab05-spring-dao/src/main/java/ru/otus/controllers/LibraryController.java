@@ -20,10 +20,11 @@ public class LibraryController {
     public void showAllBooks(){
         bookService.getAllBooks().forEach(s -> ioService.outputString(s));
     }
+
     @ShellMethod(value = "showById", key = {"show_b_id"})
     public void showById(){
         long bookId = ioService.readLongWithPrompt("Please enter book Id");
-        ioService.outputString(bookService.showBookById(bookId));
+        ioService.outputString(bookService.getBookById(bookId));
     }
 
     @ShellMethod(value = "addBook", key = {"add_b"})
@@ -37,11 +38,17 @@ public class LibraryController {
 
     @ShellMethod(value = "deleteBook", key = {"del_b"})
     public void deleteBook(){
-        Long bookId = ioService.readLongWithPrompt(" Please enter ID book to Delete ");
+        long bookId = ioService.readLongWithPrompt(" Please enter ID book to Delete ");
         bookService.delBook(bookId);
         ioService.outputString("Book with id " + bookId + " is deleted ");
     }
 
+    @ShellMethod(value = "updateBookNameById", key = {"upd_b_by_id"})
+    public void updateNameById(){
+        String title = ioService.readStringWithPrompt("Please enter new Book Name");
+        long bookId = ioService.readLongWithPrompt("Please enter book id to update");
+        bookService.updateBookNameById(bookId,title);
+    }
     @ShellMethod(value = "showAllAuthors", key = {"show_authors"})
     public void showAllAuthors(){
         bookService.getAllAuthors().forEach(a -> ioService.outputString(a));

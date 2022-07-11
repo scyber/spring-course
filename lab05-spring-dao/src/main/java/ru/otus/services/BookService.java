@@ -4,9 +4,10 @@ import java.util.List;
 
 public interface BookService {
     List<String> getAllBooks();
-    String showBookById(long id);
+    String getBookById(long id);
     long addBook(String title, long authorId, long genreId );
     void delBook(long id);
+    void updateBookNameById(long id, String name);
     List<String> getAllAuthors();
     long addAuthor(String name);
     void delAuthor(long authorId);

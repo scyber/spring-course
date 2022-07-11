@@ -8,6 +8,6 @@ import ru.otus.domain.Genre;
 public class GenreConverter {
 
     public String convert(Genre genre){
-        return genre.getId() + " | " + genre.getGenreName();
+        return genre.getId() + " | " + genre.getName();
     }
 }

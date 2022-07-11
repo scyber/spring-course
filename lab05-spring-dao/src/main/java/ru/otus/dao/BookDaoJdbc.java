@@ -29,7 +29,7 @@ public class BookDaoJdbc implements BookDao {
         this.jdbc = jdbc;
         this.jdbcTemplate = jdbcTemplate;
     }
-
+    @Override
     public long save(Book domain) {
         String sqlInsert = "INSERT INTO BOOKS (name, author_id, genre_id )" +
                 "values (:name, :author_id, :genre_id)";
@@ -44,13 +44,13 @@ public class BookDaoJdbc implements BookDao {
         }
         return update(domain, sqlInsert);
     }
-
+    @Override
     public void delete(long id) {
         String sqlDelete = "DELETE FROM BOOKS WHERE ID = :id";
         Map<String,Object> mappedParameters = Collections.singletonMap("id", id);
         this.jdbcTemplate.update(sqlDelete, mappedParameters);
     }
-
+    @Override
     public Optional<Book> findById(long id) {
         String sqlQueryFindById = "SELECT b.id, b.name, " +
                 " b.author_id, a.name author_name," +
@@ -65,7 +65,7 @@ public class BookDaoJdbc implements BookDao {
             throw new FindItemExecption("Could not find book by id " + id, e);
         }
     }
-
+    @Override
     public List<Book> findAll() {
         String sqlQueryFindAll = "SELECT b.id, b.name, " +
                 " b.author_id, a.name author_name," +
@@ -73,6 +73,15 @@ public class BookDaoJdbc implements BookDao {
                 " left join authors a on b.author_id = a.id " +
                 " left join genres g on b.genre_id = g.id ";
        return jdbc.query(sqlQueryFindAll, bookRowMapper);
+    }
+
+    @Override
+    public void updateNameById(long id, String name) {
+        String sqlQueryUpdateById = "UPDATE BOOKS SET name = :name where ID =:id ";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", id);
+        mapSqlParameterSource.addValue("name", name);
+        this.jdbcTemplate.update(sqlQueryUpdateById,mapSqlParameterSource);
     }
 
     private RowMapper<Book> bookRowMapper = (ResultSet rs, int rowNum) -> {
@@ -85,7 +94,7 @@ public class BookDaoJdbc implements BookDao {
         book.setAuthor(author);
         Genre genre = new Genre();
         genre.setId(rs.getLong("genre_id"));
-        genre.setGenreName(rs.getString("genre_name"));
+        genre.setName(rs.getString("genre_name"));
         book.setGenre(genre);
         return book;
     };

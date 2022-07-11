@@ -23,7 +23,7 @@ public class GenreDaoJdbc implements GenreDao {
     public GenreDaoJdbc(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
+    @Override
     public long save(Genre domain) {
         String sqlInsertGenre = " insert into genres ( name ) values( :name) ";
         String sqlUpdateGenre = " update genres set name = :name where id = :id ";
@@ -33,12 +33,13 @@ public class GenreDaoJdbc implements GenreDao {
            return update(domain, sqlInsertGenre);
         }
     }
-
+    @Override
     public void delete(long id) {
         String sqlDeleteGenre = " delete from genres where id = :id ";
         Map<String,Object> mapperParameters = Collections.singletonMap("id",id);
         this.namedParameterJdbcTemplate.update(sqlDeleteGenre,mapperParameters);
     }
+    @Override
     public Optional<Genre> findById(long id) {
         String sqlSelectById = "select id, name from genres where id = :id ";
         try {
@@ -48,7 +49,7 @@ public class GenreDaoJdbc implements GenreDao {
             throw new FindItemExecption("Could find Genre by ID " + id, e);
         }
     }
-
+    @Override
     public List<Genre> findAll() {
         String sqlSelectAll = "select id, name from genres";
         return this.namedParameterJdbcTemplate.query(sqlSelectAll, genreRowMapper);
@@ -60,7 +61,7 @@ public class GenreDaoJdbc implements GenreDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", genre.getId());
-        mapSqlParameterSource.addValue("name", genre.getGenreName());
+        mapSqlParameterSource.addValue("name", genre.getName());
         this.namedParameterJdbcTemplate.update(sql,mapSqlParameterSource,keyHolder);
         return keyHolder.getKey().longValue();
     }

@@ -10,4 +10,5 @@ public interface BookDao {
     void delete(long id);
     Optional<Book> findById(long id);
     List<Book> findAll();
+    void updateNameById(long id, String name);
 }
