@@ -6,7 +6,7 @@ import ru.otus.domain.Author;
 @Component
 public class AuthorConverter {
 
-    public String convert(Author author){
-        return  author.getId() + " | " + author.getName();
+    public String convert(Author author) {
+        return author.getId() + " | " + author.getName();
     }
 }

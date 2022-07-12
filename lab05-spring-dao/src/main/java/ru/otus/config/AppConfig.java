@@ -9,7 +9,7 @@ import ru.otus.services.IOServiceStreams;
 @Configuration
 public class AppConfig {
     @Bean
-    public IOService ioServiceStreams(){
-        return new IOServiceStreams( System.in, System.out);
+    public IOService ioServiceStreams() {
+        return new IOServiceStreams(System.in, System.out);
     }
 }

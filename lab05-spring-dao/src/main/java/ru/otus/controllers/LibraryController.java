@@ -39,7 +39,7 @@ public class LibraryController {
     @ShellMethod(value = "deleteBook", key = {"del_b"})
     public void deleteBook(){
         long bookId = ioService.readLongWithPrompt(" Please enter ID book to Delete ");
-        bookService.delBook(bookId);
+        bookService.deleteBook(bookId);
         ioService.outputString("Book with id " + bookId + " is deleted ");
     }
 
@@ -64,7 +64,7 @@ public class LibraryController {
     @ShellMethod(value = "deleteAuthor", key = {"del_a"})
     public void deleteAuthor(){
         Long authorId = ioService.readLongWithPrompt("Please enter Author Id");
-        bookService.delAuthor(authorId);
+        bookService.deleteAuthor(authorId);
         ioService.outputString("Author was deleted ");
     }
 
@@ -83,7 +83,7 @@ public class LibraryController {
     @ShellMethod(value = "delGenre", key = {"del_g"})
     public void deleteGenre(){
         Long genreId = ioService.readLongWithPrompt("Please provide Genre ID");
-        bookService.delGenre(genreId);
+        bookService.deleteGenre(genreId);
         ioService.outputString("Genre with ID " + genreId + " is deleted ");
     }
 

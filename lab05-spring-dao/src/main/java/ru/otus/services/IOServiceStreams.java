@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 
-public class IOServiceStreams implements IOService{
+public class IOServiceStreams implements IOService {
     private final PrintStream output;
     private final Scanner input;
 
@@ -28,7 +28,7 @@ public class IOServiceStreams implements IOService{
     @Override
     public Long readLongWithPrompt(String prompt) {
         output.println(prompt);
-        return  readLong();
+        return readLong();
     }
 
     @Override

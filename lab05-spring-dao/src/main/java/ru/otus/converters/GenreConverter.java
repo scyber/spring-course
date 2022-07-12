@@ -7,7 +7,7 @@ import ru.otus.domain.Genre;
 @Component
 public class GenreConverter {
 
-    public String convert(Genre genre){
+    public String convert(Genre genre) {
         return genre.getId() + " | " + genre.getName();
     }
 }

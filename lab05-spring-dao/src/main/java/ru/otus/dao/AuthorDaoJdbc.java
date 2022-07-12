@@ -19,11 +19,13 @@ import java.util.Optional;
 public class AuthorDaoJdbc implements AuthorDao{
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    RowMapper<Author> authorRowMapper = (ResultSet rs, int rowNum) -> new Author(rs.getLong("id"), rs.getString("name"));
 
     public AuthorDaoJdbc(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    @Override
     public long save(Author domain) {
         String sqlInsertAuthor = "insert into authors ( name ) values ( :name)";
         String sqlUpdateAuthor = "update authors set name = :name where id = :id";
@@ -34,12 +36,15 @@ public class AuthorDaoJdbc implements AuthorDao{
         }
     }
 
+    @Override
     public void delete(long id) {
         String sqlDelete = "delete from authors where id = :id";
         Map<String,Object> mappedParameters = Collections.singletonMap("id", id);
         this.namedParameterJdbcTemplate.update(sqlDelete,mappedParameters);
     }
-    public Optional<Author> findById(Long id) {
+
+    @Override
+    public Optional<Author> findById(long id) {
         String sqlQueryAuthorById = "select id, name from authors a where id = :id";
         Map<String,Object> mapperParameters = Collections.singletonMap("id", id);
         try {
@@ -48,15 +53,14 @@ public class AuthorDaoJdbc implements AuthorDao{
             throw new FindItemExecption("Could not find Author by ID " + id, e);
         }
     }
-    @Transactional
+
+    @Override
     public List<Author> findAll() {
         String sqlQueryForAll = "select id, name from authors a ";
         return this.namedParameterJdbcTemplate.query(sqlQueryForAll, authorRowMapper);
     }
 
-    RowMapper<Author> authorRowMapper = (ResultSet rs, int rowNum) -> new Author(rs.getLong("id"), rs.getString("name"));
-
-    private Long update(Author author, String sql){
+    private long update(Author author, String sql){
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("id", author.getId());

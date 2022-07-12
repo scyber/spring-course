@@ -14,7 +14,7 @@ import ru.otus.domain.Genre;
 import java.util.stream.Collectors;
 
 @JdbcTest
-@Import({BookDaoJdbc.class, GenreDaoJdbc.class, AuthorDaoJdbc.class})
+@Import({BookDaoJdbc.class})
 public class BookDaoTest {
     private static final String BOOK_NAME = "Приключения Васи Пупкина";
     private static final String BOOK_NAME_FOR_UPDATE = "Updated приключения";
@@ -24,16 +24,12 @@ public class BookDaoTest {
 
     @Autowired
     private BookDaoJdbc bookDao;
-    @Autowired
-    private GenreDaoJdbc genreDao;
-    @Autowired
-    private AuthorDaoJdbc authorDao;
 
 
     @Test
     @DisplayName("Проверка сохранения книги в библиотеку")
-    void testBookDaoSave(){
-		Book book = new Book();
+    void testBookDaoSave() {
+        Book book = new Book();
         Genre genre = new Genre();
         genre.setId(GENRE_ID);
         Author author = new Author();
@@ -42,12 +38,13 @@ public class BookDaoTest {
         book.setGenre(genre);
         book.setName(BOOK_NAME);
         long bookId = bookDao.save(book);
-		Book savedBook = bookDao.findById(bookId).orElseThrow();
-		Assertions.assertEquals(book.getName(),savedBook.getName());
+        Book savedBook = bookDao.findById(bookId).orElseThrow();
+        Assertions.assertEquals(book.getName(), savedBook.getName());
     }
+
     @Test
     @DisplayName("Проверка удаления удаления книги")
-    void testDeleteBook(){
+    void testDeleteBook() {
         Book book = new Book();
         book.setName(BOOK_NAME_DEL);
         Author author = new Author();
@@ -60,10 +57,11 @@ public class BookDaoTest {
         bookDao.delete(bookId);
         Assertions.assertFalse(bookDao.findAll().stream().map(b -> b.getId()).collect(Collectors.toList()).contains(bookId));
     }
+
     @Test
     @DisplayName("Обновление названия книги по ID")
     @Transactional
-    void testUpdateNameBookById(){
+    void testUpdateNameBookById() {
         Book book = new Book();
         Genre genre = new Genre();
         genre.setId(GENRE_ID);
@@ -73,7 +71,7 @@ public class BookDaoTest {
         book.setGenre(genre);
         book.setName(BOOK_NAME);
         long bookId = bookDao.save(book);
-        bookDao.updateNameById(bookId,BOOK_NAME_FOR_UPDATE);
+        bookDao.updateNameById(bookId, BOOK_NAME_FOR_UPDATE);
         Assertions.assertEquals(BOOK_NAME_FOR_UPDATE, bookDao.findById(bookId).get().getName());
     }
 

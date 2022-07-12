@@ -7,8 +7,12 @@ import java.util.Optional;
 
 public interface BookDao {
     long save(Book domain);
+
     void delete(long id);
+
     Optional<Book> findById(long id);
+
     List<Book> findAll();
+
     void updateNameById(long id, String name);
 }

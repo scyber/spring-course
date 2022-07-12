@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
@@ -14,17 +15,22 @@ import ru.otus.dao.*;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
+
 import java.util.ArrayList;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 class BookServiceTest {
 
-    private BookService bookService;
+    @MockBean
     private BookDao bookDao;
+    @MockBean
     private AuthorDao authorDao;
+    @MockBean
     private GenreDao genreDao;
+
+    private BookService bookService;
 
     @Autowired
     private GenreConverter genreConverter;
@@ -42,46 +48,46 @@ class BookServiceTest {
     private static final String GENRE_NAME = "Тестовый жанр Сервиса";
 
     @BeforeEach
-    void prepareMocks(){
-        bookDao = Mockito.mock(BookDaoJdbc.class);
-        authorDao = Mockito.mock(AuthorDaoJdbc.class);
-        genreDao = Mockito.mock(GenreDaoJdbc.class);
-        bookService = new BookServiceImpl(bookDao,authorDao,genreDao,
-                bookConverter,genreConverter,authorConverter);
+    void prepareMocks() {
+        bookService = new BookServiceImpl(bookDao, authorDao, genreDao,
+                bookConverter, genreConverter, authorConverter);
     }
 
     @Test
     @DisplayName("Тестирование добавление Авторов")
-    void testAuthorAdd(){
+    void testAuthorAdd() {
         bookService.addAuthor(AUTHOR_NAME);
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Mockito.verify(authorDao).save(author);
     }
+
     @Test
     @DisplayName("Тестирование получения всех авторов")
-    void testGetAllAuthors(){
+    void testGetAllAuthors() {
         bookService.getAllAuthors();
         Mockito.verify(authorDao).findAll();
     }
 
     @Test
     @DisplayName("Тестирование получения всех жанров")
-    void testGetAllGenres(){
+    void testGetAllGenres() {
         bookService.getAllGenres();
         Mockito.verify(genreDao).findAll();
     }
+
     @Test
     @DisplayName("Тестирование вызовов сервиса поиска всех книг библиотеки")
-    void testFindAllBooks(){
+    void testFindAllBooks() {
         var books = new ArrayList<Book>();
         Mockito.when(bookDao.findAll()).thenReturn(books);
         bookService.getAllBooks();
         Mockito.verify(bookDao).findAll();
     }
+
     @Test
     @DisplayName("Тестирование вызова поиска книги по ID")
-    void testFindBookById(){
+    void testFindBookById() {
         Book retBook = new Book();
         retBook.setId(BOOK_ID);
         Author author = new Author();
@@ -94,15 +100,17 @@ class BookServiceTest {
         bookService.getBookById(BOOK_ID);
         Mockito.verify(bookDao).findById(BOOK_ID);
     }
+
     @Test
     @DisplayName("Тестирование удаления книги")
-    void testDeleteBook(){
-        bookService.delBook(BOOK_ID);
+    void testDeleteBook() {
+        bookService.deleteBook(BOOK_ID);
         Mockito.verify(bookDao).delete(BOOK_ID);
     }
+
     @Test
     @DisplayName("Тестирование добавления книги")
-    void testAddBookByName(){
+    void testAddBookByName() {
         var author = new Author();
         author.setName(AUTHOR_NAME);
         author.setId(AUTHOR_ID);
@@ -115,13 +123,14 @@ class BookServiceTest {
         book.setName(BOOK_NAME);
         book.setAuthor(author);
         book.setGenre(genre);
-        bookService.addBook(BOOK_NAME,AUTHOR_ID,GENRE_ID);
+        bookService.addBook(BOOK_NAME, AUTHOR_ID, GENRE_ID);
         Mockito.verify(bookDao).save(book);
     }
+
     @Test
     @DisplayName("Тестирование обновления названия книги по идентификатору")
-    void testUpdateBookById(){
-        bookService.updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
-        Mockito.verify(bookDao).updateNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
+    void testUpdateBookById() {
+        bookService.updateBookNameById(BOOK_ID, BOOK_NAME_FOR_UPDATE);
+        Mockito.verify(bookDao).updateNameById(BOOK_ID, BOOK_NAME_FOR_UPDATE);
     }
 }

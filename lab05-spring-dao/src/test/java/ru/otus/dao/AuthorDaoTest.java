@@ -24,7 +24,7 @@ public class AuthorDaoTest {
 
     @Test
     @DisplayName("Тест создания и сохранения нового автора")
-    void createGenre(){
+    void createGenre() {
         Author author = new Author();
         author.setName(TEST_AUTHOR_NAME);
         long genreId = authorDao.save(author);
@@ -34,7 +34,7 @@ public class AuthorDaoTest {
 
     @Test
     @DisplayName("Тест удаление автора")
-    void deleteGenre(){
+    void deleteGenre() {
         Author author = new Author();
         author.setName(AUTHOR_TO_DEL);
         long authorId = authorDao.save(author);

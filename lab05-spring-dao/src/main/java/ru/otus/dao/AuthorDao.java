@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface AuthorDao {
     long save(Author domain);
-    void delete(long id);
-    Optional<Author> findById(Long id);
+
+    void delete(long authorId);
+
+    Optional<Author> findById(long authorId);
+
     List<Author> findAll();
 }

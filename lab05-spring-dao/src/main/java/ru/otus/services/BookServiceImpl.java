@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
         this.authorConverter = authorConverter;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllBooks(){
       return  bookDao.findAll().stream().map(book -> this.bookConverter.convert(book)).collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
         Long bookId = bookDao.save(book);
         return bookId;
     }
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public String getBookById(long bookId){
         return bookConverter.convert(bookDao.findById(bookId).orElseThrow());
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void delBook(long bookId){
+    public void deleteBook(long bookId){
         bookDao.delete(bookId);
     }
 
@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
         bookDao.updateNameById(id,name);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllAuthors(){
         return authorDao.findAll().stream().map(a -> (authorConverter.convert(a))).collect(Collectors.toList());
@@ -83,11 +83,11 @@ public class BookServiceImpl implements BookService {
     }
     @Transactional
     @Override
-    public void delAuthor(long authorId){
+    public void deleteAuthor(long authorId){
         authorDao.delete(authorId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllGenres(){
       return genreDao.findAll().stream().map(genre -> genreConverter.convert(genre)).collect(Collectors.toList());
@@ -103,7 +103,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void delGenre(long genreId){
+    public void deleteGenre(long genreId){
         genreDao.delete(genreId);
     }
 

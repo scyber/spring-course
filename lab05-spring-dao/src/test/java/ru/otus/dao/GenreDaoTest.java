@@ -24,17 +24,18 @@ public class GenreDaoTest {
 
     @Test
     @DisplayName("Тест создания и поиска жанра")
-    void testAddGenre(){
+    void testAddGenre() {
         Genre genre = new Genre();
         genre.setName(TEST_GENRE);
         long genreId = genreDao.save(genre);
         Genre genreFromDao = genreDao.findById(genreId).orElseThrow();
-        Assertions.assertEquals(genre.getName(),genreFromDao.getName());
+        Assertions.assertEquals(genre.getName(), genreFromDao.getName());
     }
+
     @Test
     @DisplayName("Тест удаление жанра")
     @Order(2)
-    void deleteGenre(){
+    void deleteGenre() {
         Genre genre = new Genre();
         genre.setName(TEST_GENRE_DEL);
         long genreId = genreDao.save(genre);
