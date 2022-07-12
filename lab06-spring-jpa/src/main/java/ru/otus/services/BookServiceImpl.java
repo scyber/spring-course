@@ -9,25 +9,29 @@ import ru.otus.dao.*;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
+import ru.otus.repository.AuthorRepository;
+import ru.otus.repository.BookRepository;
+import ru.otus.repository.GenreRepository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class BookServiceImpl implements BookService {
 
-    private final BookDao bookDao;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
     private final GenreConverter genreConverter;
     private final BookConverter bookConverter;
     private final AuthorConverter authorConverter;
 
-    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao,
-                           BookConverter bookConverter, GenreConverter genreConverter,
-                           AuthorConverter authorConverter) {
-        this.bookDao = bookDao;
-        this.authorDao = authorDao;
-        this.genreDao = genreDao;
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
+                           GenreRepository genreRepository, BookConverter bookConverter,
+                            GenreConverter genreConverter, AuthorConverter authorConverter) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
         this.genreConverter = genreConverter;
         this.bookConverter = bookConverter;
         this.authorConverter = authorConverter;
@@ -36,75 +40,75 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public List<String> getAllBooks(){
-      return  bookDao.findAll().stream().map(book -> this.bookConverter.convert(book)).collect(Collectors.toList());
+      return  bookRepository.findAll().stream().map(book -> this.bookConverter.convert(book)).collect(Collectors.toList());
     }
 
     @Transactional
     public long addBook(String title, long authorId, long genreId ){
-        Author author = authorDao.findById(authorId).orElseThrow();
-        Genre genre = genreDao.findById(genreId).orElseThrow();
+        Author author = authorRepository.findById(authorId).orElseThrow();
+        Genre genre = genreRepository.findById(genreId).orElseThrow();
         Book book = new Book();
         book.setName(title);
         book.setAuthor(author);
         book.setGenre(genre);
-        Long bookId = bookDao.save(book);
+        Long bookId = bookRepository.save(book).getId();
         return bookId;
     }
     @Transactional
     @Override
     public String getBookById(long bookId){
-        return bookConverter.convert(bookDao.findById(bookId).orElseThrow());
+        return bookConverter.convert(bookRepository.findById(bookId).orElseThrow());
     }
 
     @Transactional
     @Override
     public void delBook(long bookId){
-        bookDao.delete(bookId);
+        bookRepository.delete(bookId);
     }
 
     @Transactional
     @Override
     public void updateBookNameById(long id, String name) {
-        bookDao.updateNameById(id,name);
+        bookRepository.updateNameById(id,name);
     }
 
     @Transactional
     @Override
     public List<String> getAllAuthors(){
-        return authorDao.findAll().stream().map(a -> (authorConverter.convert(a))).collect(Collectors.toList());
+        return authorRepository.findAll().stream().map(a -> (authorConverter.convert(a))).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public long addAuthor(String authorName){
+    public Author addAuthor(String authorName){
         Author author = new Author();
         author.setName(authorName);
-        return authorDao.save(author);
+        return authorRepository.save(author);
     }
     @Transactional
     @Override
     public void delAuthor(long authorId){
-        authorDao.delete(authorId);
+        authorRepository.delete(authorId);
     }
 
     @Transactional
     @Override
     public List<String> getAllGenres(){
-      return genreDao.findAll().stream().map(genre -> genreConverter.convert(genre)).collect(Collectors.toList());
+      return genreRepository.findAll().stream().map(genre -> genreConverter.convert(genre)).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public long addGenre(String genreName){
+    public Genre addGenre(String genreName){
         Genre genre = new Genre();
         genre.setName(genreName);
-        return genreDao.save(genre);
+        return genreRepository.save(genre);
     }
 
     @Transactional
     @Override
     public void delGenre(long genreId){
-        genreDao.delete(genreId);
+        genreRepository.delete(genreId);
     }
 
 }

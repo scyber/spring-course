@@ -13,7 +13,8 @@ import java.util.Optional;
 
 
 @Repository
-public class GenreRepositoryJpa {
+public class GenreRepositoryJpa implements GenreRepository{
+
     @PersistenceContext
     private final EntityManager em;
 
@@ -32,12 +33,14 @@ public class GenreRepositoryJpa {
         return query.getResultList();
     }
 
+    @Override
     public List<Genre> findAll() {
         var query = em.createQuery("select g from GENRE ", Genre.class);
         return query.getResultList();
     }
 
-    public void deleteById(long id) {
+    @Override
+    public void delete(long id) {
         var query = em.createQuery("delete from GENRE " +
                 "where g.id = :id", Genre.class);
         query.setParameter("id", id);
