@@ -13,6 +13,9 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -73,7 +76,7 @@ class BookRepositoryJpaTest {
         book.setAuthor(savedAuthor);
         var savedBook = bookRepository.save(book);
         var books = bookRepository.findAll();
-        assertTrue(books.contains(savedBook));
+        Assertions.assertTrue(books.contains(savedBook));
     }
     @Test
     @Rollback
@@ -102,7 +105,8 @@ class BookRepositoryJpaTest {
         var savedBook = bookRepository.save(book);
         var id = savedBook.getId();
         bookRepository.deleteById(id);
-        var authors = bookRepository.findAll();
-        Assertions.assertTrue(!authors.contains(savedBook));
+        em.detach(savedBook);
+        var notFoundBook = bookRepository.findById(id);
+        Assertions.assertEquals(notFoundBook, Optional.empty());
     }
 }
