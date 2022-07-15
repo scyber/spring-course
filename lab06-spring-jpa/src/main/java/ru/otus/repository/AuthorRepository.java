@@ -11,4 +11,5 @@ public interface AuthorRepository {
     Optional<Author> findById(long id);
     List<Author> findByName(String name);
     void delete(long id);
+    void updateAuthorNameById(long id, String name);
 }

@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
-import ru.otus.dao.*;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -37,7 +36,7 @@ public class BookServiceImpl implements BookService {
         this.authorConverter = authorConverter;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllBooks(){
       return  bookRepository.findAll().stream().map(book -> this.bookConverter.convert(book)).collect(Collectors.toList());
@@ -54,7 +53,7 @@ public class BookServiceImpl implements BookService {
         Long bookId = bookRepository.save(book).getId();
         return bookId;
     }
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public String getBookById(long bookId){
         return bookConverter.convert(bookRepository.findById(bookId).orElseThrow());
@@ -62,14 +61,14 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void delBook(long bookId){
-        bookRepository.delete(bookId);
+    public void deleteBook(long bookId){
+        bookRepository.deleteById(bookId);
     }
 
     @Transactional
     @Override
     public void updateBookNameById(long id, String name) {
-        bookRepository.updateNameById(id,name);
+        bookRepository.updateBookNameById(id,name);
     }
 
     @Transactional
@@ -87,11 +86,11 @@ public class BookServiceImpl implements BookService {
     }
     @Transactional
     @Override
-    public void delAuthor(long authorId){
+    public void deleteAuthor(long authorId){
         authorRepository.delete(authorId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllGenres(){
       return genreRepository.findAll().stream().map(genre -> genreConverter.convert(genre)).collect(Collectors.toList());
@@ -107,7 +106,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void delGenre(long genreId){
+    public void deleteGenre(long genreId){
         genreRepository.delete(genreId);
     }
 

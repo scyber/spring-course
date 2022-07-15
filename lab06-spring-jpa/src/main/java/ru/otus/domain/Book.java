@@ -3,9 +3,6 @@ package ru.otus.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,24 +11,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "books")
+//@NamedEntityGraph(name = "book-author-entity-graph",
+//        attributeNodes = {@NamedAttributeNode("author")})
+//@NamedEntityGraph(name = "book-genre-entity-graph", attributeNodes =
+//        {@NamedAttributeNode("genre")})
 public class Book {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @OneToOne(targetEntity = Author.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "id", nullable = false)
     private Author author;
 
     @OneToOne(targetEntity = Genre.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "genre_id")
+    @JoinColumn(name = "id", nullable = false)
     private Genre genre;
 
-    @Fetch(FetchMode.SELECT)
-    @OneToMany(targetEntity = Comment.class,fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
-    @JoinColumn(name = "comment_id")
+    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id")
     private List<Comment> comments;
 }

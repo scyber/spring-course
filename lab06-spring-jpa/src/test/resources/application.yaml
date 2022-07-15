@@ -1,4 +1,7 @@
 spring:
+    jpa:
+      hibernate:
+        ddl-auto: none
     datasource:
       url: jdbc:h2:mem:testdb
       initialization-mode: always
@@ -14,3 +17,7 @@ spring:
     shell:
       interactive:
         enabled: false
+    logging:
+      level:
+        org:
+          springframework: trace

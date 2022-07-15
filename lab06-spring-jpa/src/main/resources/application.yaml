@@ -3,7 +3,7 @@ spring:
       allow-circular-references: true
     datasource:
       url: jdbc:h2:mem:testdb
-#      initialization-mode: always
+      initialization-mode: never
 #      schema: schema.sql
 #      data: data.sql
 #    sql:

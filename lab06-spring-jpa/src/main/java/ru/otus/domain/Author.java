@@ -11,11 +11,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "authors")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

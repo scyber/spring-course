@@ -1,7 +1,6 @@
 package ru.otus.repository;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 
@@ -13,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class BookRepositoryJpa implements BookRepository{
+public class BookRepositoryJpa implements BookRepository {
 
     @PersistenceContext
-    private final EntityManager em ;
+    private final EntityManager em;
 
 
     public BookRepositoryJpa(EntityManager em) {
@@ -25,12 +24,11 @@ public class BookRepositoryJpa implements BookRepository{
 
     @Override
     public Book save(Book book) {
-        if(book.getId() == null){
+        if (book.getId() <= 0) {
             em.persist(book);
             return book;
-        } else {
-          return em.merge(book);
         }
+        return em.merge(book);
     }
 
     @Override
@@ -40,32 +38,40 @@ public class BookRepositoryJpa implements BookRepository{
 
     @Override
     public List<Book> findAll() {
-        TypedQuery<Book> query= em.createQuery("SELECT b from BOOK", Book.class);
+        TypedQuery<Book> query = em.createQuery("SELECT b from Book b " +
+                "left join fetch b.comments " +
+                "left join fetch b.author " +
+                "left join fetch b.genre ", Book.class);
         return query.getResultList();
     }
 
     @Override
     public List<Book> findByName(String name) {
-        TypedQuery<Book> query = em.createQuery("select s from BOOK " +
-                "where s.name = : name", Book.class);
+        TypedQuery<Book> query = em.createQuery("select b from Book b where b.name = :name", Book.class);
         query.setParameter("name", name);
         return query.getResultList();
     }
 
+    //toDo
     @Override
     public List<Comment> getComments(long id) {
         return null;
     }
 
     @Override
-    public void updateNameById(long id, String name) {
-
+    public void updateBookNameById(long id, String name) {
+        Query query = em.createQuery("update Book b " +
+                "set b.name = :name " +
+                "where b.id = :id ");
+        query.setParameter("id", id);
+        query.setParameter("name", name);
+        query.executeUpdate();
     }
 
     @Override
-    public void delete(long id) {
-        TypedQuery<Book> query = em.createQuery("delete from BOOK " +
-                "where id = :id", Book.class);
+    public void deleteById(long id) {
+        Query query = em.createQuery("delete from Book b " +
+                "where b.id =:id");
         query.setParameter("id", id);
         query.executeUpdate();
     }

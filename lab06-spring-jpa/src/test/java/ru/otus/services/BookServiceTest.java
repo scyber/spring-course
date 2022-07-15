@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
-import ru.otus.dao.*;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -18,7 +17,6 @@ import ru.otus.repository.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BookServiceTest {
@@ -99,8 +97,8 @@ class BookServiceTest {
     @Test
     @DisplayName("Тестирование удаления книги")
     void testDeleteBook(){
-        bookService.delBook(BOOK_ID);
-        Mockito.verify(bookRepository).delete(BOOK_ID);
+        bookService.deleteBook(BOOK_ID);
+        Mockito.verify(bookRepository).deleteById(BOOK_ID);
     }
     @Test
     @DisplayName("Тестирование добавления книги")
@@ -124,6 +122,6 @@ class BookServiceTest {
     @DisplayName("Тестирование обновления названия книги по идентификатору")
     void testUpdateBookById(){
         bookService.updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
-        Mockito.verify(bookRepository).updateNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
+        Mockito.verify(bookRepository).updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
     }
 }

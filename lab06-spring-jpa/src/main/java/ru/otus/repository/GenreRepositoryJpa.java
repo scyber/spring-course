@@ -1,13 +1,9 @@
 package ru.otus.repository;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Genre;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,22 +23,22 @@ public class GenreRepositoryJpa implements GenreRepository{
     }
 
     public List<Genre> findByName(String name) {
-        var query = em.createQuery("select g from GENRE " +
-                "where name = :name",Genre.class);
+        var query = em.createQuery("select g from Genre g " +
+                "where g.name = :name ",Genre.class);
         query.setParameter("name", name);
         return query.getResultList();
     }
 
     @Override
     public List<Genre> findAll() {
-        var query = em.createQuery("select g from GENRE ", Genre.class);
+        var query = em.createQuery("select g from Genre g ", Genre.class);
         return query.getResultList();
     }
 
     @Override
     public void delete(long id) {
-        var query = em.createQuery("delete from GENRE " +
-                "where g.id = :id", Genre.class);
+        var query = em.createQuery("delete from Genre g " +
+                "where g.id = :id");
         query.setParameter("id", id);
         query.executeUpdate();
     }
