@@ -81,6 +81,7 @@ class BookRepositoryJpaTest {
     void tetUpdateNameById(){
         var book = bookRepository.findByName(BOOK_NAME_IN_REPO).get(0);
         var id = book.getId();
+        em.detach(book);
         bookRepository.updateBookNameById(id, BOOK_NAME_TO_UPDATE);
         var updatedBook = bookRepository.findById(id).get();
         Assertions.assertEquals(BOOK_NAME_TO_UPDATE, updatedBook.getName());
