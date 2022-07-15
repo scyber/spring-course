@@ -43,14 +43,17 @@ public class CommentRepositoryJpa implements CommentRepository{
     }
 
     @Override
-    public Optional<Comment> findByBookId(long bookId) {
-        var query = em.createQuery("select c from Comment c where c.book_id = :book_id");
-        query.setParameter("book_id", bookId);
-        return Optional.ofNullable((Comment) query.getSingleResult());
+    public Optional<List<Comment>> findByBookId(long bookId) {
+        var query = em.createQuery("select c from Comment c where c.bookId = :bookId");
+        query.setParameter("bookId", bookId);
+        return Optional.of(query.getResultList());
     }
 
     @Override
     public void addBookComment(long bookId, String text) {
-
+        var comment = new Comment();
+        comment.setBookId(bookId);
+        comment.setTitle(text);
+        save(comment);
     }
 }

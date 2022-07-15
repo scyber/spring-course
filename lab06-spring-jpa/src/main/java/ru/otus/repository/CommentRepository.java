@@ -10,6 +10,6 @@ public interface CommentRepository {
     Comment save(Comment domain);
     List<Comment> findAll();
     Optional<Comment> findById(long commentId);
-    Optional<Comment> findByBookId(long bookId);
+    Optional<List<Comment>> findByBookId(long bookId);
     void addBookComment(long bookId, String text);
 }

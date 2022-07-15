@@ -16,6 +16,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "book_id", nullable = false)
+    private long bookId;
+
     @Column(name = "title", nullable = false)
     private String title;
 }
