@@ -3,7 +3,6 @@ package ru.otus.repository;
 import org.springframework.stereotype.Repository;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -39,16 +38,15 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public List<Book> findAll() {
         TypedQuery<Book> query = em.createQuery("SELECT b from Book b " +
-                "left join fetch b.comments " +
                 "left join fetch b.author " +
                 "left join fetch b.genre ", Book.class);
         return query.getResultList();
     }
 
     @Override
-    public List<Book> findByName(String name) {
-        TypedQuery<Book> query = em.createQuery("select b from Book b where b.name = :name", Book.class);
-        query.setParameter("name", name);
+    public List<Book> findByTitle(String title) {
+        TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
+        query.setParameter("title", title);
         return query.getResultList();
     }
 
@@ -59,12 +57,12 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public void updateBookNameById(long id, String name) {
+    public void updateBookTitleById(long id, String title) {
         Query query = em.createQuery("update Book b " +
-                "set b.name = :name " +
+                "set b.title = :title " +
                 "where b.id = :id ");
         query.setParameter("id", id);
-        query.setParameter("name", name);
+        query.setParameter("title", title);
         query.executeUpdate();
     }
 

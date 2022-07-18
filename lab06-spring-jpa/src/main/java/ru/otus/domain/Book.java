@@ -12,18 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "books")
-//@NamedEntityGraph(name = "book-author-entity-graph",
-//        attributeNodes = {@NamedAttributeNode("author")})
-//@NamedEntityGraph(name = "book-genre-entity-graph", attributeNodes =
-//        {@NamedAttributeNode("genre")})
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @OneToOne(targetEntity = Author.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "id", nullable = false)

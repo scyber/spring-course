@@ -52,7 +52,7 @@ class BookRepositoryJpaTest {
         genre.setName(GENRE_NAME);
         var savedGenre = genreRepository.save(genre);
         Book book = new Book();
-        book.setName(BOOK_NAME);
+        book.setTitle(BOOK_NAME);
         book.setGenre(savedGenre);
         book.setAuthor(savedAuthor);
         var savedBook = bookRepository.save(book);
@@ -71,7 +71,7 @@ class BookRepositoryJpaTest {
         genre.setName(GENRE_NAME);
         var savedGenre = genreRepository.save(genre);
         Book book = new Book();
-        book.setName(BOOK_NAME);
+        book.setTitle(BOOK_NAME);
         book.setGenre(savedGenre);
         book.setAuthor(savedAuthor);
         var savedBook = bookRepository.save(book);
@@ -82,12 +82,12 @@ class BookRepositoryJpaTest {
     @Rollback
     @DisplayName("Тест обновления названия книги по Id")
     void tetUpdateNameById(){
-        var book = bookRepository.findByName(BOOK_NAME_IN_REPO).get(0);
+        var book = bookRepository.findByTitle(BOOK_NAME_IN_REPO).get(0);
         var id = book.getId();
         em.detach(book);
-        bookRepository.updateBookNameById(id, BOOK_NAME_TO_UPDATE);
+        bookRepository.updateBookTitleById(id, BOOK_NAME_TO_UPDATE);
         var updatedBook = bookRepository.findById(id).get();
-        Assertions.assertEquals(BOOK_NAME_TO_UPDATE, updatedBook.getName());
+        Assertions.assertEquals(BOOK_NAME_TO_UPDATE, updatedBook.getTitle());
     }
     @Test
     @Transactional
@@ -95,7 +95,7 @@ class BookRepositoryJpaTest {
     @DisplayName("Тест удаления книги")
     void testDeleteBook(){
         var book = new Book();
-        book.setName(BOOK_NAME);
+        book.setTitle(BOOK_NAME);
         var author = new Author();
         author.setName(AUTHOR_NAME);
         var genre = new Genre();

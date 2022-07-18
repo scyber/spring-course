@@ -4,6 +4,9 @@ spring:
     datasource:
       url: jdbc:h2:mem:testdb
       initialization-mode: never
+    jpa:
+      hibernate:
+        ddl-auto: none
 #      schema: schema.sql
 #      data: data.sql
 #    sql:

@@ -33,8 +33,8 @@ public class LibraryController {
         String title = ioService.readStringWithPrompt("Please enter Book name ");
         long authorId = ioService.readLongWithPrompt("Please enter author Id");
         long genreId = ioService.readLongWithPrompt("Please enter genre Id");
-        long bookId = bookService.addBook(title,authorId,genreId);
-        ioService.outputString(title + " Is created with ID "+ bookId);
+        var book = bookService.addBook(title,authorId,genreId);
+        ioService.outputString(title + " Is created with ID "+ book.getId());
     }
 
     @ShellMethod(value = "deleteBook", key = {"del_b"})

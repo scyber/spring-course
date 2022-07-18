@@ -1,6 +1,7 @@
 package ru.otus.repository;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -10,10 +11,6 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
-
-import javax.persistence.EntityManager;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({CommentRepositoryJpa.class,BookRepositoryJpa.class, AuthorRepositoryJpa.class, GenreRepositoryJpa.class})
@@ -49,9 +46,10 @@ class CommentRepositoryJpaTest {
 
 
     @Test
+    @DisplayName("Тест добавления комментария к книге")
     void testAddComment(){
        var book = new Book();
-       book.setName(BOOK_NAME);
+       book.setTitle(BOOK_NAME);
        var genre = new Genre();
        genre.setName(GENRE_NAME);
        var author = new Author();
@@ -69,5 +67,32 @@ class CommentRepositoryJpaTest {
        Assertions.assertEquals(TITLE_COMMENT, foundComment.get().getTitle());
        var listOfComments = commentRepositoryJpa.findByBookId(bookId);
        Assertions.assertTrue(listOfComments.get().contains(savedComment));
+    }
+    @Test
+    @DisplayName("Тест сохранения и удаления комментария к книге")
+    void deleteComment(){
+        var book = new Book();
+        book.setTitle(BOOK_NAME);
+        var genre = new Genre();
+        genre.setName(GENRE_NAME);
+        var author = new Author();
+        author.setName(AUTHOR_NAME);
+        book.setGenre(genre);
+        book.setAuthor(author);
+        var savedBook = bookRepository.save(book);
+        var bookId = savedBook.getId();
+        var comment = new Comment();
+        comment.setBookId(bookId);
+        comment.setTitle(TITLE_COMMENT);
+        var savedComment = commentRepositoryJpa.save(comment);
+        var commentId = savedComment.getId();
+        var foundComment = commentRepositoryJpa.findById(commentId);
+        Assertions.assertEquals(TITLE_COMMENT, foundComment.get().getTitle());
+        var listOfComments = commentRepositoryJpa.findByBookId(bookId);
+        Assertions.assertTrue(listOfComments.get().contains(savedComment));
+        commentRepositoryJpa.delete(commentId);
+        em.detach(savedComment);
+        listOfComments = commentRepositoryJpa.findByBookId(bookId);
+        Assertions.assertFalse(listOfComments.get().contains(savedComment));
     }
 }
