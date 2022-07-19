@@ -24,7 +24,4 @@ id bigint auto_increment primary key,
 book_id bigint references books(id) on delete cascade,
 title varchar(255)
 );
-create TABLE AUTHORS_BOOKS(
-book_id bigint references books(id),
-author_id bigint references authors(id)
-);
+

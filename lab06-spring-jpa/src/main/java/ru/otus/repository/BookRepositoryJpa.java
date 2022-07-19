@@ -1,6 +1,7 @@
 package ru.otus.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import javax.persistence.EntityManager;
@@ -31,6 +32,7 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
@@ -44,19 +46,24 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Book> findByTitle(String title) {
         TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
         query.setParameter("title", title);
         return query.getResultList();
     }
 
-    //toDo
+
     @Override
+    @Transactional(readOnly = true)
     public List<Comment> getComments(long id) {
-        return null;
+        var query = em.createQuery("select c from Comment c where c.book_id = :book_id");
+        query.setParameter("book_id", id);
+        return query.getResultList();
     }
 
     @Override
+    @Transactional
     public void updateBookTitleById(long id, String title) {
         Query query = em.createQuery("update Book b " +
                 "set b.title = :title " +
@@ -67,6 +74,7 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         Query query = em.createQuery("delete from Book b " +
                 "where b.id =:id");

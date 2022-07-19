@@ -1,6 +1,7 @@
 package ru.otus.services;
 
 import org.springframework.stereotype.Component;
+
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
@@ -13,9 +14,7 @@ import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,12 +41,14 @@ public class BookServiceImpl implements BookService {
         this.authorConverter = authorConverter;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
+    @Transactional(readOnly = true)
     public List<String> getAllBooks() {
-        return bookRepository.findAll().stream().map(book -> this.bookConverter.convert(book)).collect(Collectors.toList());
+        return bookRepository.findAll().stream().map(this.bookConverter::convert).collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public Book addBook(String title, long authorId, long genreId) {
         Author author = authorRepository.findById(authorId).orElseThrow();
@@ -59,77 +60,88 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public String getBookById(long bookId) {
         return bookConverter.convert(bookRepository.findById(bookId).orElseThrow());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteBook(long bookId) {
         bookRepository.deleteById(bookId);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void updateBookNameById(long id, String name) {
         bookRepository.updateBookTitleById(id, name);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public List<String> getAllAuthors() {
-        return authorRepository.findAll().stream().map(a -> (authorConverter.convert(a))).collect(Collectors.toList());
+        return authorRepository.findAll().stream().map(authorConverter::convert).collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Author addAuthor(String authorName) {
         Author author = new Author();
         author.setName(authorName);
         return authorRepository.save(author);
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public void deleteAuthor(long authorId) {
         authorRepository.delete(authorId);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<String> getAllGenres() {
-        return genreRepository.findAll().stream().map(genre -> genreConverter.convert(genre)).collect(Collectors.toList());
+        return genreRepository.findAll().stream().map(genreConverter::convert).collect(Collectors.toList());
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public Genre addGenre(String genreName) {
         Genre genre = new Genre();
         genre.setName(genreName);
         return genreRepository.save(genre);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteGenre(long genreId) {
         genreRepository.delete(genreId);
     }
 
     @Override
+    @Transactional
     public Comment addComment(long bookId, String text) {
-        return null;
+        return commentRepository.addCommentBookById(bookId, text);
     }
 
     @Override
-    public Optional<List<Comment>> findCommentsByBookId(long bookId) {
-        return Optional.empty();
+    @Transactional(readOnly = true)
+    public List<Comment> findCommentsByBookId(long bookId) {
+        return commentRepository.findByBookId(bookId);
     }
 
     @Override
+    @Transactional
     public void deleteCommentById(long commentId) {
+        commentRepository.delete(commentId);
+    }
 
+    @Override
+    @Transactional
+    public void updateCommentById(long commentId, String text) {
+        commentRepository.updateCommentById(commentId, text);
     }
 
 }

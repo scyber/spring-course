@@ -9,20 +9,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CommentRepositoryJpa implements CommentRepository{
+public class CommentRepositoryJpa implements CommentRepository {
 
     @PersistenceContext
     EntityManager em;
 
     @Override
-    public void delete(long commentId) {
+    @Transactional
+    public void delete(long id) {
         var query = em.createQuery("delete from Comment c where c.id = :id");
-        query.setParameter("id", commentId);
+        query.setParameter("id", id);
         query.executeUpdate();
     }
+
     @Override
+    @Transactional
     public Comment save(Comment domain) {
-        if(domain.getId() <= 0){
+        if (domain.getId() <= 0) {
             em.persist(domain);
             return domain;
         }
@@ -38,22 +41,33 @@ public class CommentRepositoryJpa implements CommentRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findById(long commentId) {
-        return Optional.ofNullable(em.find(Comment.class,commentId));
+    public Optional<Comment> findById(long id) {
+        return Optional.ofNullable(em.find(Comment.class, id));
     }
 
     @Override
-    public Optional<List<Comment>> findByBookId(long bookId) {
+    @Transactional
+    public List<Comment> findByBookId(long bookId) {
         var query = em.createQuery("select c from Comment c where c.bookId = :bookId");
         query.setParameter("bookId", bookId);
-        return Optional.of(query.getResultList());
+        return query.getResultList();
     }
 
     @Override
-    public void addBookComment(long bookId, String text) {
+    @Transactional
+    public Comment addCommentBookById(long bookId, String title) {
         var comment = new Comment();
         comment.setBookId(bookId);
-        comment.setTitle(text);
-        save(comment);
+        comment.setTitle(title);
+        return save(comment);
+    }
+
+    @Override
+    @Transactional
+    public void updateCommentById(long id, String title) {
+        var query = em.createQuery("update Comment c set c.title =:title where c.id =:id");
+        query.setParameter("title", title);
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

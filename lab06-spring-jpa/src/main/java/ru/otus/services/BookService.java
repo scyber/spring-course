@@ -21,6 +21,7 @@ public interface BookService {
     Genre addGenre(String genreName);
     void deleteGenre(long genreId);
     Comment addComment(long bookId, String text);
-    Optional<List<Comment>> findCommentsByBookId(long bookId);
+    List<Comment> findCommentsByBookId(long bookId);
     void deleteCommentById(long commentId);
+    void updateCommentById(long commentId, String text);
 }

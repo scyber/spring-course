@@ -1,6 +1,7 @@
 package ru.otus.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Genre;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,10 +19,14 @@ public class GenreRepositoryJpa implements GenreRepository{
         this.em = em;
     }
 
+    @Override
+    @Transactional
     public Optional<Genre> findById(long id) {
         return Optional.ofNullable(em.find(Genre.class, id));
     }
 
+    @Override
+    @Transactional
     public List<Genre> findByName(String name) {
         var query = em.createQuery("select g from Genre g " +
                 "where g.name = :name ",Genre.class);
@@ -30,6 +35,7 @@ public class GenreRepositoryJpa implements GenreRepository{
     }
 
     @Override
+    @Transactional
     public List<Genre> findAll() {
         var query = em.createQuery("select g from Genre g ", Genre.class);
         return query.getResultList();

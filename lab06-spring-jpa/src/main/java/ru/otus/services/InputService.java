@@ -1,7 +1,7 @@
 package ru.otus.services;
 
 public interface InputService {
-    Long readLong();
+    long readLong();
     String readStringWithPrompt(String prompt);
-    Long readLongWithPrompt(String prompt);
+    long readLongWithPrompt(String prompt);
 }
