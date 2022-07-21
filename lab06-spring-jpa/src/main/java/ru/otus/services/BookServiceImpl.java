@@ -79,7 +79,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<String> getAllAuthors() {
         return authorRepository.findAll().stream().map(authorConverter::convert).collect(Collectors.toList());
     }

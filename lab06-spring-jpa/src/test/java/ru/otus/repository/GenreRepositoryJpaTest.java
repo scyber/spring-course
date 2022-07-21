@@ -43,7 +43,7 @@ class GenreRepositoryJpaTest {
         var genreFromSave = genreRepositoryJpa.save(genre);
         genreRepositoryJpa.delete(genreFromSave.getId());
         var genres = genreRepositoryJpa.findByName(GENRE_FOR_DEL);
-        assertTrue(!genres.contains(genreFromSave));
+        assertFalse(genres.contains(genreFromSave));
     }
     @Test
     @DisplayName("Тестирование получения всех жанров")

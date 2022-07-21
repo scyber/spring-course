@@ -32,7 +32,6 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    @Transactional
     public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
@@ -46,7 +45,6 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByTitle(String title) {
         TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
         query.setParameter("title", title);
@@ -55,7 +53,6 @@ public class BookRepositoryJpa implements BookRepository {
 
 
     @Override
-    @Transactional(readOnly = true)
     public List<Comment> getComments(long id) {
         var query = em.createQuery("select c from Comment c where c.book_id = :book_id");
         query.setParameter("book_id", id);
@@ -63,7 +60,6 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    @Transactional
     public void updateBookTitleById(long id, String title) {
         Query query = em.createQuery("update Book b " +
                 "set b.title = :title " +
@@ -74,7 +70,6 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         Query query = em.createQuery("delete from Book b " +
                 "where b.id =:id");

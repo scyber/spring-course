@@ -15,7 +15,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     EntityManager em;
 
     @Override
-    @Transactional
     public void delete(long id) {
         var query = em.createQuery("delete from Comment c where c.id = :id");
         query.setParameter("id", id);
@@ -23,7 +22,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    @Transactional
     public Comment save(Comment domain) {
         if (domain.getId() <= 0) {
             em.persist(domain);
@@ -33,20 +31,17 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Comment> findAll() {
         var query = em.createQuery("select c from Comment c ", Comment.class);
         return query.getResultList();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Comment> findById(long id) {
         return Optional.ofNullable(em.find(Comment.class, id));
     }
 
     @Override
-    @Transactional
     public List<Comment> findByBookId(long bookId) {
         var query = em.createQuery("select c from Comment c where c.bookId = :bookId");
         query.setParameter("bookId", bookId);
@@ -54,7 +49,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    @Transactional
     public Comment addCommentBookById(long bookId, String title) {
         var comment = new Comment();
         comment.setBookId(bookId);
@@ -63,7 +57,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    @Transactional
     public void updateCommentById(long id, String title) {
         var query = em.createQuery("update Comment c set c.title =:title where c.id =:id");
         query.setParameter("title", title);
