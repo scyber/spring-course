@@ -29,8 +29,6 @@ class GenreRepositoryJpaTest {
 
     @Test
     @DisplayName("Тестирование добавления жанра")
-    @Transactional
-    @Rollback
     void testAddGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
@@ -39,8 +37,6 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тест удаления жанра")
-    @Transactional
-    @Rollback
     void testDeleteGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_FOR_DEL);
@@ -60,8 +56,6 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тестирование поиска по имени жанра")
-    @Transactional
-    @Rollback
     void testFindByNameGenres(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
@@ -71,8 +65,6 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тест поиска по id жанра")
-    @Transactional
-    @Rollback
     void testFindByIdGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);

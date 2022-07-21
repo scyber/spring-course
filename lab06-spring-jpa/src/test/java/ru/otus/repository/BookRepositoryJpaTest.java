@@ -41,8 +41,6 @@ class BookRepositoryJpaTest {
 
 
     @Test
-    @Transactional
-    @Rollback
     @DisplayName("Тест сохранения и поиска книги")
     void testSaveBook(){
         Author author = new Author();
@@ -61,7 +59,6 @@ class BookRepositoryJpaTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("Тест получения сохранения и получения книг")
     void testGetAllBooks(){
         Author author = new Author();
@@ -79,7 +76,6 @@ class BookRepositoryJpaTest {
         Assertions.assertTrue(books.contains(savedBook));
     }
     @Test
-    @Rollback
     @DisplayName("Тест обновления названия книги по Id")
     void tetUpdateNameById(){
         var book = bookRepository.findByTitle(BOOK_NAME_IN_REPO).get(0);
@@ -90,8 +86,6 @@ class BookRepositoryJpaTest {
         Assertions.assertEquals(BOOK_NAME_TO_UPDATE, updatedBook.getTitle());
     }
     @Test
-    @Transactional
-    @Rollback
     @DisplayName("Тест удаления книги")
     void testDeleteBook(){
         var book = new Book();

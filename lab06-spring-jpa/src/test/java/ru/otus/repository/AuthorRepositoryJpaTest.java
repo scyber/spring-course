@@ -50,8 +50,6 @@ class AuthorRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тестирование удаления автора")
-    @Transactional
-    @Rollback
     void testDeleteAuthor(){
         var author = new Author();
         author.setName(AUTРOR_FOR_DEL);
@@ -62,8 +60,6 @@ class AuthorRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тестирование поиска автора по имени")
-    @Transactional
-    @Rollback
     void testFindAuthorByName(){
         var author = new Author();
         author.setName(AUTHOR_NAME);
@@ -72,8 +68,6 @@ class AuthorRepositoryJpaTest {
         Assertions.assertTrue(authors.size() > 0);
     }
     @Test
-    @Transactional
-    @Rollback
     @DisplayName("Тест обновления имени Автора по id")
     void updateAuthorNameById(){
         var author = new Author();
