@@ -21,10 +21,10 @@ class GenreRepositoryJpaTest {
     private static final String GENRE_FOR_DEL = "Автор на удаление";
 
     @Autowired
-    GenreRepositoryJpa genreRepositoryJpa;
+    private GenreRepositoryJpa genreRepositoryJpa;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
 
     @Test
