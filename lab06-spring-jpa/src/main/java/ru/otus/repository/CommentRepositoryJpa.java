@@ -1,7 +1,7 @@
 package ru.otus.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Comment;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +12,13 @@ import java.util.Optional;
 public class CommentRepositoryJpa implements CommentRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private final EntityManager em;
+    private final BookRepository bookRepository;
+
+    public CommentRepositoryJpa(EntityManager em, BookRepository bookRepository) {
+        this.em = em;
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public void delete(long id) {
@@ -32,7 +38,8 @@ public class CommentRepositoryJpa implements CommentRepository {
 
     @Override
     public List<Comment> findAll() {
-        var query = em.createQuery("select c from Comment c ", Comment.class);
+        var query = em.createQuery("select c from Comment c " +
+                "left join fetch c.book", Comment.class);
         return query.getResultList();
     }
 
@@ -43,16 +50,18 @@ public class CommentRepositoryJpa implements CommentRepository {
 
     @Override
     public List<Comment> findByBookId(long bookId) {
-        var query = em.createQuery("select c from Comment c where c.bookId = :bookId");
-        query.setParameter("bookId", bookId);
+        var query = em.createQuery("select c from Comment c where c.book = :book");
+        var book = bookRepository.findById(bookId).get();
+        query.setParameter("book", book);
         return query.getResultList();
     }
 
     @Override
     public Comment addCommentBookById(long bookId, String title) {
         var comment = new Comment();
-        comment.setBookId(bookId);
+        var book = bookRepository.findById(bookId).get();
         comment.setTitle(title);
+        comment.setBook(book);
         return save(comment);
     }
 

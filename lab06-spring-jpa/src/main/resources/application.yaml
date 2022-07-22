@@ -1,19 +1,29 @@
 spring:
     main:
       allow-circular-references: true
+#    datasource:
+#      url: jdbc:h2:mem:testdb
+#      initialization-mode: never
     datasource:
-      url: jdbc:h2:mem:testdb
-      initialization-mode: never
+       platform: postgres
+       url: jdbc:postgresql://localhost:5432/library
+       username: postgres
+       password: pgpwd
+       driverClassName: org.postgresql.Driver
+       initialization-mode: always
+
     jpa:
+      database: POSTGRESQL
+      show-sql: false
       hibernate:
         ddl-auto: none
-#      schema: schema.sql
-#      data: data.sql
-#    sql:
-#     init:
-#       mode: always
-#       data-locations: data.sql
-#       schema-locations: schema.sql
+        schema: schema.sql
+        data: data.sql
+    sql:
+      init:
+      mode: always
+#        data-locations: data.sql
+#        schema-locations: schema.sql
     h2:
      console:
        enabled: true

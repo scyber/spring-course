@@ -13,6 +13,7 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,7 @@ class BookRepositoryJpaTest {
 
     private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
     private final static String AUTHOR_NAME = "ТЕСТОВЫЙ АВТОР";
-    private final static String AUTHOR_NAME_FOR_UPDATE = "Update Authoer Name";
+    private final static String AUTHOR_NAME_FOR_UPDATE = "Update Author Name";
     private final static String GENRE_NAME = "Тестовый жанр";
     private final static String BOOK_NAME_TO_UPDATE = "Тестовая книга на обновление";
     private final static String BOOK_NAME_IN_REPO = "Russian modern history";
@@ -51,8 +52,8 @@ class BookRepositoryJpaTest {
         var savedGenre = genreRepository.save(genre);
         Book book = new Book();
         book.setTitle(BOOK_NAME);
-        book.setGenre(savedGenre);
-        book.setAuthor(savedAuthor);
+        book.setGenres(List.of(savedGenre));
+        book.setAuthors(List.of(savedAuthor));
         var savedBook = bookRepository.save(book);
         var foundBook = bookRepository.findById(savedBook.getId()).get();
         assertEquals(savedBook,foundBook);
@@ -69,8 +70,8 @@ class BookRepositoryJpaTest {
         var savedGenre = genreRepository.save(genre);
         Book book = new Book();
         book.setTitle(BOOK_NAME);
-        book.setGenre(savedGenre);
-        book.setAuthor(savedAuthor);
+        book.setGenres(List.of(savedGenre));
+        book.setAuthors(List.of(author));
         var savedBook = bookRepository.save(book);
         var books = bookRepository.findAll();
         Assertions.assertTrue(books.contains(savedBook));
@@ -94,8 +95,8 @@ class BookRepositoryJpaTest {
         author.setName(AUTHOR_NAME);
         var genre = new Genre();
         genre.setName(GENRE_NAME);
-        book.setAuthor(author);
-        book.setGenre(genre);
+        book.setAuthors(List.of(author));
+        book.setGenres(List.of(genre));
         var savedBook = bookRepository.save(book);
         var id = savedBook.getId();
         bookRepository.deleteById(id);

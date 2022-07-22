@@ -3,6 +3,9 @@ package ru.otus.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -21,15 +24,16 @@ public class Book {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @OneToOne(targetEntity = Author.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", nullable = false)
-    private Author author;
+    @Fetch(FetchMode.SELECT)
+    @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "authors_books",
+            joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private List<Author> authors;
 
-    @OneToOne(targetEntity = Genre.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", nullable = false)
-    private Genre genre;
+    @Fetch(FetchMode.SELECT)
+    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "genres_books",
+            joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<Genre> genres;
 
-    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
-    private List<Comment> comments;
 }

@@ -49,8 +49,8 @@ public class LibraryController {
 
     @ShellMethod(value = "update Book Name By Id", key = {"upd_b_by_id"})
     public void updateNameById(){
-        String title = ioService.readStringWithPrompt("Please enter new Book Name");
         long bookId = ioService.readLongWithPrompt("Please enter book id to update");
+        String title = ioService.readStringWithPrompt("Please enter new Book Name");
         bookService.updateBookNameById(bookId,title);
     }
     @ShellMethod(value = "show All Authors", key = {"show_authors"})
@@ -101,7 +101,7 @@ public class LibraryController {
         var bookId = ioService.readLongWithPrompt("Please Enter book id for comment");
         var title = ioService.readStringWithPrompt("Please enter text of your comment");
         var comment = bookService.addComment(bookId,title);
-        ioService.outputString("Your comment was added with id" + comment.getId());
+        ioService.outputString(" Your comment was added with id " + comment.getId());
     }
     @ShellMethod(value = "delete Comment", key = {"del_c"})
     public void deleteComment(){

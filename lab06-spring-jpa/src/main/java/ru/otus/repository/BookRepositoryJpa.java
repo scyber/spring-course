@@ -1,7 +1,6 @@
 package ru.otus.repository;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import javax.persistence.EntityManager;
@@ -38,9 +37,7 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        TypedQuery<Book> query = em.createQuery("SELECT b from Book b " +
-                "left join fetch b.author " +
-                "left join fetch b.genre ", Book.class);
+        TypedQuery<Book> query = em.createQuery("SELECT b from Book b ", Book.class);
         return query.getResultList();
     }
 

@@ -16,6 +16,7 @@ import ru.otus.domain.Genre;
 import ru.otus.repository.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -85,8 +86,8 @@ class BookServiceTest {
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
         Mockito.when(bookRepository.findById(BOOK_ID)).thenReturn(Optional.of(retBook));
-        retBook.setAuthor(author);
-        retBook.setGenre(genre);
+        retBook.setAuthors(List.of(author));
+        retBook.setGenres(List.of(genre));
         bookService.getBookById(BOOK_ID);
         Mockito.verify(bookRepository).findById(BOOK_ID);
     }
@@ -109,8 +110,8 @@ class BookServiceTest {
         Mockito.when(authorRepository.findById(AUTHOR_ID)).thenReturn(Optional.of(author));
         var book = new Book();
         book.setTitle(BOOK_TITLE);
-        book.setAuthor(author);
-        book.setGenre(genre);
+        book.setAuthors(List.of(author));
+        book.setGenres(List.of(genre));
         bookService.addBook(BOOK_TITLE,AUTHOR_ID,GENRE_ID);
         Mockito.verify(bookRepository).save(book);
     }
