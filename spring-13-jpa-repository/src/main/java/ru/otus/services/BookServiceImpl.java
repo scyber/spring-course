@@ -86,8 +86,8 @@ public class BookServiceImpl implements BookService {
     }
     @Transactional
     @Override
-    public void deleteAuthor(long authorId){
-        authorRepository.delete(authorId);
+    public void deleteAuthor(Long authorId){
+        authorRepository.deleteById(authorId);
     }
 
     @Transactional(readOnly = true)
@@ -107,7 +107,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public void deleteGenre(long genreId){
-        genreRepository.delete(genreId);
+        genreRepository.deleteById(genreId);
     }
 
 }

@@ -14,11 +14,15 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "book_id", nullable = false)
-    private long bookId;
+    private Book book;
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    public Comment(String title) {
+        this.title = title;
+    }
 }

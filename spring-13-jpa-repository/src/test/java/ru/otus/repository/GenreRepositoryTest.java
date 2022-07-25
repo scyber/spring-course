@@ -3,25 +3,24 @@ package ru.otus.repository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.domain.Genre;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import(GenreRepositoryJpa.class)
-class GenreRepositoryJpaTest {
+@ExtendWith(SpringExtension.class)
+class GenreRepositoryTest {
 
     private static final String GENRE_NAME = "Тестовый Автор";
     private static final String GENRE_FOR_DEL = "Автор на удаление";
 
     @Autowired
-    GenreRepositoryJpa genreRepositoryJpa;
+    GenreRepository genreRepository;
 
     @Autowired
     TestEntityManager em;
@@ -29,24 +28,20 @@ class GenreRepositoryJpaTest {
 
     @Test
     @DisplayName("Тестирование добавления жанра")
-    @Transactional
-    @Rollback
     void testAddGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        var genreFromSave = genreRepositoryJpa.save(genre);
+        var genreFromSave = genreRepository.save(genre);
         assertNotNull(genreFromSave);
     }
     @Test
     @DisplayName("Тест удаления жанра")
-    @Transactional
-    @Rollback
     void testDeleteGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_FOR_DEL);
-        var genreFromSave = genreRepositoryJpa.save(genre);
-        genreRepositoryJpa.delete(genreFromSave.getId());
-        var genres = genreRepositoryJpa.findByName(GENRE_FOR_DEL);
+        var genreFromSave = genreRepository.save(genre);
+        genreRepository.deleteById(genreFromSave.getId());
+        var genres = genreRepository.findByName(GENRE_FOR_DEL);
         assertTrue(!genres.contains(genreFromSave));
     }
     @Test
@@ -54,30 +49,26 @@ class GenreRepositoryJpaTest {
     void testGetAllGenres(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        genreRepositoryJpa.save(genre);
-        var genres = genreRepositoryJpa.findAll();
+        genreRepository.save(genre);
+        var genres = genreRepository.findAll();
         Assertions.assertTrue(genres.contains(genre));
     }
     @Test
     @DisplayName("Тестирование поиска по имени жанра")
-    @Transactional
-    @Rollback
     void testFindByNameGenres(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        genreRepositoryJpa.save(genre);
-        var genres = genreRepositoryJpa.findByName(GENRE_NAME);
+        genreRepository.save(genre);
+        var genres = genreRepository.findByName(GENRE_NAME);
         assertTrue(genres.contains(genre));
     }
     @Test
     @DisplayName("Тест поиска по id жанра")
-    @Transactional
-    @Rollback
     void testFindByIdGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        var genreFromSave =  genreRepositoryJpa.save(genre);
+        var genreFromSave =  genreRepository.save(genre);
         var id = genreFromSave.getId();
-        assertEquals(genreFromSave,genreRepositoryJpa.findById(id).get());
+        assertEquals(genreFromSave, genreRepository.findById(id).get());
     }
 }

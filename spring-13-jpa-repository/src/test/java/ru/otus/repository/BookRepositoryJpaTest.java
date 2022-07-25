@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({BookRepositoryJpa.class, AuthorRepositoryJpa.class, GenreRepositoryJpa.class})
+@Import({BookRepositoryJpa.class, AuthorRepository.class, GenreRepository.class})
 class BookRepositoryJpaTest {
 
     private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
@@ -35,9 +35,9 @@ class BookRepositoryJpaTest {
     @Autowired
     private BookRepositoryJpa bookRepository;
     @Autowired
-    private GenreRepositoryJpa genreRepository;
+    private GenreRepository genreRepository;
     @Autowired
-    private AuthorRepositoryJpa authorRepository;
+    private AuthorRepository authorRepository;
 
 
     @Test

@@ -7,6 +7,7 @@ spring:
       initialization-mode: always
     main:
       allow-circular-references: true
+      allow-bean-definition-overriding: true
 #    h2:
 #      console:
 #        enabled: true

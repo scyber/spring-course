@@ -4,7 +4,13 @@ spring:
     datasource:
       url: jdbc:h2:mem:testdb
       initialization-mode: never
-#      schema: schema.sql
+    jpa:
+      generate-ddl: true
+      hibernate:
+        ddl-auto: drop-create
+      show-sql: true
+      defer-datasource-initialization: true
+  #      schema: schema.sql
 #      data: data.sql
 #    sql:
 #     init:

@@ -2,10 +2,12 @@ package ru.otus.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -16,8 +18,8 @@ import javax.persistence.EntityManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({CommentRepositoryJpa.class,BookRepositoryJpa.class, AuthorRepositoryJpa.class, GenreRepositoryJpa.class})
-class CommentRepositoryJpaTest {
+@ExtendWith(SpringExtension.class)
+class CommentRepositoryTest {
 
     private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
     private final static String AUTHOR_NAME = "ТЕСТОВЫЙ АВТОР";
@@ -33,19 +35,16 @@ class CommentRepositoryJpaTest {
     private BookRepositoryJpa bookRepository;
 
     @Autowired
-    private GenreRepositoryJpa genreRepository;
+    private GenreRepository genreRepository;
 
     @Autowired
-    private AuthorRepositoryJpa authorRepository;
-
-    @Autowired
-    private CommentRepositoryJpa commentRepositoryJpa;
+    private AuthorRepository authorRepository;
 
     private static final String TITLE_COMMENT = "Комментарий тестовый";
 
 
     @Autowired
-    private CommentRepositoryJpa commentRepository;
+    private CommentRepository commentRepository;
 
 
     @Test
@@ -61,13 +60,13 @@ class CommentRepositoryJpaTest {
        var savedBook = bookRepository.save(book);
        var bookId = savedBook.getId();
        var comment = new Comment();
-       comment.setBookId(bookId);
+       comment.setBook(savedBook);
        comment.setTitle(TITLE_COMMENT);
-       var savedComment = commentRepositoryJpa.save(comment);
+       var savedComment = commentRepository.save(comment);
        var commentId = savedComment.getId();
-       var foundComment = commentRepositoryJpa.findById(commentId);
+       var foundComment = commentRepository.findById(commentId);
        Assertions.assertEquals(TITLE_COMMENT, foundComment.get().getTitle());
-       var listOfComments = commentRepositoryJpa.findByBookId(bookId);
-       Assertions.assertTrue(listOfComments.get().contains(savedComment));
+       var listOfComments = commentRepository.findByBookId(bookId);
+       Assertions.assertTrue(listOfComments.contains(savedComment));
     }
 }
