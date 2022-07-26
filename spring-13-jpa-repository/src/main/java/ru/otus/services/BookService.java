@@ -1,0 +1,26 @@
+package ru.otus.services;
+
+import ru.otus.domain.Author;
+import ru.otus.domain.Book;
+import ru.otus.domain.Comment;
+import ru.otus.domain.Genre;
+import java.util.List;
+
+
+public interface BookService {
+    List<String> getAllBooks();
+    String getBookById(Long id);
+    Book addBook(String title, Long authorId, Long genreId );
+    void deleteBook(Long id);
+    void updateBookNameById(Long id, String name);
+    List<String> getAllAuthors();
+    Author addAuthor(String name);
+    void deleteAuthor(Long authorId);
+    List<String> getAllGenres();
+    Genre addGenre(String genreName);
+    void deleteGenre(Long genreId);
+    Comment addComment(Long bookId, String text);
+    List<Comment> findCommentsByBookId(Long bookId);
+    void deleteCommentById(Long commentId);
+    void updateCommentById(Long commentId, String text);
+}
