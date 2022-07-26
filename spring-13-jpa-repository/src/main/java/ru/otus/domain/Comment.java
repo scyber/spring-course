@@ -5,24 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "comments")
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id")
+    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Book book;
 
     @Column(name = "title", nullable = false)
     private String title;
-
-    public Comment(String title) {
-        this.title = title;
-    }
 }
