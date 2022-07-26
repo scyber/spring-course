@@ -9,7 +9,8 @@ public interface CommentRepository {
     void delete(long commentId);
     Comment save(Comment domain);
     List<Comment> findAll();
-    Optional<Comment> findById(long commentId);
-    Optional<List<Comment>> findByBookId(long bookId);
-    void addBookComment(long bookId, String text);
+    Optional<Comment> findById(long id);
+    List<Comment> findByBookId(long bookId);
+    Comment addCommentBookById(long bookId, String title);
+    void updateCommentById(long id, String title);
 }

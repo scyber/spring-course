@@ -21,16 +21,14 @@ class GenreRepositoryJpaTest {
     private static final String GENRE_FOR_DEL = "Автор на удаление";
 
     @Autowired
-    GenreRepositoryJpa genreRepositoryJpa;
+    private GenreRepositoryJpa genreRepositoryJpa;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
 
     @Test
     @DisplayName("Тестирование добавления жанра")
-    @Transactional
-    @Rollback
     void testAddGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
@@ -39,15 +37,13 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тест удаления жанра")
-    @Transactional
-    @Rollback
     void testDeleteGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_FOR_DEL);
         var genreFromSave = genreRepositoryJpa.save(genre);
         genreRepositoryJpa.delete(genreFromSave.getId());
         var genres = genreRepositoryJpa.findByName(GENRE_FOR_DEL);
-        assertTrue(!genres.contains(genreFromSave));
+        assertFalse(genres.contains(genreFromSave));
     }
     @Test
     @DisplayName("Тестирование получения всех жанров")
@@ -60,8 +56,6 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тестирование поиска по имени жанра")
-    @Transactional
-    @Rollback
     void testFindByNameGenres(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
@@ -71,8 +65,6 @@ class GenreRepositoryJpaTest {
     }
     @Test
     @DisplayName("Тест поиска по id жанра")
-    @Transactional
-    @Rollback
     void testFindByIdGenre(){
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);

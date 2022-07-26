@@ -15,7 +15,7 @@ public class IOServiceStreams implements IOService{
     }
 
     @Override
-    public Long readLong() {
+    public long readLong() {
         return Long.parseLong(input.nextLine());
     }
 
@@ -26,7 +26,7 @@ public class IOServiceStreams implements IOService{
     }
 
     @Override
-    public Long readLongWithPrompt(String prompt) {
+    public long readLongWithPrompt(String prompt) {
         output.println(prompt);
         return  readLong();
     }

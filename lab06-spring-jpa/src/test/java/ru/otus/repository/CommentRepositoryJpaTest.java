@@ -1,73 +1,78 @@
 package ru.otus.repository;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import ru.otus.domain.Author;
-import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
-import ru.otus.domain.Genre;
 
-import javax.persistence.EntityManager;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({CommentRepositoryJpa.class,BookRepositoryJpa.class, AuthorRepositoryJpa.class, GenreRepositoryJpa.class})
+@Import({CommentRepositoryJpa.class, BookRepositoryJpa.class})
 class CommentRepositoryJpaTest {
 
-    private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
-    private final static String AUTHOR_NAME = "ТЕСТОВЫЙ АВТОР";
-    private final static String AUTHOR_NAME_FOR_UPDATE = "Update Authoer Name";
-    private final static String GENRE_NAME = "Тестовый жанр";
-    private final static String BOOK_NAME_TO_UPDATE = "Тестовая книга на обновление";
-    private final static String BOOK_NAME_IN_REPO = "Russian modern history";
+    private static final long BOOK_ID = 1L;
 
     @Autowired
     private TestEntityManager em;
-
     @Autowired
-    private BookRepositoryJpa bookRepository;
-
-    @Autowired
-    private GenreRepositoryJpa genreRepository;
-
-    @Autowired
-    private AuthorRepositoryJpa authorRepository;
-
-    @Autowired
-    private CommentRepositoryJpa commentRepositoryJpa;
-
-    private static final String TITLE_COMMENT = "Комментарий тестовый";
-
-
+    private BookRepositoryJpa bookRepositoryJpa;
     @Autowired
     private CommentRepositoryJpa commentRepository;
 
+    private static final String TITLE_COMMENT = "Комментарий тестовый";
+    private static final String TITLE_COMMENT_UPDATE = "Обнолвленный тестовый комментарий";
+
+
+
 
     @Test
+    @DisplayName("Тест добавления комментария к книге")
     void testAddComment(){
-       var book = new Book();
-       book.setName(BOOK_NAME);
-       var genre = new Genre();
-       genre.setName(GENRE_NAME);
-       var author = new Author();
-       author.setName(AUTHOR_NAME);
-       book.setGenre(genre);
-       book.setAuthor(author);
-       var savedBook = bookRepository.save(book);
-       var bookId = savedBook.getId();
        var comment = new Comment();
-       comment.setBookId(bookId);
+       var book = bookRepositoryJpa.findById(BOOK_ID).get();
+       comment.setBook(book);
        comment.setTitle(TITLE_COMMENT);
-       var savedComment = commentRepositoryJpa.save(comment);
+       var savedComment = commentRepository.save(comment);
        var commentId = savedComment.getId();
-       var foundComment = commentRepositoryJpa.findById(commentId);
+       var foundComment = commentRepository.findById(commentId);
        Assertions.assertEquals(TITLE_COMMENT, foundComment.get().getTitle());
-       var listOfComments = commentRepositoryJpa.findByBookId(bookId);
-       Assertions.assertTrue(listOfComments.get().contains(savedComment));
+       var listOfComments = commentRepository.findByBookId(1L);
+       Assertions.assertTrue(listOfComments.contains(savedComment));
+    }
+    @Test
+    @DisplayName("Тест сохранения и удаления комментария к книге")
+    void deleteComment(){
+        var comment = new Comment();
+        var book = bookRepositoryJpa.findById(BOOK_ID).get();
+        comment.setBook(book);
+        comment.setTitle(TITLE_COMMENT);
+        var savedComment = commentRepository.save(comment);
+        var commentId = savedComment.getId();
+        var foundComment = commentRepository.findById(commentId);
+        commentRepository.delete(commentId);
+        em.detach(savedComment);
+        var emptyComment = commentRepository.findById(commentId);
+        Assertions.assertEquals(Optional.empty(),emptyComment);
+    }
+    @Test
+    @DisplayName("Тест обновления комментария к книге")
+    void testUpdateComment(){
+        var comment = new Comment();
+        var book = bookRepositoryJpa.findById(BOOK_ID).get();
+        comment.setBook(book);
+        comment.setTitle(TITLE_COMMENT);
+        var savedComment = commentRepository.save(comment);
+        var commentId = savedComment.getId();
+        commentRepository.updateCommentById(commentId,TITLE_COMMENT_UPDATE);
+        em.detach(savedComment);
+        var updatedComment = commentRepository.findById(commentId).get();
+        Assertions.assertEquals(TITLE_COMMENT_UPDATE,updatedComment.getTitle());
     }
 }
