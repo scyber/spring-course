@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({BookRepositoryJpa.class, AuthorRepositoryJpa.class, GenreRepositoryJpa.class})
+@Import({BookRepositoryJpa.class})
 class BookRepositoryJpaTest {
 
     private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
@@ -35,10 +35,6 @@ class BookRepositoryJpaTest {
 
     @Autowired
     private BookRepositoryJpa bookRepository;
-    @Autowired
-    private GenreRepositoryJpa genreRepository;
-    @Autowired
-    private AuthorRepositoryJpa authorRepository;
 
 
     @Test
@@ -46,14 +42,12 @@ class BookRepositoryJpaTest {
     void testSaveBook(){
         Author author = new Author();
         author.setName(AUTHOR_NAME);
-        var savedAuthor = authorRepository.save(author);
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        var savedGenre = genreRepository.save(genre);
         Book book = new Book();
         book.setTitle(BOOK_NAME);
-        book.setGenres(List.of(savedGenre));
-        book.setAuthors(List.of(savedAuthor));
+        book.setGenres(List.of(genre));
+        book.setAuthors(List.of(author));
         var savedBook = bookRepository.save(book);
         var foundBook = bookRepository.findById(savedBook.getId()).get();
         assertEquals(savedBook,foundBook);
@@ -64,13 +58,11 @@ class BookRepositoryJpaTest {
     void testGetAllBooks(){
         Author author = new Author();
         author.setName(AUTHOR_NAME);
-        var savedAuthor = authorRepository.save(author);
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
-        var savedGenre = genreRepository.save(genre);
         Book book = new Book();
         book.setTitle(BOOK_NAME);
-        book.setGenres(List.of(savedGenre));
+        book.setGenres(List.of(genre));
         book.setAuthors(List.of(author));
         var savedBook = bookRepository.save(book);
         var books = bookRepository.findAll();

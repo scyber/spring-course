@@ -17,13 +17,11 @@ spring:
       show-sql: false
       hibernate:
         ddl-auto: none
-        schema: schema.sql
-        data: data.sql
     sql:
       init:
       mode: always
-#        data-locations: data.sql
-#        schema-locations: schema.sql
+        data-locations: data.sql
+        schema-locations: schema.sql
     h2:
      console:
        enabled: true
