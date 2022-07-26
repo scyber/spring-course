@@ -34,11 +34,6 @@ class CommentRepositoryTest {
     @Autowired
     private BookRepositoryJpa bookRepository;
 
-    @Autowired
-    private GenreRepository genreRepository;
-
-    @Autowired
-    private AuthorRepository authorRepository;
 
     private static final String TITLE_COMMENT = "Комментарий тестовый";
 
