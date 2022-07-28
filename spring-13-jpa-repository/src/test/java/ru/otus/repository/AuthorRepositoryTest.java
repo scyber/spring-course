@@ -25,10 +25,10 @@ class AuthorRepositoryTest {
     private static final String AUTРOR_FOR_DEL = "Автор на удаление";
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     @Test
     @DisplayName("Тестирование записи Автора в репозиторий")

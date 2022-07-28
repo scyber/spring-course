@@ -18,7 +18,6 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     void delete(Book book);
     List<Book> findByTitle(String title);
 
-    @Transactional
     @Modifying
     @Query("update Book b set b.title = :title where b.id = :id")
     void updateBookTitleById(@Param("id") Long id,@Param("title") String title);

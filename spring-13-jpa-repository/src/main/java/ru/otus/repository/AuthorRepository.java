@@ -20,14 +20,12 @@ public interface AuthorRepository extends JpaRepository<Author,Long> {
     Optional<Author> findById(Long id);
 
     @Query("select a from Author a where a.name = :name")
-    @Transactional
     List<Author> findByName(@Param("name") String name);
 
 
     void deleteById(@Param("id") Long id);
 
     @Modifying
-    @Transactional
     @Query("update Author a set a.name = :name where a.id = :id")
     void updateNameById(@Param("id") long id, @Param("name") String name);
 }

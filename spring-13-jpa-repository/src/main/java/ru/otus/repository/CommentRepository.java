@@ -20,12 +20,10 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     Optional<Comment> findById(@Param("id") Long id);
 
     @Query("select c from Comment c where c.book = :book ")
-    @Transactional(readOnly = true)
     List<Comment> findByBook(@Param("book") Book book);
 
     @Query("update Comment c set c.title = :title where c.id = :id")
     @Modifying
-    @Transactional
     void updateCommentById(@Param("id")Long id, @Param("title") String title);
 
 }
