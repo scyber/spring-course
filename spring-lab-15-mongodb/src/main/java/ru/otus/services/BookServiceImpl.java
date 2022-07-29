@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book addBook(String title, Long authorId, Long genreId) {
+    public Book addBook(String title, String authorId, String genreId) {
         Author author = authorRepository.findById(authorId).orElseThrow();
         Genre genre = genreRepository.findById(genreId).orElseThrow();
         Book book = new Book();
@@ -62,19 +62,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public String getBookById(Long bookId) {
+    public String getBookById(String bookId) {
         return bookConverter.convert(bookRepository.findById(bookId).orElseThrow());
     }
 
     @Override
     @Transactional
-    public void deleteBook(Long bookId) {
+    public void deleteBook(String bookId) {
         bookRepository.deleteById(bookId);
     }
 
     @Override
     @Transactional
-    public void updateBookNameById(Long id, String name) {
+    public void updateBookNameById(String id, String name) {
         bookRepository.updateBookTitleById(id, name);
     }
 
@@ -95,7 +95,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteAuthor(Long authorId) {
+    public void deleteAuthor(String authorId) {
         authorRepository.deleteById(authorId);
     }
 
@@ -116,13 +116,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteGenre(Long genreId) {
+    public void deleteGenre(String genreId) {
         genreRepository.deleteById(genreId);
     }
 
     @Override
     @Transactional
-    public Comment addComment(Long bookId, String text) {
+    public Comment addComment(String bookId, String text) {
         var book = bookRepository.findById(bookId).get();
         var commment = new Comment();
         commment.setBook(book);
@@ -132,20 +132,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> findCommentsByBookId(Long bookId) {
+    public List<Comment> findCommentsByBookId(String bookId) {
         var book = bookRepository.findById(bookId).get();
         return commentRepository.findByBook(book);
     }
 
     @Override
     @Transactional
-    public void deleteCommentById(Long commentId) {
+    public void deleteCommentById(String commentId) {
         commentRepository.deleteById(commentId);
     }
 
     @Override
     @Transactional
-    public void updateCommentById(Long commentId, String text) {
+    public void updateCommentById(String commentId, String text) {
         commentRepository.updateCommentById(commentId, text);
     }
 

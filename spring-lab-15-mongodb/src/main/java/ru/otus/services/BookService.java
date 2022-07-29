@@ -9,18 +9,18 @@ import java.util.List;
 
 public interface BookService {
     List<String> getAllBooks();
-    String getBookById(Long id);
-    Book addBook(String title, Long authorId, Long genreId );
-    void deleteBook(Long id);
-    void updateBookNameById(Long id, String name);
+    String getBookById(String id);
+    Book addBook(String title, String authorId, String genreId );
+    void deleteBook(String id);
+    void updateBookNameById(String id, String name);
     List<String> getAllAuthors();
     Author addAuthor(String name);
-    void deleteAuthor(Long authorId);
+    void deleteAuthor(String authorId);
     List<String> getAllGenres();
     Genre addGenre(String genreName);
-    void deleteGenre(Long genreId);
-    Comment addComment(Long bookId, String text);
-    List<Comment> findCommentsByBookId(Long bookId);
-    void deleteCommentById(Long commentId);
-    void updateCommentById(Long commentId, String text);
+    void deleteGenre(String genreId);
+    Comment addComment(String bookId, String text);
+    List<Comment> findCommentsByBookId(String bookId);
+    void deleteCommentById(String commentId);
+    void updateCommentById(String commentId, String text);
 }

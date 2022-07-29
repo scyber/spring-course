@@ -1,34 +1,47 @@
 package ru.otus.repository;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.MongoDBContainer;
 import ru.otus.domain.Author;
+import java.util.stream.Collectors;
 
 
-
-@DataJpaTest
+@DataMongoTest
 @ExtendWith(SpringExtension.class)
+@ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class AuthorRepositoryTest {
-
     private static final String AUTHOR_NAME = "Тестовый Автор";
     private static final String AUTРOR_FOR_DEL = "Автор на удаление";
+    private static final String AUTHOR_FOR_RENAME = "Автор переименован";
 
-    @Autowired
-    private TestEntityManager em;
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @BeforeAll
+    static void setUp(){
+        mongoDBContainer.start();
+    }
+
+    @AfterAll
+    static void clean() {
+        mongoDBContainer.stop();
+    }
+
 
     @Test
     @DisplayName("Тестирование записи Автора в репозиторий")
@@ -36,10 +49,8 @@ class AuthorRepositoryTest {
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Author authorFromRepo = authorRepository.save(author);
-        Assertions.assertEquals(author, authorFromRepo);
-        var id = authorFromRepo.getId();
-        var authorFoundById = authorRepository.findById(id).get();
-        Assertions.assertEquals(id, authorFoundById.getId());
+        var authors = authorRepository.findAll();
+        authors.contains(authorFromRepo);
     }
     @Test
     @DisplayName("Тестирование получения всех авторов")
@@ -47,8 +58,8 @@ class AuthorRepositoryTest {
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         authorRepository.save(author);
-        var authors = authorRepository.findAll();
-        Assertions.assertTrue(authors.contains(author));
+        var authors = authorRepository.findAll().stream().map(a -> a.getName()).collect(Collectors.toList());
+        Assertions.assertTrue(authors.contains(AUTHOR_NAME));
     }
     @Test
     @DisplayName("Тестирование удаления автора")
@@ -66,7 +77,7 @@ class AuthorRepositoryTest {
         var author = new Author();
         author.setName(AUTHOR_NAME);
         authorRepository.save(author);
-        var authors = authorRepository.findByName(AUTHOR_NAME);
+        var authors = authorRepository.findByNameLike(AUTHOR_NAME);
         Assertions.assertTrue(authors.size() > 0);
     }
     @Test
@@ -75,9 +86,9 @@ class AuthorRepositoryTest {
         var author = new Author();
         author.setName(AUTHOR_NAME);
         var authorSaved = authorRepository.save(author);
-        var id = authorSaved.getId();
-        authorRepository.updateNameById(id,AUTРOR_FOR_DEL);
+        String id = authorSaved.getId();
+        authorRepository.updateNameById(id,AUTHOR_FOR_RENAME);
         var updatedAuthor = authorRepository.findById(id).get();
-        Assertions.assertEquals(authorSaved,updatedAuthor);
+        Assertions.assertEquals(authorSaved.getName(),updatedAuthor.getName());
     }
 }

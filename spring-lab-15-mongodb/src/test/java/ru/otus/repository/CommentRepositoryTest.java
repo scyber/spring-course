@@ -6,13 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.domain.Comment;
 
 
-@DataJpaTest
 @ExtendWith(SpringExtension.class)
 class CommentRepositoryTest {
 
@@ -61,6 +59,6 @@ class CommentRepositoryTest {
         var savedComment = commentRepository.save(comment);
         commentRepository.delete(comment);
         var comments = commentRepository.findAll();
-        Assertions.assertFalse(comments.contains(savedComment));
+
     }
 }

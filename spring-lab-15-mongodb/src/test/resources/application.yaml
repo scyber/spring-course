@@ -1,24 +1,31 @@
 spring:
-    jpa:
-      hibernate:
-        ddl-auto: none
-    datasource:
-      url: jdbc:h2:mem:testdb
-      initialization-mode: always
     main:
       allow-circular-references: true
       allow-bean-definition-overriding: true
-#    h2:
-#      console:
-#        enabled: true
-#        path: /h2-console
-#        settings:
-#          web-allow-others: true
-#
+    data:
+      mongodb:
+        embedded:
+          version: 5.0.9
+          port: 0
+#        database: library
+#        authentication-database: admin
+#        username: root
+#        password: example
+#        port: 27017
+#        host: localhost
     shell:
       interactive:
         enabled: false
-    logging:
-      level:
-        org:
-          springframework: trace
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.mongock
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: INFO

@@ -1,21 +1,25 @@
+logging:
+  level:
+    root: INFO
 spring:
-    main:
-      allow-circular-references: true
-    datasource:
-      url: jdbc:h2:mem:testdb
-      initialization-mode: never
-    jpa:
-      generate-ddl: true
-      hibernate:
-        ddl-auto: none
-      show-sql: true
-      defer-datasource-initialization: true
-    h2:
-     console:
-       enabled: true
-       path: /h2-console
-       settings:
-         web-allow-others: true
-    shell:
-      interactive:
-        enabled: true
+  main:
+    allow-circular-references: true
+    #allow-bean-definition-overriding: true
+  shell:
+    interactive:
+      enabled: true
+
+  data:
+    mongodb:
+      database: library
+      authentication-database: admin
+      username: root
+      password: example
+      port: 27017
+      host: localhost
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.mongock

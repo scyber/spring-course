@@ -1,26 +1,27 @@
 package ru.otus.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 
-
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "authors")
+@Document(collection = "authors")
+@Getter
+@Setter
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String name;
 
     public Author(String name) {
         this.name = name;
     }
+
 }
