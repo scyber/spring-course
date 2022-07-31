@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class AuthorRepositoryTest {
     private static final String AUTHOR_NAME = "Тестовый Автор";
-    private static final String AUTРOR_FOR_DEL = "Автор на удаление";
+    private static final String AUTHOR_FOR_DEL = "Автор на удаление";
     private static final String AUTHOR_FOR_RENAME = "Автор переименован";
 
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
@@ -65,7 +65,7 @@ class AuthorRepositoryTest {
     @DisplayName("Тестирование удаления автора")
     void testDeleteAuthor(){
         var author = new Author();
-        author.setName(AUTРOR_FOR_DEL);
+        author.setName(AUTHOR_FOR_DEL);
         var authorFromRepo =  authorRepository.save(author);
         authorRepository.deleteById(authorFromRepo.getId());
         var authors = authorRepository.findAll();

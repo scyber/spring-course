@@ -20,9 +20,7 @@ public class Book {
 
     private String title;
 
-
     private List<Author> authors;
-
 
     private List<Genre> genres;
 
