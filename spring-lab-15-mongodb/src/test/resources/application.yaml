@@ -1,0 +1,33 @@
+spring:
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      #embedded:
+      #  version: 5.0.9
+      port: 0
+      database: test
+      #        database: testdb
+      #        authentication-database: admin
+      #        username: root
+      #        password: example
+      #        port: 27017
+      #        host: localhost
+      uri: mongodb://localhost
+  shell:
+    interactive:
+      enabled: false
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.mongock
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: INFO

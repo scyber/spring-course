@@ -1,0 +1,26 @@
+logging:
+  level:
+    root: INFO
+spring:
+  main:
+    allow-circular-references: true
+    #allow-bean-definition-overriding: true
+  shell:
+    interactive:
+      enabled: true
+
+  data:
+    mongodb:
+      database: library
+      authentication-database: admin
+      username: root
+      password: example
+      port: 27017
+      host: localhost
+      #uri: mongodb://localhost
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.mongock
