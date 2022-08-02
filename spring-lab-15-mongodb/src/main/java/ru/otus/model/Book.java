@@ -1,4 +1,4 @@
-package ru.otus.domain;
+package ru.otus.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -10,9 +10,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collation = "books")
-@Getter
-@Setter
+@Document(collection = "books")
+@Data
 public class Book {
 
     @Id

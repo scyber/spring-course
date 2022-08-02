@@ -1,7 +1,7 @@
 package ru.otus.converters;
 
 import org.springframework.stereotype.Component;
-import ru.otus.domain.Book;
+import ru.otus.model.Book;
 
 @Component
 public class BookConverter {

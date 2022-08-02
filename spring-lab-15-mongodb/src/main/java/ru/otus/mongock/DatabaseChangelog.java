@@ -2,34 +2,73 @@ package ru.otus.mongock;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import lombok.val;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import ru.otus.model.Author;
+import ru.otus.model.Book;
+import ru.otus.model.Genre;
 
-@ChangeLog
+import java.util.List;
+
+@ChangeLog(order = "000")
 public class DatabaseChangelog {
 
-    @ChangeSet(order = "001", id = "library", author = "root", runAlways = true)
+    Genre drama;
+    Genre comedy;
+    Genre crime;
+    Genre fantasy;
+
+    Author pushkin;
+    Author jamesChaise;
+    Author ernestHemingway;
+    Author julesVerne;
+    Author levTolstoy;
+
+    @ChangeSet(order = "001", id = "testd", author = "root", runAlways = true)
     public void dropDb(MongoDatabase db) {
         db.drop();
     }
 
-    @ChangeSet(order = "002", id = "1", author = "admin")
-    public void insertTolstoy(MongoDatabase db) {
-        MongoCollection<Document> collection = db.getCollection("authors");
-        var doc = new Document().append("name", "Lev Tolstoy");
-        collection.insertOne(doc);
+    @ChangeSet(order = "002", id = "2", author = "admin", runAlways = true)
+    public void insertBook(MongoTemplate template){
+        drama = new Genre("Drama");
+        comedy = new Genre("Comedy");
+        fantasy = new Genre("Fantasy");
+        crime = new Genre("Crime");
+        val genres = List.of(drama,comedy,crime,fantasy);
+        genres.forEach(g -> template.save(g));
     }
-    @ChangeSet(order = "003", id = "2", author = "admin")
-    public void insertGenre(MongoDatabase db){
-        MongoCollection<Document> collection = db.getCollection("genres");
-        var doc = new Document().append("name", "Drama");
-        collection.insertOne(doc);
+    @ChangeSet(order = "003", id = "3", author = "admin", runAlways = true)
+    public void insertAuthors(MongoTemplate template){
+        levTolstoy = new Author("Лев Толстой");
+        julesVerne = new Author("Jules Verne");
+        ernestHemingway = new Author("Ernest Hemingway");
+        jamesChaise = new Author("James Hadley Chase");
+        pushkin = new Author("Александр Пушкин");
+        val authors = List.of(ernestHemingway,levTolstoy,jamesChaise,julesVerne,pushkin);
+        authors.forEach(a -> template.save(a));
     }
-    @ChangeSet(order = "004", id = "3", author = "admin")
-    public void insertBook(MongoDatabase db){
-        var collection = db.getCollection("books");
-        var doc = new Document().append("title", "Peace and War");
-        collection.insertOne(doc);
+    @ChangeSet(order = "004", id = "4", author = "admin", runAlways = true)
+    public void insertBooks(MongoTemplate template){
+        val oldManAndSea = new Book("The Old Man and The Sea");
+        oldManAndSea.setAuthors(List.of(ernestHemingway));
+        oldManAndSea.setGenres(List.of(drama));
+        template.save(oldManAndSea);
+
+        val theSunAlsoRise = new Book("The Sun Also Rises");
+        theSunAlsoRise.setAuthors(List.of(ernestHemingway));
+        theSunAlsoRise.setGenres(List.of(fantasy));
+        template.save(theSunAlsoRise);
+
+        val journeyToTheEarth = new Book("Journey to the Centre of the Earth");
+        journeyToTheEarth.setAuthors(List.of(julesVerne));
+        journeyToTheEarth.setGenres(List.of(fantasy));
+        template.save(journeyToTheEarth);
+
+        val theWorldInPocket = new Book("The World In My Pocket");
+        theWorldInPocket.setGenres(List.of(crime));
+        theWorldInPocket.setAuthors(List.of(jamesChaise));
+        template.save(theWorldInPocket);
     }
 }

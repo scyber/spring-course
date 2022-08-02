@@ -10,24 +10,22 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MongoDBContainer;
-import ru.otus.domain.Author;
-import ru.otus.domain.Book;
-import ru.otus.domain.Genre;
+import ru.otus.model.Author;
+import ru.otus.model.Book;
+import ru.otus.model.Genre;
 import java.util.List;
+import java.util.Optional;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class BookRepositoryTest {
 
-    private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";
+    private final static String BOOK_TITLE = "ТЕСТОВАЯ КНИГА";
     private final static String AUTHOR_NAME = "ТЕСТОВЫЙ АВТОР";
     private final static String GENRE_NAME = "Тестовый жанр";
-    private final static String BOOK_NAME_TO_UPDATE = "Тестовая книга на обновление";
+    private final static String BOOK_TITLE_TO_UPDATE = "Тестовая книга на обновление";
     private final static String BOOK_NAME_IN_REPO = "Russian modern history";
 
 
@@ -44,8 +42,9 @@ class BookRepositoryTest {
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
     }
+
     @BeforeAll
-    static void setUp(){
+    static void setUp() {
         mongoDBContainer.start();
     }
 
@@ -56,7 +55,7 @@ class BookRepositoryTest {
 
     @Test
     @DisplayName("Тест сохранения и поиска книги")
-    void testSaveBook(){
+    void testSaveBook() {
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Genre genre = new Genre();
@@ -64,46 +63,54 @@ class BookRepositoryTest {
         var savedGenre = genreRepository.save(genre);
         var savedAuthor = authorRepository.save(author);
         Book book = new Book();
-        book.setTitle(BOOK_NAME);
+        book.setTitle(BOOK_TITLE);
         book.setGenres(List.of(savedGenre));
         book.setAuthors(List.of(savedAuthor));
         var savedBook = bookRepository.save(book);
-        System.out.println(savedBook.getId());
-        assertNotNull(savedBook);
+        Assertions.assertEquals(BOOK_TITLE, savedBook.getTitle());
     }
 
     @Test
     @DisplayName("Тест получения сохранения и получения книг")
-    void testGetAllBooks(){
+    void testGetAllBooks() {
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Genre genre = new Genre();
         genre.setName(GENRE_NAME);
         Book book = new Book();
-        book.setTitle(BOOK_NAME);
+        book.setTitle(BOOK_TITLE);
         var savedGenre = genreRepository.save(genre);
         var savedAuthor = authorRepository.save(author);
         book.setGenres(List.of(savedGenre));
         book.setAuthors(List.of(savedAuthor));
         var savedBook = bookRepository.save(book);
         var books = bookRepository.findAll();
-        books.forEach(b -> System.out.println(b.getTitle()));
         Assertions.assertTrue(books.contains(savedBook));
     }
+
     @Test
     @DisplayName("Тест обновления названия книги по Id")
-    void tetUpdateNameById(){
-        var book = bookRepository.findByTitle(BOOK_NAME_IN_REPO).get(0);
-        String id = book.getId();
-        bookRepository.updateBookTitleById(id, BOOK_NAME_TO_UPDATE);
+    void testUpdateNameById() {
+        Author author = new Author();
+        author.setName(AUTHOR_NAME);
+        Genre genre = new Genre();
+        genre.setName(GENRE_NAME);
+        Book book = new Book();
+        book.setTitle(BOOK_TITLE);
+        var savedGenre = genreRepository.save(genre);
+        var savedAuthor = authorRepository.save(author);
+        var savedBook = bookRepository.save(book);
+        String id = savedBook.getId();
+        bookRepository.updateBookTitleById(id, BOOK_TITLE_TO_UPDATE);
         var updatedBook = bookRepository.findById(id).get();
-        Assertions.assertEquals(BOOK_NAME_TO_UPDATE, updatedBook.getTitle());
+        Assertions.assertEquals(BOOK_TITLE_TO_UPDATE, updatedBook.getTitle());
     }
+
     @Test
     @DisplayName("Тест удаления книги")
-    void testDeleteBook(){
+    void testDeleteBook() {
         var book = new Book();
-        book.setTitle(BOOK_NAME);
+        book.setTitle(BOOK_TITLE);
         var author = new Author();
         author.setName(AUTHOR_NAME);
         var genre = new Genre();
@@ -113,7 +120,7 @@ class BookRepositoryTest {
         var savedBook = bookRepository.save(book);
         var id = savedBook.getId();
         bookRepository.delete(savedBook);
-        var books = bookRepository.findAll();
-        Assertions.assertFalse(books.contains(savedBook));
+        var optionalBook = bookRepository.findById(id);
+        Assertions.assertEquals(Optional.empty(), optionalBook);
     }
 }

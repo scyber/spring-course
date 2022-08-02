@@ -2,12 +2,10 @@ package ru.otus.controllers;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.domain.Comment;
-import ru.otus.domain.Genre;
+import ru.otus.model.Genre;
 import ru.otus.services.BookService;
 import ru.otus.services.IOService;
 
-import java.util.List;
 
 @ShellComponent
 public class LibraryController {
@@ -47,12 +45,7 @@ public class LibraryController {
         ioService.outputString("Book with id " + bookId + " is deleted ");
     }
 
-    @ShellMethod(value = "update Book Name By Id", key = {"upd_b_by_id"})
-    public void updateNameById(){
-        String bookId = ioService.readStringWithPrompt("Please enter book id to update");
-        String title = ioService.readStringWithPrompt("Please enter new Book Name");
-        bookService.updateBookNameById(bookId,title);
-    }
+
     @ShellMethod(value = "show All Authors", key = {"show_a"})
     public void showAllAuthors(){
         bookService.getAllAuthors().forEach(ioService::outputString);

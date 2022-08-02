@@ -1,25 +1,29 @@
 package ru.otus.services;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
-import ru.otus.domain.Author;
-import ru.otus.domain.Book;
-import ru.otus.domain.Genre;
+import ru.otus.model.Author;
+import ru.otus.model.Book;
+import ru.otus.model.Genre;
 import ru.otus.repository.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@Disabled
+@ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class BookServiceTest {
     @MockBean
     private BookRepository bookRepository;
@@ -45,39 +49,58 @@ class BookServiceTest {
     private static final String BOOK_NAME_FOR_UPDATE = "Update Book Name";
     private static final String GENRE_NAME = "Тестовый жанр Сервиса";
 
+    private static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
+
+    @BeforeAll
+    static void setUp() {
+        mongoDBContainer.start();
+    }
+
+    @AfterAll
+    static void clean() {
+        mongoDBContainer.stop();
+    }
 
     @Test
     @DisplayName("Тестирование добавление Авторов")
-    void testAuthorAdd(){
+    void testAuthorAdd() {
         bookService.addAuthor(AUTHOR_NAME);
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Mockito.verify(authorRepository).save(author);
     }
+
     @Test
     @DisplayName("Тестирование получения всех авторов")
-    void testGetAllAuthors(){
+    void testGetAllAuthors() {
         bookService.getAllAuthors();
         Mockito.verify(authorRepository).findAll();
     }
 
     @Test
     @DisplayName("Тестирование получения всех жанров")
-    void testGetAllGenres(){
+    void testGetAllGenres() {
         bookService.getAllGenres();
         Mockito.verify(genreRepository).findAll();
     }
+
     @Test
     @DisplayName("Тестирование вызовов сервиса поиска всех книг библиотеки")
-    void testFindAllBooks(){
+    void testFindAllBooks() {
         var books = new ArrayList<Book>();
         Mockito.when(bookRepository.findAll()).thenReturn(books);
         bookService.getAllBooks();
         Mockito.verify(bookRepository).findAll();
     }
+
     @Test
     @DisplayName("Тестирование вызова поиска книги по ID")
-    void testFindBookById(){
+    void testFindBookById() {
         Book retBook = new Book();
         retBook.setId(BOOK_ID);
         Author author = new Author();
@@ -90,15 +113,17 @@ class BookServiceTest {
         bookService.getBookById(BOOK_ID);
         Mockito.verify(bookRepository).findById(BOOK_ID);
     }
+
     @Test
     @DisplayName("Тестирование удаления книги")
-    void testDeleteBook(){
+    void testDeleteBook() {
         bookService.deleteBook(BOOK_ID);
         Mockito.verify(bookRepository).deleteById(BOOK_ID);
     }
+
     @Test
     @DisplayName("Тестирование добавления книги")
-    void testAddBookByName(){
+    void testAddBookByName() {
         var author = new Author();
         author.setName(AUTHOR_NAME);
         var genre = new Genre();
@@ -109,13 +134,14 @@ class BookServiceTest {
         book.setTitle(BOOK_NAME);
         book.setAuthors(List.of(author));
         book.setGenres(List.of(genre));
-        bookService.addBook(BOOK_NAME,AUTHOR_ID,GENRE_ID);
+        bookService.addBook(BOOK_NAME, AUTHOR_ID, GENRE_ID);
         Mockito.verify(bookRepository).save(book);
     }
+
     @Test
     @DisplayName("Тестирование обновления названия книги по идентификатору")
-    void testUpdateBookById(){
-        bookService.updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
-        Mockito.verify(bookRepository).updateBookTitleById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
+    void testUpdateBookById() {
+        bookService.updateBookNameById(BOOK_ID, BOOK_NAME_FOR_UPDATE);
+        Mockito.verify(bookRepository).updateBookTitleById(BOOK_ID, BOOK_NAME_FOR_UPDATE);
     }
 }

@@ -1,4 +1,4 @@
-package ru.otus.domain;
+package ru.otus.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -9,12 +9,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "comments")
-@Getter
-@Setter
+@Data
 public class Comment {
 
     @Id
-    private long id;
+    private String id;
 
     @DBRef
     private Book book;

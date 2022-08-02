@@ -1,9 +1,9 @@
 package ru.otus.services;
 
-import ru.otus.domain.Author;
-import ru.otus.domain.Book;
-import ru.otus.domain.Comment;
-import ru.otus.domain.Genre;
+import ru.otus.model.Author;
+import ru.otus.model.Book;
+import ru.otus.model.Comment;
+import ru.otus.model.Genre;
 import java.util.List;
 
 

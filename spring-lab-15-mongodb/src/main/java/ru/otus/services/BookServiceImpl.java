@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.converters.AuthorConverter;
 import ru.otus.converters.BookConverter;
 import ru.otus.converters.GenreConverter;
-import ru.otus.domain.Author;
-import ru.otus.domain.Book;
-import ru.otus.domain.Comment;
-import ru.otus.domain.Genre;
+import ru.otus.model.Author;
+import ru.otus.model.Book;
+import ru.otus.model.Comment;
+import ru.otus.model.Genre;
 import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
@@ -133,8 +133,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Comment> findCommentsByBookId(String bookId) {
-        var book = bookRepository.findById(bookId).get();
-        return commentRepository.findByBook(book);
+        return commentRepository.findByBookId(bookId);
     }
 
     @Override

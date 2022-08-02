@@ -3,25 +3,15 @@ package ru.otus.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import ru.otus.domain.Book;
-import ru.otus.domain.Comment;
+import ru.otus.model.Comment;
 import java.util.List;
-import java.util.Optional;
 
-public interface CommentRepository extends MongoRepository<Comment,String> {
 
-    void deleteById(@Param("id") String id);
+public interface CommentRepository extends MongoRepository<Comment,String>, CustomCommentRepository {
 
-    Comment save(Comment domain);
 
-    Optional<Comment> findById(@Param("id") String id);
+    @Query(value = "{'book.id' : ?0 }")
+    List<Comment> findByBookId(String bookId);
 
-    @Query("select c from Comment c where c.book = :book ")
-    List<Comment> findByBook(@Param("book") Book book);
-
-    @Query("update Comment c set c.title = :title where c.id = :id")
-    void updateCommentById(@Param("id") String id, @Param("title") String title);
 
 }

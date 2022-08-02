@@ -1,21 +1,23 @@
 spring:
-    main:
-      allow-circular-references: true
-      allow-bean-definition-overriding: true
-    data:
-      mongodb:
-        embedded:
-          version: 5.0.9
-          port: 0
-#        database: library
-#        authentication-database: admin
-#        username: root
-#        password: example
-#        port: 27017
-#        host: localhost
-    shell:
-      interactive:
-        enabled: false
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      #embedded:
+      #  version: 5.0.9
+      port: 0
+      database: test
+      #        database: testdb
+      #        authentication-database: admin
+      #        username: root
+      #        password: example
+      #        port: 27017
+      #        host: localhost
+      uri: mongodb://localhost
+  shell:
+    interactive:
+      enabled: false
 mongock:
   runner-type: "ApplicationRunner" # default
   #runner-type: "InitializingBean"

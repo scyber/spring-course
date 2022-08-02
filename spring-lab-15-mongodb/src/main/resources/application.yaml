@@ -17,6 +17,7 @@ spring:
       password: example
       port: 27017
       host: localhost
+      #uri: mongodb://localhost
 
 mongock:
   runner-type: "ApplicationRunner" # default
