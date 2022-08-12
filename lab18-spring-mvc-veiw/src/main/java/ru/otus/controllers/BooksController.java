@@ -9,9 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.domain.Author;
-import ru.otus.domain.AuthorsMapper;
-import ru.otus.domain.Book;
+import org.springframework.web.servlet.ModelAndView;
+import ru.otus.domain.*;
 import ru.otus.dto.BookDto;
 import ru.otus.exeptions.FindItemExecption;
 import ru.otus.repository.AuthorRepository;
@@ -30,8 +29,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @RequestMapping("/")
 public class BooksController {
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
     private final BookService bookService;
 
     @GetMapping("/list")
@@ -59,7 +56,7 @@ public class BooksController {
 
     @GetMapping("/authors")
     public String authors(Model model) {
-        List<Author> authors = authorRepository.findAll();
+        List<Author> authors = bookService.getAllAuthors();
         model.addAttribute("authors", authors);
         return "authors";
     }
@@ -71,38 +68,96 @@ public class BooksController {
             return "edit";
         }
         var objBook = book.toDomainObject();
-        bookService.updateBookNameById(objBook.getId(),objBook.getTitle());
+        bookService.updateBookNameById(objBook.getId(), objBook.getTitle());
         return "redirect:/list";
     }
 
     @GetMapping("/edit")
     public String editPage(Model model, @RequestParam("id") Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new FindItemExecption("book not found with id " + id));
+        Book book = bookService.getBookById(id);
         List<Author> authors = bookService.getAllAuthors();
+        var genres = bookService.getAllGenres();
         var authorsMapper = new AuthorsMapper();
+        var genreesMapper = new GenresMapper();
         model.addAttribute("authorsMapper", authorsMapper);
+        model.addAttribute("genresMapper", genreesMapper);
         model.addAttribute("book", book);
-        model.addAttribute("authors",authors);
+        model.addAttribute("authors", authors);
+        model.addAttribute("genres", genres);
         return "edit";
     }
-    @PostMapping("/addauthor")
-    public String addAuthorToBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId){
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
-        var authors = book.getAuthors();
-        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
-        authors.add(author);
-        book.setAuthors(authors);
-        bookRepository.save(book);
+
+    @PostMapping("/addAuthorForBook")
+    public String addAuthorToBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
+        bookService.addAuthorForBook(bookId, authorId);
         return "redirect:/list";
     }
-    @PostMapping("/deleteauthor")
-    public String deleteAuthorFromBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId){
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
-        var authors = book.getAuthors();
-        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
-        authors.remove(author);
-        bookRepository.save(book);
+
+    @PostMapping("/deleteAuthorFromBook")
+    public String deleteAuthorFromBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
+        bookService.deleteAuthorFromBook(bookId, authorId);
         return "redirect:/list";
     }
+
+    @PostMapping("/addGenreForBook")
+    public String addGenreToBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
+        bookService.addGenreForBook(bookId, genreId);
+        return "redirect:/list";
+    }
+
+    @PostMapping("/deleteGenreFromBook")
+    public String deleteGenreFromBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
+        bookService.deleteGenreFromBook(bookId, genreId);
+        return "redirect:/list";
+    }
+
+    @GetMapping("/editBooks")
+    public String editBookList(Model model, @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(3);
+        Page<Book> bookPage = bookService.findPage(PageRequest.of(currentPage - 1, pageSize));
+        model.addAttribute("bookPage", bookPage);
+        int totalPages = bookPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "editBooks";
+    }
+
+    @PostMapping("/deleteBook")
+    public String deleteBook(Model model, @RequestParam("id") Long id) {
+        bookService.deleteBook(id);
+        return "redirect:/editBooks";
+    }
+
+    @GetMapping("/addBook")
+    public String getAddBook(Model model) {
+        var authors = bookService.getAllAuthors();
+        var genres = bookService.getAllGenres();
+        var bookMapper = new BookMapper();
+        model.addAttribute("authors", authors);
+        model.addAttribute("genres", genres);
+        model.addAttribute("bookMapper", bookMapper);
+        return "addBook";
+    }
+
+    @PostMapping("/addBook")
+    public String postAddBook(Model model, @RequestParam("title") String title,
+                              @RequestParam("authorId") Long authorId, @RequestParam("genreId") Long genreId) {
+        bookService.addBook(title, authorId, genreId);
+        return "redirect:/editBooks";
+    }
+
+    @GetMapping("/viewComments")
+    public String viewComments(Model model, @RequestParam("id") Long id){
+        var comments = bookService.findCommentsByBookId(id);
+        model.addAttribute("comments", comments);
+        return "viewComments";
+    }
+
 
 }

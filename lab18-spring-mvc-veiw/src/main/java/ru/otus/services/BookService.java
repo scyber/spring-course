@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface BookService {
     Page<Book> findPage(Pageable pageable);
-    List<String> getAllBooks();
-    String getBookById(Long id);
+    List<Book> getAllBooks();
+    Book getBookById(Long id);
     Book addBook(String title, Long authorId, Long genreId );
     void deleteBook(Long id);
     void updateBookNameById(Long id, String name);
     List<Author> getAllAuthors();
     Author addAuthor(String name);
     void deleteAuthor(Long authorId);
-    List<String> getAllGenres();
+    List<Genre> getAllGenres();
     Genre addGenre(String genreName);
     void deleteGenre(Long genreId);
     Comment addComment(Long bookId, String text);
@@ -31,4 +31,7 @@ public interface BookService {
 
     void deleteAuthorFromBook(Long bookId, Long authorId);
 
+    void addGenreForBook(Long bookId, Long genreId);
+
+    void deleteGenreFromBook(Long bookId, Long genreId);
 }

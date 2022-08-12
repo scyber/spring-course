@@ -23,23 +23,17 @@
         }
 
 
-
-
-
-
-
-
-
-
-
     </style>
 
 </head>
 
 <body>
-<form id="edit-form" , action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
+<div>
+    <div><a href="#" th:href="@{/list(lang=en)}" th:text="#{en-lang-switch-button-caption}">EN</a></div>
+    <div><a href="#" th:href="@{/list(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">RU</a></div>
+</div>
+<form id="edit-form", action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
     <h3 th:text="#{book-form-header}">Book Info:</h3>
-
 
     <div class="edit-book">
         <table id="table-book">
@@ -48,6 +42,7 @@
                 <th>Title</th>
                 <th>Authors</th>
                 <th>Genres</th>
+                <th>Comments</th>
             </tr>
             </thead>
             <tbody>
@@ -72,13 +67,15 @@
                         </p>
                     </div>
                 </td>
+                <td th:href="@{/editComments/(id=${book.id})}">
+                    <a href="edit-comments.hml" th:text="#{edit-comments-book}">Edit Comments of the Book</a>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
 
-
-    </p>
+    <br/>
     <div class="row">
         <button type="submit" th:text="#{save-button-caption}" th:method="post">Save</button>
         <a href="list.html" th:href="@{/list}">
@@ -86,20 +83,28 @@
         </a>
     </div>
 </form>
-<p/>
+<br/>
 <div th:each="author : ${book.authors}">
-    <form name="delete-author" th:action="@{/deleteauthor(bookId=${book.id},authorId=${author.id})}" th:method="post">
+    <form name="delete-author" th:action="@{/deleteAuthorFromBook(bookId=${book.id},authorId=${author.id})}" th:method="post">
         <div th:text="${author.name}" style="float:left">Author</div>
         <div>
             <button type="submit">delete</button>
         </div>
     </form>
 </div>
-<p/>
-
+<br/>
+<div th:each="genre : ${book.genres}">
+    <form name="delete-genre" th:action="@{/deleteGenreFromBook(bookId=${book.id},genreId=${genre.id})}" th:method="post">
+        <div th:text="${genre.name}" style="float:left">Genre</div>
+        <div>
+            <button type="submit">delete</button>
+        </div>
+    </form>
+</div>
+<br/>
 
 <div>
-    <form id="add-author" th:object="${authorsMapper}" th:method="post" th:action="@{/addauthor(bookId=${book.id})}">
+    <form id="add-author" th:object="${authorsMapper}" th:method="post" th:action="@{/addAuthorForBook(bookId=${book.id})}">
         <select th:field="*{authorId}" form="add-author">
             <option th:each="author, rowStat : ${authors}" th:text="${author.name}" th:value="${author.id}">Author for
                 Add
@@ -109,7 +114,19 @@
             <button type="submit" th:value="${authorsMapper}">add</button>
         </div>
     </form>
-
+</div>
+<br/>
+<div>
+    <form id="add-genre" th:object="${genresMapper}" th:method="post" th:action="@{/addGenreForBook(bookId=${book.id})}">
+        <select th:field="*{genreId}" form="add-genre">
+            <option th:each="genre, rowStat : ${genres}" th:text="${genre.name}" th:value="${genre.id}">Genre for
+                Add
+            </option>
+        </select>
+        <div style="float:left">
+            <button type="submit" th:value="${genresMapper}">add</button>
+        </div>
+    </form>
 </div>
 
 

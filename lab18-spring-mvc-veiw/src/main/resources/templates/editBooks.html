@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book List</title>
+    <style type="text/css">
+       body {
+            padding: 50px;
+        }
+        .edit-form {
+            border: 1px solid steelblue;
+            border-collapse: collapse;
+        }
+        .edit-book tr td,th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        h3 {
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div><a href="#" th:href="@{/list(lang=en)}" th:text="#{en-lang-switch-button-caption}">EN</a></div>
+    <div><a href="#" th:href="@{/list(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">RU</a></div>
+</div>
+
+<h3 th:text="#{books-form-header}">Books</h3>
+<div class="edit-book">
+    <table id="table-book">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Genres</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book, iStat : ${bookPage.content}">
+            <td>
+                <p th:text="${book.title}">Sample book</p>
+            </td>
+            <td>
+                <div th:each="author, itemStat : ${book.authors}">
+                    <p th:text="${author.name}">
+                        Author Author2
+                    </p>
+                </div>
+            </td>
+            <td>
+                <div th:each="genre, itemStat  : ${book.genres}">
+                    <p th:text="${genre.name}">
+                        Comedy Drama
+                    </p>
+                </div>
+            </td>
+            <td>
+                <form id="edit-form" , action="edit.html" th:action="@{/deleteBook(id=${book.id})}" th:method="post"
+                      th:object="${book}">
+                    <button type="submit" th:text="#{delete-button-caption}" th:method="post">delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:if="${bookPage.totalPages > 0}" class="pagination" th:each="pageNumber : ${pageNumbers}" style="float:left">
+    <a th:href="@{/editBooks(size=${bookPage.size}, page=${pageNumber})}" th:text=${pageNumber}
+       th:class="${pageNumber==bookPage.number + 1} ? active" style="margin:5px"></a>
+</div>
+<br/>
+<br/>
+<div class="row">
+    <a href="addBook.html" th:href="@{/addBook}">
+        <button type="button" th:text="#{add-button-caption}">add</button>
+    </a>
+    <a href="list.html" th:href="@{/list}">
+        <button type="button" th:text="#{cancel-button-caption}">cancel</button>
+    </a>
+</div>
+
+</body>
+</html>

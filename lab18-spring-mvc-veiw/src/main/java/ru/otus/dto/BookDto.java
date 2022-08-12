@@ -1,7 +1,5 @@
 package ru.otus.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;

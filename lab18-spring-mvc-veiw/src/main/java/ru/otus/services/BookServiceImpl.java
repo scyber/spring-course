@@ -14,6 +14,7 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
+import ru.otus.exeptions.FindItemExecption;
 import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
@@ -68,15 +69,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getAllBooks() {
-        return bookRepository.findAll().stream().map(this.bookConverter::convert).collect(Collectors.toList());
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
     @Override
     @Transactional
     public Book addBook(String title, Long authorId, Long genreId) {
-        Author author = authorRepository.findById(authorId).orElseThrow();
-        Genre genre = genreRepository.findById(genreId).orElseThrow();
+        Author author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("author not found with id " + authorId));
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("genre not found with id " + genreId));
         Book book = new Book();
         book.setTitle(title);
         book.setAuthors(List.of(author));
@@ -86,8 +87,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public String getBookById(Long bookId) {
-        return bookConverter.convert(bookRepository.findById(bookId).orElseThrow());
+    public Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
     }
 
     @Override
@@ -125,8 +126,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getAllGenres() {
-        return genreRepository.findAll().stream().map(genreConverter::convert).collect(Collectors.toList());
+    public List<Genre> getAllGenres() {
+        return genreRepository.findAll();
     }
 
 
@@ -147,7 +148,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Comment addComment(Long bookId, String text) {
-        var book = bookRepository.findById(bookId).get();
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
         var commment = new Comment();
         commment.setBook(book);
         commment.setTitle(text);
@@ -157,7 +158,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Comment> findCommentsByBookId(Long bookId) {
-        var book = bookRepository.findById(bookId).get();
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
         return commentRepository.findByBook(book);
     }
 
@@ -174,13 +175,45 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void addAuthorForBook(Long bookId, Long authorId) {
-
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var authors = book.getAuthors();
+        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
+        authors.add(author);
+        book.setAuthors(authors);
+        bookRepository.save(book);
     }
 
     @Override
+    @Transactional
     public void deleteAuthorFromBook(Long bookId, Long authorId) {
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var authors = book.getAuthors();
+        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
+        authors.remove(author);
+        bookRepository.save(book);
+    }
 
+    @Override
+    @Transactional
+    public void addGenreForBook(Long bookId, Long genreId) {
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var genres = book.getGenres();
+        var genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("Could not find Genre with id" + genreId));
+        genres.add(genre);
+        book.setGenres(genres);
+        bookRepository.save(book);
+    }
+
+    @Override
+    public void deleteGenreFromBook(Long bookId, Long genreId) {
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var genres = book.getGenres();
+        var genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("Could not find Genre with id" + genreId));
+        genres.remove(genre);
+        book.setGenres(genres);
+        bookRepository.save(book);
     }
 
 
