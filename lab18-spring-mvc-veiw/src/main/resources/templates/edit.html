@@ -4,21 +4,16 @@
     <meta charset="UTF-8">
     <title>Edit Book</title>
     <style type="text/css">
-        body {
+       body {
             padding: 50px;
-            }
-
-        label {
-            display: inline-block;
-            width: 100px;
         }
-
-        input:read-only {
-            background: lightgray;
+        .edit-form {
+            border: 1px solid steelblue;
+            border-collapse: collapse;
         }
-
-        .row {
-            margin-top: 10px;
+        .edit-book tr td,th {
+            padding: 5px;
+            border: 1px solid steelblue;
         }
 
         h3 {
@@ -27,37 +22,13 @@
             padding-left: 30px;
         }
 
-        .errors {
-           color: red;
-        }
-        .edit-book{
-            border: 1px solid steelblue;
-            width: 300px;
-            border-collapse: collapse;
-        }
-        .edit-book tr td, th {
-            padding: 5px;
-            border: 1px solid steelblue;
-        }
-        .edit-book td:last-child, td:first-child {
-            width: 50px;
-        }
-
-        .book_items {
-            display: flex;
-            flex-direction: row
-        }
 
 
 
 
-    </style>
-    <style type="text/css" th:inline="text">
-        [[h3]] {
-            background-repeat: no-repeat;
-            padding: 2px;
-            padding-left: 30px;
-        }
+
+
+
 
 
 
@@ -66,66 +37,81 @@
 </head>
 
 <body>
-<form id="edit-form", action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
+<form id="edit-form" , action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
     <h3 th:text="#{book-form-header}">Book Info:</h3>
 
-    <div class="row">
-        <label for="id-input">ID:</label>
-        <input id="id-input" type="text" readonly="readonly" th:value="${book.id}" value="1"/>
-    </div>
-    <div class="row">
-        <label for="book-title-input">Title:</label>
-        <input id="book-title-input" name="title" type="text" th:value="${book.title}" value="Sample Book" />
-        <div class="errors" th:if="${#fields.hasErrors('title')}" th:erros="${book.title}">Wrong title error</div>
-    </div>
-    <div class="row">
-        <label for="book-authors-input">Authors:</label>
-        <input id="book-authors-input" name="authors" type="hidden" th:value="${book.authors}">
-    </div>
-    <div class="row">
-        <label for="book-genres-input">Genres:</label>
-        <input id="book-genres-input" name="genres" type="hidden" th:value="${book.genres}">
+
+    <div class="edit-book">
+        <table id="table-book">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Authors</th>
+                <th>Genres</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input id="book-title-input" name="title" type="text" th:value="${book.title}" value="Sample book"/>
+                    <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="${book.title}">Wrong book title
+                        error
+                    </div>
+                </td>
+                <td>
+                    <div th:each="author, itemStat : ${book.authors}">
+                        <p th:text="${author.name}">
+                            Author Author2
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div th:each="genre, itemStat  : ${book.genres}">
+                        <p th:text="${genre.name}">
+                            Comedy Drama
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
-<!--        <div class="edit-book">-->
-<!--            <table id="edit-book">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Title</th>-->
-<!--                    <th>Authors</th>-->
-<!--                    <th>Genres</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                        <input id="book-title-input" title="title" type="text" th:value="${book.title}" value="Sample book"/>-->
-<!--                        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="${book.title}">Wrong book title error</div>-->
-<!--                    </td>-->
-<!--                    <td th:each="author : ${book.authors}">-->
-<!--                        <p th:text="${author.name}">John Doe</p>-->
-<!--                    </td>-->
-<!--                    <td th:each="genre : ${book.genres}">-->
-<!--                        <p th:text="${genre.name}">Comedy</p>-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--                <td/>-->
-<!--                <td>-->
-<!--                    <button id="edit-authors">edit</button>-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <button id="edit-genres">edit</button>-->
-<!--                </td>-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
 
+    </p>
     <div class="row">
-        <button type="submit" th:text="#{save-button-caption}">Save</button>
-        <a href="list.html" th:href="@{/list}"><button type="button" th:text="#{cancel-button-caption}">Cancel</button>
+        <button type="submit" th:text="#{save-button-caption}" th:method="post">Save</button>
+        <a href="list.html" th:href="@{/list}">
+            <button type="button" th:text="#{cancel-button-caption}">Cancel</button>
         </a>
     </div>
 </form>
+<p/>
+<div th:each="author : ${book.authors}">
+    <form name="delete-author" th:action="@{/deleteauthor(bookId=${book.id},authorId=${author.id})}" th:method="post">
+        <div th:text="${author.name}" style="float:left">Author</div>
+        <div>
+            <button type="submit">delete</button>
+        </div>
+    </form>
+</div>
+<p/>
+
+
+<div>
+    <form id="add-author" th:object="${authorsMapper}" th:method="post" th:action="@{/addauthor(bookId=${book.id})}">
+        <select th:field="*{authorId}" form="add-author">
+            <option th:each="author, rowStat : ${authors}" th:text="${author.name}" th:value="${author.id}">Author for
+                Add
+            </option>
+        </select>
+        <div style="float:left">
+            <button type="submit" th:value="${authorsMapper}">add</button>
+        </div>
+    </form>
+
+</div>
+
 
 </body>
 </html>

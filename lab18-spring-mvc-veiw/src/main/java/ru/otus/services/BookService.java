@@ -16,7 +16,7 @@ public interface BookService {
     Book addBook(String title, Long authorId, Long genreId );
     void deleteBook(Long id);
     void updateBookNameById(Long id, String name);
-    List<String> getAllAuthors();
+    List<Author> getAllAuthors();
     Author addAuthor(String name);
     void deleteAuthor(Long authorId);
     List<String> getAllGenres();
@@ -26,4 +26,9 @@ public interface BookService {
     List<Comment> findCommentsByBookId(Long bookId);
     void deleteCommentById(Long commentId);
     void updateCommentById(Long commentId, String text);
+
+    void addAuthorForBook(Long bookId, Long authorId);
+
+    void deleteAuthorFromBook(Long bookId, Long authorId);
+
 }

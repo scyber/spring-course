@@ -20,7 +20,6 @@
             width: 50px;
         }
         h3 {
-            background-image: url("../static/listmark.png");
             background-repeat: no-repeat;
             padding: 2px;
             padding-left: 30px;
@@ -61,11 +60,15 @@
     <tr th:each="book, iStat : ${bookPage.content}">
         <td th:text="${book.id}">1</td>
         <td ><a th:text="${book.title}" th:href="@{/edit/(id=${book.id})}" href="Edit Sample Book">Sample Book</a></td>
-        <td th:each="author : *{book.authors}">
-            <p th:text="*{author.name}">John Doe</p>
+        <td>
+            <div th:each="author : *{book.authors}">
+                <p th:text="*{author.name}">John Doe</p>
+            </div>
         </td>
-        <td th:each="genre: *{book.genres}" >
-            <p th:text="*{genre.name}">Comedy</p>
+        <td>
+            <div th:each="genre: *{book.genres}">
+                <p th:text="*{genre.name}">Comedy</p>
+            </div>
         </td>
     </tr>
     </tbody>
@@ -75,26 +78,5 @@
 </div>
 <p/>
 
-
-<!--<table class="books">-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        <th>Title</th>-->
-<!--        <th>Authors</th>-->
-<!--        <th>Genre</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr th:each="book : ${books}">-->
-<!--        <td th:text="*{book.title}" >Sample Book</td>-->
-<!--            <td th:each="author : *{book.authors}">-->
-<!--                <p th:text="*{author.name}">John Doe</p>-->
-<!--            </td>-->
-<!--        <td th:each="genre: *{book.genres}" >-->
-<!--            <p th:text="*{genre.name}">Comedy</p>-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
 </body>
 </html>

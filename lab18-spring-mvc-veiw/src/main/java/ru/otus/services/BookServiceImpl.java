@@ -104,8 +104,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getAllAuthors() {
-        return authorRepository.findAll().stream().map(authorConverter::convert).collect(Collectors.toList());
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
     }
 
     @Override
@@ -171,6 +171,16 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void updateCommentById(Long commentId, String text) {
         commentRepository.updateCommentById(commentId, text);
+    }
+
+    @Override
+    public void addAuthorForBook(Long bookId, Long authorId) {
+
+    }
+
+    @Override
+    public void deleteAuthorFromBook(Long bookId, Long authorId) {
+
     }
 
 

@@ -7,6 +7,7 @@ import ru.otus.domain.Genre;
 import ru.otus.services.BookService;
 import ru.otus.services.IOService;
 
+import java.util.Collections;
 import java.util.List;
 
 @ShellComponent
@@ -55,7 +56,7 @@ public class LibraryController {
     }
     @ShellMethod(value = "show All Authors", key = {"show_authors"})
     public void showAllAuthors(){
-        bookService.getAllAuthors().forEach(ioService::outputString);
+        bookService.getAllAuthors().stream().map(a -> a.getName()).forEach(ioService::outputString);
     }
 
     @ShellMethod(value = "add Author ", key = {"add_a"})
