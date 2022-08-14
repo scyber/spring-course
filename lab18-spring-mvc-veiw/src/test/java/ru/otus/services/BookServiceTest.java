@@ -1,16 +1,12 @@
 package ru.otus.services;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.converters.AuthorConverter;
-import ru.otus.converters.BookConverter;
-import ru.otus.converters.GenreConverter;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -31,12 +27,6 @@ class BookServiceTest {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private GenreConverter genreConverter;
-    @Autowired
-    private BookConverter bookConverter;
-    @Autowired
-    private AuthorConverter authorConverter;
     private static final long BOOK_ID = 1L;
     private static final long AUTHOR_ID = 1L;
     private static final long GENRE_ID = 1L;

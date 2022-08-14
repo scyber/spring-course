@@ -5,11 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.converters.AuthorConverter;
-import ru.otus.converters.BookConverter;
-import ru.otus.converters.GenreConverter;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -19,10 +15,9 @@ import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
-
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Component
 public class BookServiceImpl implements BookService {
@@ -32,20 +27,13 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
 
     private final CommentRepository commentRepository;
-    private final GenreConverter genreConverter;
-    private final BookConverter bookConverter;
-    private final AuthorConverter authorConverter;
 
     public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-                           GenreRepository genreRepository, CommentRepository commentRepository,
-                           BookConverter bookConverter, GenreConverter genreConverter, AuthorConverter authorConverter) {
+                           GenreRepository genreRepository, CommentRepository commentRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
         this.commentRepository = commentRepository;
-        this.genreConverter = genreConverter;
-        this.bookConverter = bookConverter;
-        this.authorConverter = authorConverter;
     }
 
 

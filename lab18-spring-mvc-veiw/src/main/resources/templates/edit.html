@@ -31,6 +31,7 @@
 <div>
     <div><a href="#" th:href="@{/list(lang=en)}" th:text="#{en-lang-switch-button-caption}">EN</a></div>
     <div><a href="#" th:href="@{/list(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">RU</a></div>
+    <div><a href="list.html" th:href="@{/list}" th:text="#{view-books-list}">Book List</a></div>
 </div>
 <form id="edit-form", action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
     <h3 th:text="#{book-form-header}">Book Info:</h3>
@@ -67,8 +68,8 @@
                         </p>
                     </div>
                 </td>
-                <td th:href="@{/editComments/(id=${book.id})}">
-                    <a href="edit-comments.hml" th:text="#{edit-comments-book}">Edit Comments of the Book</a>
+                <td>
+                    <a href="editComments" th:href="@{/editComments/(id=${book.id})}" th:text="#{edit-comments-book}">Edit Comments of the Book</a>
                 </td>
             </tr>
             </tbody>
@@ -97,7 +98,7 @@
     <form name="delete-genre" th:action="@{/deleteGenreFromBook(bookId=${book.id},genreId=${genre.id})}" th:method="post">
         <div th:text="${genre.name}" style="float:left">Genre</div>
         <div>
-            <button type="submit">delete</button>
+            <button type="submit" th:text="#{delete}">delete</button>
         </div>
     </form>
 </div>
@@ -111,7 +112,7 @@
             </option>
         </select>
         <div style="float:left">
-            <button type="submit" th:value="${authorsMapper}">add</button>
+            <button type="submit" th:value="${authorsMapper}" th:text="#{add-author}">add</button>
         </div>
     </form>
 </div>
@@ -124,7 +125,7 @@
             </option>
         </select>
         <div style="float:left">
-            <button type="submit" th:value="${genresMapper}">add</button>
+            <button type="submit" th:value="${genresMapper}" th:text="#{add-genre}">add</button>
         </div>
     </form>
 </div>

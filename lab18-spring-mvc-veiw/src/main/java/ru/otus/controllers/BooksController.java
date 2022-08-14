@@ -1,27 +1,21 @@
 package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.hql.spi.id.local.LocalTemporaryTableBulkIdStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.otus.domain.*;
 import ru.otus.dto.BookDto;
-import ru.otus.exeptions.FindItemExecption;
-import ru.otus.repository.AuthorRepository;
-import ru.otus.repository.BookRepository;
 import ru.otus.services.BookService;
-
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -88,27 +82,31 @@ public class BooksController {
     }
 
     @PostMapping("/addAuthorForBook")
-    public String addAuthorToBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
+    public ModelAndView addAuthorToBook(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
         bookService.addAuthorForBook(bookId, authorId);
-        return "redirect:/list";
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/edit", model);
     }
 
     @PostMapping("/deleteAuthorFromBook")
-    public String deleteAuthorFromBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
+    public ModelAndView deleteAuthorFromBook(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("authorId") Long authorId) {
         bookService.deleteAuthorFromBook(bookId, authorId);
-        return "redirect:/list";
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/edit", model);
     }
 
     @PostMapping("/addGenreForBook")
-    public String addGenreToBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
+    public ModelAndView addGenreToBook(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
         bookService.addGenreForBook(bookId, genreId);
-        return "redirect:/list";
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/edit", model);
     }
 
     @PostMapping("/deleteGenreFromBook")
-    public String deleteGenreFromBook(Model model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
+    public ModelAndView deleteGenreFromBook(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("genreId") Long genreId) {
         bookService.deleteGenreFromBook(bookId, genreId);
-        return "redirect:/list";
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/edit", model);
     }
 
     @GetMapping("/editBooks")
@@ -153,10 +151,38 @@ public class BooksController {
     }
 
     @GetMapping("/viewComments")
-    public String viewComments(Model model, @RequestParam("id") Long id){
+    public String viewComments(Model model, @RequestParam("id") Long id) {
         var comments = bookService.findCommentsByBookId(id);
         model.addAttribute("comments", comments);
         return "viewComments";
+    }
+
+    @GetMapping("/editComments")
+    public String editComments(Model model, @RequestParam("id") Long id) {
+        var comments = bookService.findCommentsByBookId(id);
+        var commentMapper = new CommentMapper();
+        model.addAttribute("commentMapper", commentMapper);
+        model.addAttribute("comments", comments);
+        model.addAttribute("id", id);
+        return "editComments";
+    }
+
+    @PostMapping("/deleteComment")
+    public ModelAndView deleteComment(ModelMap model,
+                                      @RequestParam("bookId") Long bookId, @RequestParam("commentId") Long commentId) {
+        var comments = bookService.findCommentsByBookId(bookId);
+        model.addAttribute("id", bookId);
+        model.addAttribute("comments", comments);
+        bookService.deleteCommentById(commentId);
+        return new ModelAndView("redirect:/editComments", model);
+    }
+
+    @PostMapping("/addComment")
+    public ModelAndView addComment(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("title") String title) {
+        var book = bookService.getBookById(bookId);
+        bookService.addComment(bookId, title);
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/editComments", model);
     }
 
 
