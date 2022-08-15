@@ -10,7 +10,7 @@ import javax.servlet.ServletContext;
 public class AppConfig {
 
     @Autowired
-    ServletContext servletContext;
+    private ServletContext servletContext;
 
 
 }
