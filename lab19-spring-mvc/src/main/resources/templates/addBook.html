@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style type="text/css">
+       body {
+            padding: 50px;
+        }
+        .edit-form {
+            border: 1px solid steelblue;
+            border-collapse: collapse;
+        }
+        .edit-book tr td,th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        h3 {
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<form id="add-book", action="addBook.html" th:action="@{/addBook}" th:method="post" th:object="${bookMapper}">
+  <h3 th:text="#{book-form-header}">Book Info:</h3>
+
+  <div class="edit-book">
+    <table id="table-book">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Authors</th>
+        <th>Genres</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input id="book-title-input" name="title" type="text" th:value="${bookMapper.title}" value="Sample book"/>
+          <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="${bookMapper.title}">Wrong book title error</div>
+        </td>
+        <td>
+          <select th:field="*{authorId}" form="add-book">
+            <option th:each="author, rowStat : ${authors}" th:text="${author.name}" th:value="${author.id}">Author for add</option>
+          </select>
+        </td>
+        <td>
+          <select th:field="*{genreId}" form="add-book">
+            <option th:each="genre, rowStat : ${genres}" th:text="${genre.name}" th:value="${genre.id}">Genre for add</option>
+          </select>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  </p>
+  <div class="row">
+    <button type="submit" th:text="#{save-button-caption}" th:method="post">Save</button>
+    <a href="editBooks.html" th:href="@{/editBooks}">
+      <button type="button" th:text="#{cancel-button-caption}">Cancel</button>
+    </a>
+  </div>
+</form>
+</body>
+</html>
