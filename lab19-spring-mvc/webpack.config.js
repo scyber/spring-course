@@ -19,7 +19,7 @@ module.exports = {
               exclude: /(node_modules|bower_components|build)/,
               use: {
                 loader: 'babel-loader',
-                options: { presets: ['env', 'react'] }
+                options: { presets: ['@babel/preset-env', '@babel/preset-react'] }
               }
             }
           ]
