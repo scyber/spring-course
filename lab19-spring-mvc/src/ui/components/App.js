@@ -1,13 +1,13 @@
 import React from 'react'
 
 const styles = {
-    personsTable: {
+    booksTable: {
         border: "1px solid steelblue",
         width: "300px",
         borderCollapse: "collapse",
     },
 
-    personsTableItem: {
+    booksTableItem: {
         padding: "5px",
         border: "1px solid steelblue"
     }  
@@ -21,32 +21,32 @@ export default class App extends React.Component {
 
     constructor() {
         super();
-        this.state = {persons: []};
+        this.state = {books: []};
     }
 
     componentDidMount() {
-        fetch('/api/persons')
+        fetch('/api/books')
             .then(response => response.json())
-            .then(persons => this.setState({persons}));
+            .then(books => this.setState({books}));
     }
 
     render() {
         return (
             <React.Fragment>
-                <Header title={'Persons'}/>
-                <table style={styles.personsTable}>
+                <Header title={'Books'}/>
+                <table style={styles.booksTable}>
                     <thead>
-                    <tr style={styles.personsTableItem}>
-                        <th style={styles.personsTableItem}>ID</th>
-                        <th style={styles.personsTableItem}>Name</th>
+                    <tr style={styles.booksTableItem}>
+                        <th style={styles.booksTableItem}>id</th>
+                        <th style={styles.booksTableItem}>Title</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
-                        this.state.persons.map((person, i) => (
-                            <tr style={styles.personsTableItem} key={i}>
-                                <td style={styles.personsTableItem}>{person.id}</td>
-                                <td style={styles.personsTableItem}>{person.name}</td>
+                        this.state.books.map((book, i) => (
+                            <tr style={styles.booksTableItem} key={i}>
+                                <td style={styles.booksTableItem}>{book.id}</td>
+                                <td style={styles.booksTableItem}>{book.title}</td>
                             </tr>
                         ))
                     }
