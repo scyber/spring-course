@@ -44,4 +44,12 @@ public class CommentsController {
         bookService.deleteCommentById(commentId);
         return new ModelAndView("redirect:/editComments", model);
     }
+
+    @PostMapping("/addComment")
+    public ModelAndView addComment(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("title") String title) {
+        var book = bookService.getBookById(bookId);
+        bookService.addComment(bookId, title);
+        model.addAttribute("id", bookId);
+        return new ModelAndView("redirect:/editComments", model);
+    }
 }
