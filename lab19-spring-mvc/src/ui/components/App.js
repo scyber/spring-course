@@ -1,58 +1,29 @@
+import "./App.css"
 import React from 'react'
+import NavigationBar from './NavigationBar'
+import Welcome from './Welcome'
+import Footer from './Footer'
+import AddBook from './AddBook'
+import BookList from './BookList'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Row, Container, Col, Button} from 'react-bootstrap'
+import {BrowserRouter as Router , Routes, Route } from 'react-router-dom'
 
-const styles = {
-    booksTable: {
-        border: "1px solid steelblue",
-        width: "300px",
-        borderCollapse: "collapse",
-    },
-
-    booksTableItem: {
-        padding: "5px",
-        border: "1px solid steelblue"
-    }  
-}
-
-const Header = (props) => (
-    <h1>{props.title}</h1>
-);
-
-export default class App extends React.Component {
-
-    constructor() {
-        super();
-        this.state = {books: []};
-    }
-
-    componentDidMount() {
-        fetch('/api/books')
-            .then(response => response.json())
-            .then(books => this.setState({books}));
-    }
-
-    render() {
+function App () {
+   const marginTop = {
+                marginTop: "20px"
+            };
         return (
-            <React.Fragment>
-                <Header title={'Books'}/>
-                <table style={styles.booksTable}>
-                    <thead>
-                    <tr style={styles.booksTableItem}>
-                        <th style={styles.booksTableItem}>id</th>
-                        <th style={styles.booksTableItem}>Title</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.state.books.map((book, i) => (
-                            <tr style={styles.booksTableItem} key={i}>
-                                <td style={styles.booksTableItem}>{book.id}</td>
-                                <td style={styles.booksTableItem}>{book.title}</td>
-                            </tr>
-                        ))
-                    }
-                    </tbody>
-                </table>
-            </React.Fragment>
-        )
-    }
-};
+
+                <div className="App">
+                    <NavigationBar />
+                            <Container>
+                                <Welcome />
+                            </Container>
+                    <Footer />
+                </div>
+
+        );
+
+}
+export default App
