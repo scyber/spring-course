@@ -1,11 +1,11 @@
-import axios from 'axios';
-import React from 'react'
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import axios from 'axios'
+import React , {Component} from 'react'
+import { Button, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+//import { ceil } from 'mathjs'
 
 
-
-class BookComponent extends React.Component{
+export default class BookComponent extends Component{
 
     constructor(props){
         super(props)
@@ -15,6 +15,8 @@ class BookComponent extends React.Component{
             totalPages: 0,
             totalElements: 0,
             recordPerPage: 3,
+            last: false,
+            first: true
         }
     }
 
@@ -22,29 +24,35 @@ class BookComponent extends React.Component{
         this.getBooksByPagination(this.state.currentPage);
     }
     getBooksByPagination(currentPage){
-        currentPage -= currentPage;
-        axios.get("/api/sampleList",{
+        axios.get("/api/books",{
             params: {
             page: this.state.currentPage,
             size : this.state.recordPerPage
             }})
         .then(response => response.data)
         .then((data) =>{this.setState({books: data.content,
-                                     recordPerPage: data.pageSize,
-                                     currentPage: data.number + 1,
-                                     totalElements: data.totalElements,
-                                     totalPages: data.totalPages});
+                                      currentPage: currentPage,
+                                      totalPages: data.totalPages,
+                                      totalElements: data.totalElements,
+                                      recordPerPage: data.pageSize,
+                                      last: data.last,
+                                      first: data.first
+                                     });
                       console.log('books', this.state.books);
         }
         );
-        currentPage += 1;
-        console.log('state.currentPage ', this.state.currentPage);
+        //this.state.currentPage += 1;
+        console.log('currentPage ', currentPage);
     }
 
     //Writing All the pagination functions
     //Show Next page
     showNextPage = () =>{
-        if(this.state.currentPage < Math.ceil(this.state.totalElements/this.state.recordPerPage)){
+        console.log('call show next Page and currentPage is ', this.state.currentPage);
+        console.log(' first state', this.state.first);
+        console.log(' last state', this.state.last);
+        console.log('first state ', this.state.first);
+        if(!this.state.last){
             this.getBooksByPagination(this.state.currentPage + 1);
             console.log('this.state.currentPage ' + this.state.currentPage);
         }
@@ -52,6 +60,7 @@ class BookComponent extends React.Component{
 
     //Show Last Page
     showLastPage = () =>{
+        console.log('call show last Page and currentPage is ', this.state.currentPage)
         if(this.state.currentPage < Math.ceil(this.state.totalElements/this.state.recordPerPage)){
             this.getBooksByPagination(Math.ceil(this.state.totalElements/this.state.recordPerPage));
         }
@@ -124,4 +133,3 @@ class BookComponent extends React.Component{
         )
     }
 }
-export default BookComponent

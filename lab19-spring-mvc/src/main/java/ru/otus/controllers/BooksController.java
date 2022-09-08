@@ -95,7 +95,7 @@ public class BooksController {
 //        return "redirect:/editBooks";
 //    }
 
-    @GetMapping("/api/books")
+    @GetMapping("/api/booklist")
     public List<BookDto> getJsonBooks() {
         return bookRepository.findAll().stream().map(BookDto::fromDomainObject).collect(Collectors.toList());
     }

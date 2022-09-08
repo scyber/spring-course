@@ -46,7 +46,7 @@ public class MainViewController {
 //    public String indexPage(Model model) {
 //        return "index";
 //    }
-    @GetMapping("/api/sampleList")
+    @GetMapping("/api/books")
     public Page<Book> sampleList(Model model, @RequestParam("page")
     Optional<Integer> page,
                                  @RequestParam("size") Optional<Integer> size) {
