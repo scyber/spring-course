@@ -26,19 +26,21 @@ export default class BookComponent extends Component{
     getBooksByPagination(currentPage){
         axios.get("/api/books",{
             params: {
-            page: this.state.currentPage,
+            page: currentPage,
             size : this.state.recordPerPage
             }})
         .then(response => response.data)
-        .then((data) =>{this.setState({books: data.content,
+        .then((data) =>{
+            console.log('data', data);
+            this.setState({books: data.content,
                                       currentPage: currentPage,
                                       totalPages: data.totalPages,
                                       totalElements: data.totalElements,
-                                      recordPerPage: data.pageSize,
+                                      recordPerPage: data.size,
                                       last: data.last,
                                       first: data.first
                                      });
-                      console.log('books', this.state.books);
+
         }
         );
         //this.state.currentPage += 1;

@@ -46,10 +46,9 @@ public class MainViewController {
 //    public String indexPage(Model model) {
 //        return "index";
 //    }
-    @GetMapping("/api/books")
+    @GetMapping("/books")
     public Page<Book> sampleList(Model model, @RequestParam("page")
-    Optional<Integer> page,
-                                 @RequestParam("size") Optional<Integer> size) {
+    Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(3);
         Page<Book> bookPage = bookService.findPage(PageRequest.of(currentPage - 1, pageSize));

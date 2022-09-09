@@ -14,6 +14,7 @@ export default class NavigationBar extends React.Component {
                         <Nav className="navbar-brand">
                             <Link to="/list" className="nav-link">Book List</Link>
                             <Link to="/add" className="nav-link">Add Book</Link>
+                            <Link to="/component" className="nav-link">Components</Link>
                             <Link to="search" className="nav-link">Search</Link>
                         </Nav>
                     </Container>

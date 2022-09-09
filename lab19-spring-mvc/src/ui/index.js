@@ -15,6 +15,8 @@ root.render(
             <Route path="/" element={<App />}/>
             <Route path="/add" element={<AddBook />}/>
             <Route path="/list" element={<BookList />} />
+            <Route path="/component" element={<BookComponent />}/>
+
         </Routes>
     </Router>
 )
