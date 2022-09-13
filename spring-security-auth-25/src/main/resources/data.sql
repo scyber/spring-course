@@ -40,11 +40,11 @@ INSERT INTO GENRES_BOOKS(BOOK_ID, GENRE_ID) VALUES(CAST(8 AS BIGINT), CAST(2 AS 
 INSERT INTO COMMENTS(BOOK_ID, TITLE) VALUES(CAST (1 AS BIGINT), 'Test Comment');
 INSERT INTO COMMENTS(BOOK_ID, TITLE) VALUES(CAST( 1 AS BIGINT ), 'Next Comment');
 
-INSERT INTO users(username, password, enabled) VALUES
-('admin', '$2y$10$4cyMqF3jykO0CasWiUOIdOaymtshZ7sHrBfBYKG7V/xBM2AW/S1v6', 1),
-('user', '$2y$10$xKJ8w67HFKdv/5R3gtChS.A7DT.CmzXqF/rv1tdC.zmjhQURiIM8i', 1);
+INSERT INTO users(user_name, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES
+('admin', '$2y$10$4cyMqF3jykO0CasWiUOIdOaymtshZ7sHrBfBYKG7V/xBM2AW/S1v6', 1, 1, 1, 1),
+('user', '$2y$10$xKJ8w67HFKdv/5R3gtChS.A7DT.CmzXqF/rv1tdC.zmjhQURiIM8i', 1, 1, 1, 1);
 
-INSERT INTO authorities (username, authority) VALUES
-('admin', 'ROLE_ADMIN'),
-('admin', 'ROLE_USER'),
-('user', 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES
+(CAST( 1 AS BIGINT), 'ROLE_ADMIN'),
+(CAST( 1 AS BIGINT), 'ROLE_USER'),
+(CAST( 2 AS BIGINT), 'ROLE_USER');

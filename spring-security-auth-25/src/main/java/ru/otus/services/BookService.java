@@ -39,11 +39,4 @@ public interface BookService {
 
     void deleteGenreFromBook(Long bookId, Long genreId);
 
-    @PostMapping("/addComment")
-    default ModelAndView addComment(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("title") String title) {
-        var book = getBookById(bookId);
-        addComment(bookId, title);
-        model.addAttribute("id", bookId);
-        return new ModelAndView("redirect:/editComments", model);
-    }
 }

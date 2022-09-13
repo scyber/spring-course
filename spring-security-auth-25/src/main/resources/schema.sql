@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS GENRES_BOOKS cascade;
 
 DROP TABLE IF EXISTS users CASCADE ;
 DROP TABLE IF EXISTS authorities CASCADE ;
-DROP INDEX IF EXISTS ix_auth_username;
+
 
 CREATE TABLE AUTHORS(
 id bigserial primary key,
@@ -37,14 +37,18 @@ book_id bigint references books(id) on delete cascade,
 title varchar(255)
 );
 create table users(
-                      username varchar_ignorecase(150) not null primary key,
-                      password varchar_ignorecase(150) not null,
-                      enabled boolean not null
+                    id bigserial,
+                    user_name varchar_ignorecase(255) not null,
+                    password varchar_ignorecase(255) not null,
+                    account_non_expired     boolean,
+                    account_non_locked      boolean,
+                    credentials_non_expired boolean,
+                    enabled boolean not null,
+                    primary key(id)
 );
 
 create table authorities (
-                             username varchar_ignorecase(150) not null,
-                             authority varchar_ignorecase(150) not null,
-                             constraint fk_authorities_users foreign key(username) references users(username)
+                           id bigserial primary key,
+                           user_id bigint references users(id) on delete cascade,
+                           authority varchar_ignorecase(255) not null
 );
-create unique index ix_auth_username on authorities (username,authority);
