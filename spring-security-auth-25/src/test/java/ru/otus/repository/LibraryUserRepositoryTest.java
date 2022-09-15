@@ -21,6 +21,6 @@ class LibraryUserRepositoryTest {
     @DisplayName("Тестирование users записей в базе ")
     void testAuthorSave() {
         var libraryUser = libraryUserRepository.findByUserName("testuser");
-        Assertions.assertEquals("testuser", libraryUser.getUserName());
+        Assertions.assertEquals("testuser", libraryUser.getUsername());
     }
 }

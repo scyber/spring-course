@@ -12,8 +12,9 @@ public class LibraryUserAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private LibraryUser user;
 
     private String authority;
 }
