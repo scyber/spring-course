@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+    <style type="text/css">
+       body {
+            padding: 50px;
+        }
+        .edit-form {
+            border: 1px solid steelblue;
+            border-collapse: collapse;
+        }
+        .edit-book tr td,th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        h3 {
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+<div>
+    <div><a href="#" th:href="@{/list(lang=en)}" th:text="#{en-lang-switch-button-caption}">EN</a></div>
+    <div><a href="#" th:href="@{/list(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">RU</a></div>
+    <div><a href="list.html" th:href="@{/list}" th:text="#{view-books-list}">Book List</a></div>
+</div>
+<form id="edit-form", action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post" th:object="${book}">
+    <h3 th:text="#{book-form-header}">Book Info:</h3>
+
+    <div class="edit-book">
+        <table id="table-book">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Authors</th>
+                <th>Genres</th>
+                <th>Comments</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input id="book-title-input" name="title" type="text" th:value="${book.title}" value="Sample book"/>
+                    <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="${book.title}">Wrong book title
+                        error
+                    </div>
+                </td>
+                <td>
+                    <div th:each="author, itemStat : ${book.authors}">
+                        <p th:text="${author.name}">
+                            Author Author2
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div th:each="genre, itemStat  : ${book.genres}">
+                        <p th:text="${genre.name}">
+                            Comedy Drama
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <a href="editComments" th:href="@{/editComments/(id=${book.id})}" th:text="#{edit-comments-book}">Edit Comments of the Book</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+    <div class="row">
+        <button type="submit" th:text="#{save-button-caption}" th:method="post">Save</button>
+        <a href="list.html" th:href="@{/list}">
+            <button type="button" th:text="#{cancel-button-caption}">Cancel</button>
+        </a>
+    </div>
+</form>
+<br/>
+<div th:each="author : ${book.authors}">
+    <form name="delete-author" th:action="@{/deleteAuthorFromBook(bookId=${book.id},authorId=${author.id})}" th:method="post">
+        <div th:text="${author.name}" style="float:left">Author</div>
+        <div>
+            <button type="submit">delete</button>
+        </div>
+    </form>
+</div>
+<br/>
+<div th:each="genre : ${book.genres}">
+    <form name="delete-genre" th:action="@{/deleteGenreFromBook(bookId=${book.id},genreId=${genre.id})}" th:method="post">
+        <div th:text="${genre.name}" style="float:left">Genre</div>
+        <div>
+            <button type="submit" th:text="#{delete}">delete</button>
+        </div>
+    </form>
+</div>
+<br/>
+
+<div>
+    <form id="add-author" th:object="${authorsMapper}" th:method="post" th:action="@{/addAuthorForBook(bookId=${book.id})}">
+        <select th:field="*{authorId}" form="add-author">
+            <option th:each="author, rowStat : ${authors}" th:text="${author.name}" th:value="${author.id}">Author for
+                Add
+            </option>
+        </select>
+        <div style="float:left">
+            <button type="submit" th:value="${authorsMapper}" th:text="#{add-author}">add</button>
+        </div>
+    </form>
+</div>
+<br/>
+<div>
+    <form id="add-genre" th:object="${genresMapper}" th:method="post" th:action="@{/addGenreForBook(bookId=${book.id})}">
+        <select th:field="*{genreId}" form="add-genre">
+            <option th:each="genre, rowStat : ${genres}" th:text="${genre.name}" th:value="${genre.id}">Genre for
+                Add
+            </option>
+        </select>
+        <div style="float:left">
+            <button type="submit" th:value="${genresMapper}" th:text="#{add-genre}">add</button>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>
