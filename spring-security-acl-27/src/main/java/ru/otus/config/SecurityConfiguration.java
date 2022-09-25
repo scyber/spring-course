@@ -22,7 +22,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-            .antMatchers("/");
+            .antMatchers("/")
+            .antMatchers("/swagger/swagger-ui.html")
+            .antMatchers("/webjars/springfox-swagger-ui/**")
+            .antMatchers("/swagger-resources/**")
+            .antMatchers("/v2/api-docs")
+            .antMatchers("/h2-console/**");
     }
 
     @Override

@@ -1,12 +1,17 @@
 package ru.otus.services;
 
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.acls.jdbc.JdbcMutableAclService;
+import org.springframework.security.acls.model.MutableAclService;
+import org.springframework.security.acls.model.ObjectIdentity;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
+@Disabled
 class BookServiceTest {
     @MockBean
     private BookRepository bookRepository;
@@ -24,6 +30,10 @@ class BookServiceTest {
     private AuthorRepository authorRepository;
     @MockBean
     private GenreRepository genreRepository;
+    @MockBean
+    private ACLGrantService aclGrantService;
+
+
     @Autowired
     private BookService bookService;
 
@@ -43,7 +53,10 @@ class BookServiceTest {
         bookService.addAuthor(AUTHOR_NAME);
         Author author = new Author();
         author.setName(AUTHOR_NAME);
+        author.setId(1L);
         Mockito.verify(authorRepository).save(author);
+        ObjectIdentity objectIdentity = new ObjectIdentityImpl(author.getClass(), author.getId());
+        Mockito.verify(aclGrantService).applyACLGranting(objectIdentity);
     }
     @Test
     @DisplayName("Тестирование получения всех авторов")
