@@ -4,7 +4,9 @@ spring:
         ddl-auto: none
     datasource:
       url: jdbc:h2:mem:testdb
-      initialization-mode: never
+      username: sa
+      password: sa
+      initialization-mode: always
     main:
       allow-circular-references: true
       allow-bean-definition-overriding: true

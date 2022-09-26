@@ -71,10 +71,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book addBook(String title, Long authorId, Long genreId) {
-        Author author = authorRepository.findById(authorId).get();
-        //.orElseThrow(() -> new FindItemExecption("author not found with id " + authorId));
-        Genre genre = genreRepository.findById(genreId).get();
-        //.orElseThrow(() -> new FindItemExecption("genre not found with id " + genreId));
+        Author author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("author not found with id " + authorId));
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("genre not found with id " + genreId));
         Book book = new Book();
         book.setTitle(title);
         book.setAuthors(List.of(author));
@@ -89,8 +87,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER')")
     public Book getBookById(Long bookId) {
-        return bookRepository.findById(bookId).get();
-            //.orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        return bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
     }
 
     @Override
@@ -165,8 +162,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER')")
     public Comment addComment(Long bookId, String text) {
-        var book = bookRepository.findById(bookId).get();
-            //.orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
         var commment = new Comment();
         commment.setBook(book);
         commment.setTitle(text);
@@ -180,8 +176,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER')")
     public List<Comment> findCommentsByBookId(Long bookId) {
-        var book = bookRepository.findById(bookId).get();
-            //.orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
         return commentRepository.findByBook(book);
     }
 
