@@ -12,6 +12,7 @@ import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
@@ -78,6 +79,7 @@ public class AppConfig {
     }
 
     @Bean
+    @DependsOn("libraryUserAuthorityRepository")
     public AclAuthorizationStrategy aclAuthorizationStrategy() {
         SimpleGrantedAuthority[] authorities = libraryUserAuthorityRepository.findAll()
             .stream()
@@ -88,8 +90,8 @@ public class AppConfig {
         LOGGER.info("Size from Repository " + testLibraryAuthority.size());
         Arrays.stream(authorities).forEach( a -> LOGGER.info("Authority " + a.getAuthority()));
         LOGGER.info("Authorities size " + authorities.length);
-        //return new AclAuthorizationStrategyImpl(authorities);
-        return new AclAuthorizationStrategyImpl(new SimpleGrantedAuthority( "ROLE_EDITOR"));
+        return new AclAuthorizationStrategyImpl(authorities);
+
     }
 
     @Bean
@@ -110,15 +112,4 @@ public class AppConfig {
         return new SecurityEvaluationContextExtension();
     }
 
-//    @Bean
-//    public DataSource dataSource() throws SQLException {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName("org.postgresql.Driver");
-//        dataSource.setUrl("jdbc:postgresql://localhost:5432/timescaledb");
-//        dataSource.setUsername("postgres");
-//        dataSource.setPassword("password");
-//        Connection connection = dataSource.getConnection();
-//        System.out.println(connection.createStatement());
-//        return dataSource;
-//    }
 }
