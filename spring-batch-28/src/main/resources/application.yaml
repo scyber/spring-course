@@ -24,3 +24,8 @@ mongock:
   #runner-type: "InitializingBean"
   change-logs-scan-package:
     - ru.otus.mongock
+
+app:
+  input-books-file: books.csv
+  input-authors-file: authors.csv
+  input-genres-file: genres.csv

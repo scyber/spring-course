@@ -12,7 +12,7 @@ import ru.otus.services.IOServiceStreams;
 @Configuration
 public class AppConfig {
 
-     static final String CHANGELOGS_PACKAGE = "ru.otus.mongock";
+    static final String CHANGELOGS_PACKAGE = "ru.otus.mongock";
 
     @Bean
     public Mongock mongock(MongoProps mongoProps, MongoClient mongoClient) {
@@ -23,6 +23,5 @@ public class AppConfig {
     public IOService ioServiceStreams(){
         return new IOServiceStreams( System.in, System.out);
     }
-
 
 }

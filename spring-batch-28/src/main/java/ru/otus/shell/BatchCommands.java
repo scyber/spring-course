@@ -1,4 +1,4 @@
-package ru.otus.controllers;
+package ru.otus.shell;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -8,12 +8,12 @@ import ru.otus.services.IOService;
 
 
 @ShellComponent
-public class LibraryController {
+public class BatchCommands {
 
     private final BookService bookService;
     private final IOService ioService;
 
-    public LibraryController(BookService bookService, IOService ioService) {
+    public BatchCommands(BookService bookService, IOService ioService) {
         this.bookService = bookService;
         this.ioService = ioService;
     }
