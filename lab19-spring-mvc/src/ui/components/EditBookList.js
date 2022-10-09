@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios'
 
-export default class BookList extends Component {
+export default class EditBookList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,9 +33,9 @@ export default class BookList extends Component {
     render() {
         return (
             <div>
-                <div className="BookList">
-                    <NavigationBar/>
-                    <div className="">
+                <div className="EditBookList">
+
+                    <div className="EditBookList">
                         <div>
                             <Card className={"border"}>
                                 <Card.Header><FontAwesomeIcon icon={faList} className={"border"}/>Add Book
@@ -83,9 +83,9 @@ export default class BookList extends Component {
                             </Card>
                         </div>
                     </div>
-                    <Footer/>
+
                 </div>
-                <Outlet/>
+
             </div>
         );
     }

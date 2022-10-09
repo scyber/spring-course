@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import NavigationBar from './NavigationBar'
 import Footer from './Footer'
 import {Outlet} from 'react-router-dom'
@@ -6,7 +6,7 @@ import {Button, Card, Col, Form} from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare, faSave } from "@fortawesome/free-solid-svg-icons";
 
-class AddBook extends React.Component {
+class AddBook extends Component {
     constructor(props) {
         super(props);
         this.state = {title: '', authors: '', sample: ''};
@@ -26,8 +26,8 @@ class AddBook extends React.Component {
     render() {
         return (
             <div>
-                <div className="BookList">
-                    <NavigationBar/>
+                <div className="AddBook">
+
                     <div>
                         <Card className={"border text-black"}>
                             <Card.Header className={"border text-black"}><FontAwesomeIcon icon={faPlusSquare} /> Add Book</Card.Header>
@@ -86,9 +86,9 @@ class AddBook extends React.Component {
                             </Form>
                         </Card>
                     </div>
-                    <Footer/>
+
                 </div>
-                <Outlet/>
+
             </div>
         );
     }

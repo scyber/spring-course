@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Container, Navbar, Nav} from 'react-bootstrap';
 import {Link, Outlet} from 'react-router-dom'
 
-export default class NavigationBar extends React.Component {
+export default class NavigationBar extends Component {
 
     render() {
         return (
@@ -12,9 +12,9 @@ export default class NavigationBar extends React.Component {
                         <Navbar.Brand href="/">Book Library</Navbar.Brand>
                         <div className="mr-auto"></div>
                         <Nav className="navbar-brand">
-                            <Link to="/list" className="nav-link">Book List</Link>
-                            <Link to="/add" className="nav-link">Add Book</Link>
-                            <Link to="/component" className="nav-link">Components</Link>
+                            <Link to="editlist" className="nav-link">EditList</Link>
+                            <Link to="add"  className="nav-link">AddBook</Link>
+                            <Link to="listofbooks"  className="nav-link">ListOfBooks</Link>
                             <Link to="search" className="nav-link">Search</Link>
                         </Nav>
                     </Container>
