@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
-public interface LibraryResource<T>{
+public interface BookLibraryResource<T>{
 
     @GetMapping("/books")
     Page<T> findAll(Integer page, Integer size);

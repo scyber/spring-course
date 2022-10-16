@@ -4,17 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.otus.domain.Author;
 import ru.otus.services.BookService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
 public class AuthorsController {
@@ -34,10 +31,11 @@ public class AuthorsController {
 //        return new ModelAndView("redirect:/edit", model);
 //    }
 //
-//    @GetMapping("/authors")
-//    public String authors(Model model) {
-//        List<Author> authors = bookService.getAllAuthors();
+    @GetMapping("/api/authors")
+    public List<Author> authors() {
+        List<Author> authors = bookService.getAllAuthors();
+        return  authors;
 //        model.addAttribute("authors", authors);
 //        return "authors";
-//    }
+    }
 }

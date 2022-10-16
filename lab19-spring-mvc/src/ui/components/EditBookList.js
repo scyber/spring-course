@@ -35,7 +35,7 @@ export default class EditBookList extends Component {
             <div>
                 <div className="EditBookList">
 
-                    <div className="EditBookList">
+                    <div>
                         <div>
                             <Card className={"border"}>
                                 <Card.Header><FontAwesomeIcon icon={faList} className={"border"}/>Add Book

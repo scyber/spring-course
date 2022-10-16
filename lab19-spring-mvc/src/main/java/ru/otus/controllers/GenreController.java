@@ -3,13 +3,14 @@ package ru.otus.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.otus.domain.Genre;
 import ru.otus.services.BookService;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
 public class GenreController {
@@ -28,4 +29,8 @@ public class GenreController {
 //        model.addAttribute("id", bookId);
 //        return new ModelAndView("redirect:/edit", model);
 //    }
+    @GetMapping("/api/genres")
+    public List<Genre> getGenres(){
+      return bookService.getAllGenres();
+    }
 }

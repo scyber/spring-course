@@ -43,7 +43,6 @@ export default class BookComponent extends Component{
 
         }
         );
-        //this.state.currentPage += 1;
         console.log('currentPage ', currentPage);
     }
 
@@ -120,7 +119,7 @@ export default class BookComponent extends Component{
                 </div>
                 <div style={{float:'right'}}>
                 <div class="clearfix"></div>
-                <nav aria-label="Page navigation example">
+                <nav aria-label="Page navigation">
   <ul class="pagination">
     <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false} onClick={this.showPrevPage}>Previous</a></li>
     <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false } onClick={this.showFirstPage}>First</a></li>
