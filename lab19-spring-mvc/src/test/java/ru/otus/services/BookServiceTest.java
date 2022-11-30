@@ -15,6 +15,7 @@ import ru.otus.repository.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class BookServiceTest {
@@ -102,7 +103,7 @@ class BookServiceTest {
         book.setTitle(BOOK_NAME);
         book.setAuthors(List.of(author));
         book.setGenres(List.of(genre));
-        bookService.addBook(BOOK_NAME,AUTHOR_ID,GENRE_ID);
+        bookService.addBook(book);
         Mockito.verify(bookRepository).save(book);
     }
     @Test

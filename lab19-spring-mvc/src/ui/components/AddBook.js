@@ -4,7 +4,7 @@ import Footer from './Footer'
 import {Outlet} from 'react-router-dom'
 import {Button, Card, Col, Form} from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faPlusSquare, faSave, faUndo } from "@fortawesome/free-solid-svg-icons";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 import axios from 'axios'
@@ -14,31 +14,38 @@ const animatedComponents = makeAnimated();
 export default class AddBook extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        authors : [],
-        genres :[]
-//        title: '',
-//        selectedAuthor : '',
-//        fruits : [
-//                                 { value: 'chocolate', label: 'Chocolate' },
-//                                 { value: 'strawberry', label: 'Strawberry' },
-//                                 { value: 'vanilla', label: 'Vanilla' }]
-        };
-
+        this.state = {title: "", selectedAuthor: "", selectedGenre: "", authors: [], genres: []};
         this.bookChange = this.bookChange.bind(this);
         this.submitBook = this.submitBook.bind(this);
     }
     componentDidMount(){
             this.getAuthors();
+            this.getGenres();
     }
-    submitBook(event) {
+    submitBook (event) {
         event.preventDefault();
-        //this.state.fruits.map(fruit => console.log('option ' + fruit.value));
-        //console.log('event target value ' + event.target.value);
-        alert("title " + this.state.title + " authors " + this.state.authors + " selectedAuthor " + this.state.selectedAuthor);
-    }
+        var filteredAuthors = this.state.authors.filter((author) => author.id == this.state.selectedAuthor);
+        var filteredGenres = this.state.genres.filter((genre) => genre.id == this.state.selectedGenre);
+        filteredAuthors.map((author) => console.log('filtered author ' + author.name));
+        const book = {
+            title : this.state.title,
+            authors : filteredAuthors,
+            genres: filteredGenres
+         };
+         console.log('book ' + book + ' book.title ' + book.title);
+         axios.post("/api/books", book).then(response => {
+                        console.log("response data " + response.data);
+                        if(response.data != null){
+                            this.setState({title : '', selectedAuthor : '', selectedGenre: ''});
+                        }
+         });
 
-    bookChange(event) {
+    };
+    resetBook = () => {
+        this.setState({title: '', selectedAuthor: '', selectedGenre: '' });
+    };
+
+    bookChange = (event) => {
         console.log('event.target.name ' + event.target.name);
         console.log('event.target.value ' + event.target.value);
         this.setState({[event.target.name]: event.target.value});
@@ -50,43 +57,43 @@ export default class AddBook extends Component {
                 this.setState({authors: data});
                 console.log('data ' + data);
                 });
-                }
-//                .then((data) => {
-//                    console.log('data ' + data);
-//                    this.setState({authors: data});
-//                    console.log('authors ' + this.state.authors);
-//                });
-//    }
-
+     }
+    getGenres(){
+        axios.get("/api/genres")
+              .then(response => response.data)
+              .then((data) => {
+                this.setState({genres :data});
+                console.log("data " + data);
+              });
+    }
     render() {
+        const {title, selectedAuthor, selectedGenre} = this.state
         return (
             <div>
                 <div className="AddBook">
-
                     <div>
                         <Card className={"border text-black"}>
                             <Card.Header className={"border text-black"}><FontAwesomeIcon icon={faPlusSquare} /> Add Book</Card.Header>
-                            <Form id="bookFormId" onSubmit={this.submitBook}>
+                            <Form id="bookFormId" onSubmit={this.submitBook} onReset={this.resetBook}>
                                 <Card.Body>
 
-                                    <Form.Group as={Col} controlId="formGridTitle" className="mb-3">
+                                    <Form.Group as={Col} controlId="title" className="mb-3">
                                         <Form.Label>Book Title</Form.Label>
-                                        <Form.Control required
+                                        <Form.Control required autoComplete = "off"
                                                       type="test"
                                                       placeholder="Enter Book Title"
                                                       name="title"
-                                                      value={this.state.title}
+                                                      value={title}
                                                       onChange={this.bookChange}/>
                                         <Form.Text className="text-muted">
                                             This is a Title of Book
                                         </Form.Text>
                                     </Form.Group>
-
-                                    <Form.Group as={Col} controlId="selectGridAuthor"  className="mb-3">
+                                    <Form.Group as={Col} controlId="selectedAuthor"  className="mb-3">
                                         <Form.Label>select author</Form.Label>
                                         <Form.Control required
                                                       name = "selectedAuthor"
-                                                      value={this.state.selectedAuthor}
+                                                      value={selectedAuthor}
                                                       as="select"
                                                       custom
                                                       components={animatedComponents}
@@ -96,19 +103,33 @@ export default class AddBook extends Component {
                                                         ))
                                                         }
                                         </Form.Control>
+                                        </Form.Group>
+                                        <Form.Group as={Col} controlId="selectedGenre"  className="mb-3">
+                                              <Form.Label>select genre</Form.Label>
+                                              <Form.Control required
+                                                             name = "selectedGenre"
+                                                             value={selectedGenre}
+                                                             as="select"
+                                                             custom
+                                                             components={animatedComponents}
+                                                             onChange={this.bookChange}>
+                                                              {this.state.genres.map((genre) => (
+                                                               <option value={genre.id}>{genre.name}</option>))}
+                                        </Form.Control>
                                     </Form.Group>
                                 </Card.Body>
                                 <Card.Footer>
                                     <Button size={"sm"} variant="success" type="submit">
                                         <FontAwesomeIcon icon={faSave} /> Submit
-                                    </Button>
+                                    </Button>{' '}
+                                    <Button size={"sm"} variant="info" type="reset">
+                                        <FontAwesomeIcon icon={faUndo} /> Reset
+                                     </Button>
                                 </Card.Footer>
                             </Form>
                         </Card>
                     </div>
-
                 </div>
-
             </div>
         );
     }

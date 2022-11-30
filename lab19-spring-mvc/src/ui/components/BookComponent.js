@@ -1,8 +1,9 @@
 import axios from 'axios'
-import React , {Component} from 'react'
-import { Button, Row } from 'react-bootstrap'
+import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
-//import { ceil } from 'mathjs'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {Card, Table, Button, ButtonGroup, Row } from 'react-bootstrap'
 
 
 export default class BookComponent extends Component{
@@ -45,23 +46,16 @@ export default class BookComponent extends Component{
         );
         console.log('currentPage ', currentPage);
     }
-
     //Writing All the pagination functions
     //Show Next page
     showNextPage = () =>{
-        console.log('call show next Page and currentPage is ', this.state.currentPage);
-        console.log(' first state', this.state.first);
-        console.log(' last state', this.state.last);
-        console.log('first state ', this.state.first);
         if(!this.state.last){
             this.getBooksByPagination(this.state.currentPage + 1);
-            console.log('this.state.currentPage ' + this.state.currentPage);
         }
     };
 
     //Show Last Page
     showLastPage = () =>{
-        console.log('call show last Page and currentPage is ', this.state.currentPage)
         if(this.state.currentPage < Math.ceil(this.state.totalElements/this.state.recordPerPage)){
             this.getBooksByPagination(Math.ceil(this.state.totalElements/this.state.recordPerPage));
         }
@@ -71,7 +65,6 @@ export default class BookComponent extends Component{
         let firstPage = 1;
         if(this.state.currentPage > firstPage){
             this.getBooksByPagination(firstPage);
-            console.log('this.state.currentPage ' + this.state.currentPage);
         }
     };
 
@@ -80,8 +73,17 @@ export default class BookComponent extends Component{
         let prevPage = 1
         if(this.state.currentPage > prevPage){
             this.getBooksByPagination(this.state.currentPage - prevPage);
-            console.log('this.state.currentPage ' + this.state.currentPage);
         }
+    };
+    deleteBook = (bookId) =>{
+        alert('bookId ' + bookId);
+        axios.delete("/api/books/", {
+            params :{id : bookId}
+        })
+        .then(response => response.data).then(data =>{ if(data !== null) {
+            this.getBooksByPagination(this.state.currentPage);
+            }}
+        );
     };
 
     render(){
@@ -96,16 +98,26 @@ export default class BookComponent extends Component{
                     <tr>
                     <th>#</th>
                     <th>Book Title</th>
+                    <th>Book Authors</th>
+                    <th>Book Genres</th>
+                    <th>Actions </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {books.length===0?
-                        <tr align="center"><td colSpan="5">No Record Found</td></tr>:
+                    {books.length === 0 ? <tr align="center"><td colSpan="5">No Books Available </td></tr> :
                         books.map(
                             (book,index) =>(
                                 <tr>
                                     <td>{book.id}</td>
                                     <td>{book.title}</td>
+                                    <td>{book.authors.map((author) =><li>{author.name}</li>)}</td>
+                                    <td>{book.genres.map((genre) =><li>{genre.name}</li>)}</td>
+                                    <td>
+                                        <ButtonGroup>
+                                         <Button size="sm" variant="outline-primary"><FontAwesomeIcon icon={faEdit} className={"border"}/></Button>
+                                         <Button size="sm" variant="outline-danger" onClick={this.deleteBook.bind(this, book.id)}><FontAwesomeIcon icon={faTrash} className={"border"}/></Button>
+                                         </ButtonGroup>
+                                    </td>
                                 </tr>
                             )
                         )

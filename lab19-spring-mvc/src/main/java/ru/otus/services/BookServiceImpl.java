@@ -1,11 +1,15 @@
 package ru.otus.services;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -17,6 +21,7 @@ import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -25,8 +30,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
-
     private final CommentRepository commentRepository;
+
 
     public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
                            GenreRepository genreRepository, CommentRepository commentRepository) {
@@ -34,25 +39,15 @@ public class BookServiceImpl implements BookService {
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
         this.commentRepository = commentRepository;
+
     }
 
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Book> findPage(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Book> books = bookRepository.findAll();
-        List<Book> list;
-        if (books.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, books.size());
-            list = books.subList(startItem, toIndex);
-        }
-        Page<Book> bookPage = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
-        return bookPage;
+    public Page<Book> findPage(Integer page, Integer size) {
+        return bookRepository.findAll(
+                PageRequest.of(page - 1, size));
     }
 
     @Override
@@ -63,13 +58,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book addBook(String title, Long authorId, Long genreId) {
-        Author author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("author not found with id " + authorId));
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("genre not found with id " + genreId));
-        Book book = new Book();
-        book.setTitle(title);
-        book.setAuthors(List.of(author));
-        book.setGenres(List.of(genre));
+    public Book addBook(Book book) {
+        var receivedBookAuthors = book.getAuthors().stream().map(a->a.getId()).collect(Collectors.toList());
+        var receivedBookGenres = book.getGenres().stream().map(g ->g.getId()).collect(Collectors.toList());
+        var authors = authorRepository.findAll().stream().filter(a ->receivedBookAuthors.contains(a.getId())).collect(Collectors.toList());
+        var genres = genreRepository.findAll().stream().filter(g ->receivedBookGenres.contains(g.getId())).collect(Collectors.toList());
+        book.setGenres(genres);
+        book.setAuthors(authors);
         return bookRepository.save(book);
     }
 
@@ -82,7 +77,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteBook(Long bookId) {
-        bookRepository.deleteById(bookId);
+            bookRepository.deleteById(bookId);
     }
 
     @Override
@@ -131,6 +126,11 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void deleteGenre(Long genreId) {
         genreRepository.deleteById(genreId);
+    }
+
+    @Override
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
     }
 
     @Override
@@ -203,6 +203,7 @@ public class BookServiceImpl implements BookService {
         book.setGenres(genres);
         bookRepository.save(book);
     }
+
 
 
 }

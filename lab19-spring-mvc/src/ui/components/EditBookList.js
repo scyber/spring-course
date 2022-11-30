@@ -21,7 +21,7 @@ export default class EditBookList extends Component {
     }
 
     findAllBooks() {
-        axios.get("/books").then(
+        axios.get("/api/books").then(
             response => {
                 console.log(response.data.content);
                 this.setState({
@@ -46,22 +46,21 @@ export default class EditBookList extends Component {
                                         <tr>
                                             <th>Title</th>
                                             <th>Authors</th>
-                                            <th>Actions</th>
                                             <th>Genres</th>
+                                            <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {
                                             this.state.content.length === 0 ?
                                                 <tr align="center">
-                                                    <td colSpan="6"> No Book Available</td>
+                                                    <td colSpan="6">No Book Available</td>
                                                 </tr> :
                                                 this.state.content.map(
                                                     (book) => (
                                                         <tr key={book.id}>
                                                             <td>{book.title}</td>
-                                                            <td>{book.authors.map((author) =>
-                                                                <li>{author.name}</li>)}</td>
+                                                            <td>{book.authors.map((author) =><li>{author.name}</li>)}</td>
                                                             <td>{book.genres.map((genre) => <li>{genre.name}</li>)}</td>
                                                             <td>
                                                                 <ButtonGroup>
@@ -75,7 +74,6 @@ export default class EditBookList extends Component {
                                                             </td>
                                                         </tr>
                                                     ))
-
                                         }
                                         </tbody>
                                     </Table>

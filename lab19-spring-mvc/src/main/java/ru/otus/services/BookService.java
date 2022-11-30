@@ -14,10 +14,10 @@ import java.util.List;
 
 
 public interface BookService {
-    Page<Book> findPage(Pageable pageable);
+    Page<Book> findPage(Integer page, Integer size);
     List<Book> getAllBooks();
     Book getBookById(Long id);
-    Book addBook(String title, Long authorId, Long genreId );
+    Book addBook(Book book);
     void deleteBook(Long id);
     void updateBookNameById(Long id, String name);
     List<Author> getAllAuthors();
@@ -26,11 +26,12 @@ public interface BookService {
     List<Genre> getAllGenres();
     Genre addGenre(String genreName);
     void deleteGenre(Long genreId);
+
+    List<Comment> getAllComments();
     Comment addComment(Long bookId, String text);
     List<Comment> findCommentsByBookId(Long bookId);
     void deleteCommentById(Long commentId);
     void updateCommentById(Long commentId, String text);
-
     void addAuthorForBook(Long bookId, Long authorId);
 
     void deleteAuthorFromBook(Long bookId, Long authorId);
@@ -39,11 +40,4 @@ public interface BookService {
 
     void deleteGenreFromBook(Long bookId, Long genreId);
 
-    @PostMapping("/addComment")
-    default ModelAndView addComment(ModelMap model, @RequestParam("bookId") Long bookId, @RequestParam("title") String title) {
-        var book = getBookById(bookId);
-        addComment(bookId, title);
-        model.addAttribute("id", bookId);
-        return new ModelAndView("redirect:/editComments", model);
-    }
 }
