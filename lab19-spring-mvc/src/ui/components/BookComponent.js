@@ -1,10 +1,10 @@
-import axios from 'axios'
-import React, {Component} from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios';
+import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {Card, Table, Button, ButtonGroup, Row } from 'react-bootstrap'
-
+import {Card, Table, Button, ButtonGroup, Row } from 'react-bootstrap';
+import  CustomToast from './CustomToast';
 
 export default class BookComponent extends Component{
 
@@ -17,7 +17,8 @@ export default class BookComponent extends Component{
             totalElements: 0,
             recordPerPage: 3,
             last: false,
-            first: true
+            first: true,
+            show: false
         }
     }
 
@@ -76,12 +77,15 @@ export default class BookComponent extends Component{
         }
     };
     deleteBook = (bookId) =>{
-        alert('bookId ' + bookId);
         axios.delete("/api/books/", {
             params :{id : bookId}
         })
         .then(response => response.data).then(data =>{ if(data !== null) {
+            this.setState({"show": true});
+            setTimeout(() => this.setState({"show": false}), 3000);
             this.getBooksByPagination(this.state.currentPage);
+            } else {
+                this.setState({"show": false});
             }}
         );
     };
@@ -90,7 +94,10 @@ export default class BookComponent extends Component{
         const {books, currentPage, totalPages, recordPerPage} = this.state;
         return(
         <div>
-
+        <div style={{"display" : this.state.show ? "block" : "none"}}>
+            <CustomToast children ={{show: this.state.show}}/>
+        </div>
+        <div>
             <h1 className="text-center mt-5 ">List of Books</h1>
             <div className="container mt-2">
             <table className="table table-bordered border-info shadow">
@@ -132,16 +139,17 @@ export default class BookComponent extends Component{
                 <div style={{float:'right'}}>
                 <div class="clearfix"></div>
                 <nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false} onClick={this.showPrevPage}>Previous</a></li>
-    <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false } onClick={this.showFirstPage}>First</a></li>
-    <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===totalPages?true:false } onClick={this.showNextPage}>Next</a></li>
-    <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===totalPages?true:false} onClick={this.showLastPage}>Last</a></li>
-  </ul>
-</nav>
+                <ul class="pagination">
+                <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false} onClick={this.showPrevPage}>Previous</a></li>
+                <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===1?true:false } onClick={this.showFirstPage}>First</a></li>
+                <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===totalPages?true:false } onClick={this.showNextPage}>Next</a></li>
+                <li class="page-item"><a type="button" class="page-link"  disabled={currentPage===totalPages?true:false} onClick={this.showLastPage}>Last</a></li>
+                    </ul>
+                </nav>
                 </div>
             </table>
             </div>
+        </div>
         </div>
         )
     }

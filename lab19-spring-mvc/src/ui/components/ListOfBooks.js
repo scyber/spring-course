@@ -1,12 +1,10 @@
-import axios from 'axios'
-import React, {Component} from 'react'
-import {Button, Row} from 'react-bootstrap'
-import {Link,Outlet} from 'react-router-dom'
-import BookComponent from './BookComponent'
-import NavigationBar from './NavigationBar'
-import Footer from './Footer'
-
-//import { ceil } from 'mathjs'
+import axios from 'axios';
+import React, {Component} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link,Outlet} from 'react-router-dom';
+import BookComponent from './BookComponent';
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 
 
 class ListOfBooks extends Component {
