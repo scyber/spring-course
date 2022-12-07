@@ -1,11 +1,6 @@
 package ru.otus.services;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -13,7 +8,7 @@ import ru.otus.domain.Genre;
 import java.util.List;
 
 
-public interface BookService {
+public interface LibraryService {
     Page<Book> findPage(Integer page, Integer size);
     List<Book> getAllBooks();
     Book getBookById(Long id);

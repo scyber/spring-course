@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.domain.Author;
-import ru.otus.services.BookService;
+import ru.otus.services.LibraryService;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import java.util.List;
 @RestController
 public class AuthorsRestController {
 
-    private final BookService bookService;
+    private final LibraryService libraryService;
 
     @GetMapping("/api/authors")
     public List<Author> findAll() {
-        return bookService.getAllAuthors();
+        return libraryService.getAllAuthors();
     }
 
 }

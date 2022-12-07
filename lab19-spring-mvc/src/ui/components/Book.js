@@ -11,7 +11,7 @@ import axios from 'axios'
 
 const animatedComponents = makeAnimated();
 
-export default class AddBook extends Component {
+export default class Book extends Component {
     constructor(props) {
         super(props);
         this.state = {title: "", selectedAuthor: "", selectedGenre: "", authors: [], genres: []};
@@ -32,7 +32,6 @@ export default class AddBook extends Component {
             authors : filteredAuthors,
             genres: filteredGenres
          };
-         console.log('book ' + book + ' book.title ' + book.title);
          axios.post("/api/books", book).then(response => {
                         console.log("response data " + response.data);
                         if(response.data != null){
@@ -46,8 +45,6 @@ export default class AddBook extends Component {
     };
 
     bookChange = (event) => {
-        console.log('event.target.name ' + event.target.name);
-        console.log('event.target.value ' + event.target.value);
         this.setState({[event.target.name]: event.target.value});
     }
     getAuthors(){

@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.domain.Genre;
-import ru.otus.repository.GenreRepository;
-import ru.otus.services.BookService;
+import ru.otus.services.LibraryService;
 
 import java.util.List;
 
@@ -13,11 +12,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreRestController {
 
-    private final BookService bookService;
+    private final LibraryService libraryService;
 
     @GetMapping("/api/genres")
     public List<Genre> findAll() {
-        return bookService.getAllGenres();
+        return libraryService.getAllGenres();
     }
 
 

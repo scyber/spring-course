@@ -15,10 +15,9 @@ import ru.otus.repository.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @SpringBootTest
-class BookServiceTest {
+class LibraryServiceTest {
     @MockBean
     private BookRepository bookRepository;
     @MockBean
@@ -26,7 +25,7 @@ class BookServiceTest {
     @MockBean
     private GenreRepository genreRepository;
     @Autowired
-    private BookService bookService;
+    private LibraryService libraryService;
 
     private static final long BOOK_ID = 1L;
     private static final long AUTHOR_ID = 1L;
@@ -41,7 +40,7 @@ class BookServiceTest {
     @Test
     @DisplayName("Тестирование добавление Авторов")
     void testAuthorAdd(){
-        bookService.addAuthor(AUTHOR_NAME);
+        libraryService.addAuthor(AUTHOR_NAME);
         Author author = new Author();
         author.setName(AUTHOR_NAME);
         Mockito.verify(authorRepository).save(author);
@@ -49,14 +48,14 @@ class BookServiceTest {
     @Test
     @DisplayName("Тестирование получения всех авторов")
     void testGetAllAuthors(){
-        bookService.getAllAuthors();
+        libraryService.getAllAuthors();
         Mockito.verify(authorRepository).findAll();
     }
 
     @Test
     @DisplayName("Тестирование получения всех жанров")
     void testGetAllGenres(){
-        bookService.getAllGenres();
+        libraryService.getAllGenres();
         Mockito.verify(genreRepository).findAll();
     }
     @Test
@@ -64,7 +63,7 @@ class BookServiceTest {
     void testFindAllBooks(){
         var books = new ArrayList<Book>();
         Mockito.when(bookRepository.findAll()).thenReturn(books);
-        bookService.getAllBooks();
+        libraryService.getAllBooks();
         Mockito.verify(bookRepository).findAll();
     }
     @Test
@@ -79,13 +78,13 @@ class BookServiceTest {
         Mockito.when(bookRepository.findById(BOOK_ID)).thenReturn(Optional.of(retBook));
         retBook.setAuthors(List.of(author));
         retBook.setGenres(List.of(genre));
-        bookService.getBookById(BOOK_ID);
+        libraryService.getBookById(BOOK_ID);
         Mockito.verify(bookRepository).findById(BOOK_ID);
     }
     @Test
     @DisplayName("Тестирование удаления книги")
     void testDeleteBook(){
-        bookService.deleteBook(BOOK_ID);
+        libraryService.deleteBook(BOOK_ID);
         Mockito.verify(bookRepository).deleteById(BOOK_ID);
     }
     @Test
@@ -103,13 +102,13 @@ class BookServiceTest {
         book.setTitle(BOOK_NAME);
         book.setAuthors(List.of(author));
         book.setGenres(List.of(genre));
-        bookService.addBook(book);
+        libraryService.addBook(book);
         Mockito.verify(bookRepository).save(book);
     }
     @Test
     @DisplayName("Тестирование обновления названия книги по идентификатору")
     void testUpdateBookById(){
-        bookService.updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
+        libraryService.updateBookNameById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
         Mockito.verify(bookRepository).updateBookTitleById(BOOK_ID,BOOK_NAME_FOR_UPDATE);
     }
 }

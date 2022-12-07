@@ -1,15 +1,11 @@
 package ru.otus.services;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -19,13 +15,13 @@ import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
-import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
 @Component
-public class BookServiceImpl implements BookService {
+public class LibraryServiceImpl implements LibraryService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
@@ -33,8 +29,8 @@ public class BookServiceImpl implements BookService {
     private final CommentRepository commentRepository;
 
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-                           GenreRepository genreRepository, CommentRepository commentRepository) {
+    public LibraryServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
+                              GenreRepository genreRepository, CommentRepository commentRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
@@ -45,12 +41,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
+    @BatchSize(size = 10)
     public Page<Book> findPage(Integer page, Integer size) {
         return bookRepository.findAll(
                 PageRequest.of(page - 1, size));
     }
 
     @Override
+    @BatchSize(size = 10)
     @Transactional(readOnly = true)
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
@@ -59,10 +57,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book addBook(Book book) {
-        var receivedBookAuthors = book.getAuthors().stream().map(a->a.getId()).collect(Collectors.toList());
-        var receivedBookGenres = book.getGenres().stream().map(g ->g.getId()).collect(Collectors.toList());
-        var authors = authorRepository.findAll().stream().filter(a ->receivedBookAuthors.contains(a.getId())).collect(Collectors.toList());
-        var genres = genreRepository.findAll().stream().filter(g ->receivedBookGenres.contains(g.getId())).collect(Collectors.toList());
+
+        var authorsIdList = book.getAuthors().stream().map(a ->a.getId()).collect(Collectors.toList());
+        var authors = authorRepository.findAllById(authorsIdList);
+        var genresIdList = book.getGenres().stream().map(a->a.getId()).collect(Collectors.toList());
+        var genres = genreRepository.findAllById(genresIdList);
         book.setGenres(genres);
         book.setAuthors(authors);
         return bookRepository.save(book);

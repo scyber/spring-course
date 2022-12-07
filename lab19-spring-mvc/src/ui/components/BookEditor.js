@@ -8,24 +8,24 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios'
 
-export default class EditBookList extends Component {
+export default class BookEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: []
+            contentBook: []
         };
     }
 
     componentDidMount() {
-        this.findAllBooks();
+        this.getBookById(id);
     }
 
-    findAllBooks() {
-        axios.get("/api/books").then(
-            response => {
-                console.log(response.data.content);
+    getBookById(id) {
+        axios.get("/api/book", {params :{ id : bookId}})
+        .then(response => {
+                console.log(response.data);
                 this.setState({
-                    content: response.data.content
+                    contentBook: response.data
                 });
             })
     }
