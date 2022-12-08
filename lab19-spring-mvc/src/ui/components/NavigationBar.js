@@ -12,7 +12,6 @@ export default class NavigationBar extends Component {
                         <Navbar.Brand href="/">Book Library</Navbar.Brand>
                         <div className="mr-auto"></div>
                         <Nav className="navbar-brand">
-                            <Link to="editlist" className="nav-link">BookEditor</Link>
                             <Link to="add"  className="nav-link">Book</Link>
                             <Link to="listofbooks"  className="nav-link">ListOfBooks</Link>
                             <Link to="search" className="nav-link">Search</Link>

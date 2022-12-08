@@ -134,10 +134,11 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     @Transactional
-    public Comment addComment(Long bookId, String text) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Comment addComment(Book book, String text) {
+
+        var bookSaved  = bookRepository.findById(book.getId()).orElseThrow(() -> new FindItemExecption("book not found with id " + book));
         var commment = new Comment();
-        commment.setBook(book);
+        commment.setBook(bookSaved);
         commment.setTitle(text);
         return commentRepository.save(commment);
     }

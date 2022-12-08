@@ -23,7 +23,7 @@ public interface LibraryService {
     void deleteGenre(Long genreId);
 
     List<Comment> getAllComments();
-    Comment addComment(Long bookId, String text);
+    Comment addComment(Book book, String text);
     List<Comment> findCommentsByBookId(Long bookId);
     void deleteCommentById(Long commentId);
     void updateCommentById(Long commentId, String text);

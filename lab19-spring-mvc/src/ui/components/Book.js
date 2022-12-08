@@ -8,13 +8,20 @@ import { faPlusSquare, faSave, faUndo } from "@fortawesome/free-solid-svg-icons"
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 import axios from 'axios'
+import  CustomToast from './CustomToast';
 
 const animatedComponents = makeAnimated();
 
 export default class Book extends Component {
     constructor(props) {
         super(props);
-        this.state = {title: "", selectedAuthor: "", selectedGenre: "", authors: [], genres: []};
+        this.state = {title: "",
+                      selectedAuthor: "",
+                      selectedGenre: "",
+                      authors: [],
+                      genres: [],
+                      show: false,
+                      type: 'success'};
         this.bookChange = this.bookChange.bind(this);
         this.submitBook = this.submitBook.bind(this);
     }
@@ -35,7 +42,11 @@ export default class Book extends Component {
          axios.post("/api/books", book).then(response => {
                         console.log("response data " + response.data);
                         if(response.data != null){
+                            this.setState({show: true});
+                            setTimeout(() => this.setState({show: false}), 3000);
                             this.setState({title : '', selectedAuthor : '', selectedGenre: ''});
+                        } else {
+                            this.setState({show: false});
                         }
          });
 
@@ -67,6 +78,9 @@ export default class Book extends Component {
         const {title, selectedAuthor, selectedGenre} = this.state
         return (
             <div>
+                <div style={{"display" : true ? "block" : "none"}}>
+                    <CustomToast children ={{show: this.state.show, type : this.state.type}}/>
+                </div>
                 <div className="AddBook">
                     <div>
                         <Card className={"border text-black"}>

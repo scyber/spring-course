@@ -82,7 +82,7 @@ export default class BookComponent extends Component{
             params :{id : bookId}
         })
         .then(response => response.data).then(data =>{ if(data !== null) {
-            this.setState({show: true, type: 'success'});
+            this.setState({show: true});
             setTimeout(() => this.setState({show: false}), 3000);
             this.getBooksByPagination(this.state.currentPage);
             } else {
@@ -96,7 +96,7 @@ export default class BookComponent extends Component{
         return(
         <div>
         <div style={{"display" : this.state.show ? "block" : "none"}}>
-            <CustomToast children ={{show: this.state.show, type: this.state.type }}/>
+            <CustomToast children ={{show: this.state.show }}/>
         </div>
         <div>
             <h1 className="text-center mt-5 ">List of Books</h1>
