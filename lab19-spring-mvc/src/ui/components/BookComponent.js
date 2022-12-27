@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useParams } from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {Card, Table, Button, ButtonGroup, Row } from 'react-bootstrap';
-import  CustomToast from './CustomToast';
+import CustomToast from './CustomToast';
+import BookEditor from './BookEditor';
 
 export default class BookComponent extends Component{
 
@@ -34,7 +35,6 @@ export default class BookComponent extends Component{
             }})
         .then(response => response.data)
         .then((data) =>{
-            console.log('data', data);
             this.setState({books: data.content,
                                       currentPage: currentPage,
                                       totalPages: data.totalPages,
@@ -122,7 +122,7 @@ export default class BookComponent extends Component{
                                     <td>{book.genres.map((genre) =><li>{genre.name}</li>)}</td>
                                     <td>
                                         <ButtonGroup>
-                                         <Button size="sm" variant="outline-primary"><FontAwesomeIcon icon={faEdit} className={"border"}/></Button>
+                                         <Link to="/edit"><FontAwesomeIcon variant="outline-primary" icon={faEdit} className={"border"}/></Link>
                                          <Button size="sm" variant="outline-danger" onClick={this.deleteBook.bind(this, book.id)}><FontAwesomeIcon icon={faTrash} className={"border"}/></Button>
                                          </ButtonGroup>
                                     </td>

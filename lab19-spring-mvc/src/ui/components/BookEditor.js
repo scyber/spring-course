@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import NavigationBar from './NavigationBar'
 import Footer from './Footer'
-import BookComponent from './BookComponent'
-import {Link, Outlet} from 'react-router-dom'
+import {Link, Outlet, useParams} from 'react-router-dom'
 import {Card, Table, Button, ButtonGroup} from 'react-bootstrap'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEdit, faList, faTrash} from "@fortawesome/free-solid-svg-icons";
@@ -17,24 +16,27 @@ export default class BookEditor extends Component {
     }
 
     componentDidMount() {
+        let { id } = useParams();
+        console.log('id ' + id);
         this.getBookById(id);
+        console.log("component mount with id " + bookId);
     }
 
     getBookById(id) {
         axios.get("/api/book", {params :{ id : bookId}})
         .then(response => {
-                console.log(response.data);
                 this.setState({
                     contentBook: response.data
                 });
+                console.log('contentBook ' + contentBook);
             })
     }
 
     render() {
+
         return (
             <div>
-                <div className="EditBookList">
-
+                <div className="BookEditor">
                     <div>
                         <div>
                             <Card className={"border"}>
@@ -47,31 +49,20 @@ export default class BookEditor extends Component {
                                             <th>Title</th>
                                             <th>Authors</th>
                                             <th>Genres</th>
-                                            <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {
-                                            this.state.content.length === 0 ?
+                                            this.state.contentBook.length === 0 ?
                                                 <tr align="center">
-                                                    <td colSpan="6">No Book Available</td>
+                                                    <td colSpan="6">Book Not Available</td>
                                                 </tr> :
-                                                this.state.content.map(
+                                                this.state.contentBook.map(
                                                     (book) => (
                                                         <tr key={book.id}>
                                                             <td>{book.title}</td>
                                                             <td>{book.authors.map((author) =><li>{author.name}</li>)}</td>
                                                             <td>{book.genres.map((genre) => <li>{genre.name}</li>)}</td>
-                                                            <td>
-                                                                <ButtonGroup>
-                                                                    <Button size="sm"
-                                                                            variant="outline-primary"><FontAwesomeIcon
-                                                                        icon={faEdit} className={"border"}/></Button>
-                                                                    <Button size="sm"
-                                                                            variant="outline-danger"><FontAwesomeIcon
-                                                                        icon={faTrash} className={"border"}/></Button>
-                                                                </ButtonGroup>
-                                                            </td>
                                                         </tr>
                                                     ))
                                         }

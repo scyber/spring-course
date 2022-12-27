@@ -78,7 +78,7 @@ export default class Book extends Component {
         const {title, selectedAuthor, selectedGenre} = this.state
         return (
             <div>
-                <div style={{"display" : true ? "block" : "none"}}>
+                <div style={{"display" : false ? "block" : "none"}}>
                     <CustomToast children ={{show: this.state.show, type : this.state.type}}/>
                 </div>
                 <div className="AddBook">

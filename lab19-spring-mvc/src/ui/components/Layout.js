@@ -13,7 +13,6 @@ function Layout() {
             <div className="Layout">
                     <NavigationBar/>
                     <Footer/>
-
             </div>
         );
 }

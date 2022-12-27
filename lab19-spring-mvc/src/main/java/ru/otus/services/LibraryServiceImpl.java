@@ -3,7 +3,6 @@ package ru.otus.services;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Author;
@@ -16,7 +15,6 @@ import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
