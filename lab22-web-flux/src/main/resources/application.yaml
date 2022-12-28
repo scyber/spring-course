@@ -1,0 +1,11 @@
+spring:
+    main:
+      allow-circular-references: true
+    mongodb :
+      embedded:
+        version: 5.0.0
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
