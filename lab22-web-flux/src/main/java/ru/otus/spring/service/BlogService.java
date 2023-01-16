@@ -1,6 +1,5 @@
 package ru.otus.spring.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -12,10 +11,14 @@ import ru.otus.spring.repository.BlogRepository;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
 public class BlogService {
     private final BlogRepository blogRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+
+    public BlogService(BlogRepository blogRepository, ApplicationEventPublisher applicationEventPublisher) {
+        this.blogRepository = blogRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     public Flux<Blog> all(){
         return this.blogRepository.findAll();
