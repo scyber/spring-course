@@ -13,51 +13,47 @@ import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAd
 import reactor.core.publisher.Flux;
 import ru.otus.spring.events.BlogCreatedEventPublisher;
 import ru.otus.spring.events.BlogCreationEvent;
-
 import java.util.Collections;
-import java.util.Map;
 
 @Log4j2
 @Configuration
 public class WebSocketConfiguration {
 
-    @Bean
-    HandlerMapping handlerMapping(WebSocketHandler wsh){
-      return new SimpleUrlHandlerMapping(){
-            {
-                setUrlMap(Collections.singletonMap("/ws/blogs",wsh));
-                setOrder(10);
-            }
+	@Bean
+	HandlerMapping handlerMapping(WebSocketHandler wsh) {
+		return new SimpleUrlHandlerMapping() {
+			{
+				setUrlMap(Collections.singletonMap("/ws/blogs", wsh));
+				setOrder(10);
+			}
 
-        };
-    }
+		};
+	}
 
-    @Bean
-    WebSocketHandlerAdapter webSocketHandlerAdapter(){
-        return new WebSocketHandlerAdapter();
-    }
+	@Bean
+	WebSocketHandlerAdapter webSocketHandlerAdapter() {
+		return new WebSocketHandlerAdapter();
+	}
 
-    @Bean
-    WebSocketHandler webSocketHandler(ObjectMapper objectMapper, BlogCreatedEventPublisher eventPublisher){
+	@Bean
+	WebSocketHandler webSocketHandler(ObjectMapper objectMapper, BlogCreatedEventPublisher eventPublisher) {
 
-        Flux<BlogCreationEvent> publish = Flux.create(eventPublisher).share();
+		Flux<BlogCreationEvent> publish = Flux.create(eventPublisher).share();
 
-        return session -> {
-            Flux<WebSocketMessage> messageFlux = publish.
-            map(evt -> {
-                try {
-                    return objectMapper.writeValueAsString(evt.getSource());
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
+		return session -> {
+			Flux<WebSocketMessage> messageFlux = publish.map(evt -> {
+				try {
+					return objectMapper.writeValueAsString(evt.getSource());
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
 
-            }).map(str -> {
-                log.info("send message " + str);
-                return session.textMessage(str);
-                    });
-            return session.send(messageFlux);
-        };
-    }
-
+			}).map(str -> {
+				log.info("send message " + str);
+				return session.textMessage(str);
+			});
+			return session.send(messageFlux);
+		};
+	}
 
 }
