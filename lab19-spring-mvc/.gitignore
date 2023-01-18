@@ -1,2 +1,5 @@
 /.classpath
 /.factorypath
+/node_modules/
+/node/
+/.project
