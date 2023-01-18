@@ -1,11 +1,16 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Row, Container, Col, Button} from 'react-bootstrap'
+import { useParams } from "react-router-dom";
 
-
-class Welcome extends React.Component {
+export default class Welcome extends Component {
+     constructor(props) {
+            super(props);
+        }
 
     render() {
+        //let {bookId} = useParams();
         return (
+
             <div>
                 <h3>Welcome to Library</h3>
                 <p>This is a simple hero unit, a simple style component for calling
@@ -16,5 +21,3 @@ class Welcome extends React.Component {
         );
     }
 }
-
-export default Welcome
