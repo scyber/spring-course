@@ -1,23 +1,22 @@
 package ru.otus.services;
 
-import org.hibernate.annotations.BatchSize;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
-import ru.otus.exeptions.FindItemExecption;
 import ru.otus.repository.AuthorRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -40,60 +39,56 @@ public class LibraryServiceImpl implements LibraryService {
 
 
     @Override
-    @Transactional(readOnly = true)
-    @BatchSize(size = 10)
-    public Page<Book> findPage(Integer page, Integer size) {
-        return bookRepository.findAll(
-                PageRequest.of(page - 1, size));
+    public Mono<Page<Book>> findPage(PageRequest request) {
+        return bookRepository.findAllBy(request)
+        		.collectList()
+        		.zipWith(this.bookRepository.count())
+        		.map(t -> new PageImpl<>(t.getT1(),request,t.getT2()));
     }
 
     @Override
-    @BatchSize(size = 10)
-    @Transactional(readOnly = true)
-    public List<Book> getAllBooks() {
+    public Flux<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
     @Override
-    @Transactional
-    public Book addBook(Book book) {
+    public Mono<Book> addBook(Book book) {
 
         var authorsIdList = book.getAuthors().stream().map(a ->a.getId()).collect(Collectors.toList());
-        var authors = authorRepository.findAllById(authorsIdList);
+       
+        var authorsRecivedList = new ArrayList<Author>();
+        authorRepository.findAllById(authorsIdList).collectList().subscribe(authorsRecivedList::addAll);
         var genresIdList = book.getGenres().stream().map(a->a.getId()).collect(Collectors.toList());
-        var genres = genreRepository.findAllById(genresIdList);
-        book.setGenres(genres);
-        book.setAuthors(authors);
+        var genreRecievedList = new ArrayList<Genre>();
+        genreRepository.findAllById(genresIdList).collectList().subscribe(genreRecievedList::addAll);
+        
+        book.setGenres(genreRecievedList);
+        book.setAuthors(authorsRecivedList);
         return bookRepository.save(book);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Book getBookById(Long bookId) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Mono<Book> getBookById(String bookId) {
+        return bookRepository.findById(bookId);
     }
 
     @Override
-    @Transactional
-    public void deleteBook(Long bookId) {
-            bookRepository.deleteById(bookId);
+    public Mono<Void> deleteBook(String bookId) {
+           return bookRepository.deleteById(bookId);
     }
 
     @Override
-    @Transactional
-    public void updateBookNameById(Long id, String name) {
-        bookRepository.updateBookTitleById(id, name);
+    public Mono<Void> updateBookNameById(String id, String name) {
+        return bookRepository.updateBookTitleById(id, name);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Author> getAllAuthors() {
+    public Flux<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
 
     @Override
-    @Transactional
-    public Author addAuthor(String authorName) {
+    public Mono<Author> addAuthor(String authorName) {
         Author author = new Author();
         author.setName(authorName);
         return authorRepository.save(author);
@@ -101,21 +96,18 @@ public class LibraryServiceImpl implements LibraryService {
 
 
     @Override
-    @Transactional
-    public void deleteAuthor(Long authorId) {
-        authorRepository.deleteById(authorId);
+    public Mono<Void> deleteAuthor(String authorId) {
+        return authorRepository.deleteById(authorId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Genre> getAllGenres() {
+    public Flux<Genre> getAllGenres() {
         return genreRepository.findAll();
     }
 
 
     @Override
-    @Transactional
-    public Genre addGenre(String genreName) {
+    public Mono<Genre> addGenre(String genreName) {
         Genre genre = new Genre();
         genre.setName(genreName);
         return genreRepository.save(genre);
@@ -123,20 +115,19 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     @Transactional
-    public void deleteGenre(Long genreId) {
-        genreRepository.deleteById(genreId);
+    public Mono<Void> deleteGenre(String genreId) {
+       return genreRepository.deleteById(genreId);
     }
 
     @Override
-    public List<Comment> getAllComments() {
+    public Flux<Comment> getAllComments() {
         return commentRepository.findAll();
     }
 
     @Override
-    @Transactional
-    public Comment addComment(Book book, String text) {
-
-        var bookSaved  = bookRepository.findById(book.getId()).orElseThrow(() -> new FindItemExecption("book not found with id " + book));
+    public Mono<Comment> addComment(Book book, String text) {
+    	
+        var bookSaved  = bookRepository.findById(book.getId()).block();
         var commment = new Comment();
         commment.setBook(bookSaved);
         commment.setTitle(text);
@@ -144,64 +135,59 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Comment> findCommentsByBookId(Long bookId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Flux<Comment> findCommentsByBookId(String bookId) {
+        var book = bookRepository.findById(bookId).block();
         return commentRepository.findByBook(book);
     }
 
     @Override
-    @Transactional
-    public void deleteCommentById(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public Mono<Void> deleteCommentById(String commentId) {
+      return commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public Mono<Void> updateCommentById(String commentId, String text) {
+       return commentRepository.updateCommentById(commentId, text);
     }
 
     @Override
     @Transactional
-    public void updateCommentById(Long commentId, String text) {
-        commentRepository.updateCommentById(commentId, text);
-    }
-
-    @Override
-    @Transactional
-    public void addAuthorForBook(Long bookId, Long authorId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Mono<Book> addAuthorForBook(String bookId, String authorId) {
+        var book = bookRepository.findById(bookId).block();
         var authors = book.getAuthors();
-        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
+        var author = authorRepository.findById(authorId).block();
         authors.add(author);
         book.setAuthors(authors);
-        bookRepository.save(book);
+       return bookRepository.save(book);
     }
 
     @Override
-    @Transactional
-    public void deleteAuthorFromBook(Long bookId, Long authorId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Mono<Book> deleteAuthorFromBook(String bookId, String authorId) {
+        var book = bookRepository.findById(bookId).block();
         var authors = book.getAuthors();
-        var author = authorRepository.findById(authorId).orElseThrow(() -> new FindItemExecption("Could not find Author with id" + authorId));
+        var author = authorRepository.findById(authorId).block();
         authors.remove(author);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     @Override
-    @Transactional
-    public void addGenreForBook(Long bookId, Long genreId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Mono<Book> addGenreForBook(String bookId, String genreId) {
+        var book = bookRepository.findById(bookId).block();
         var genres = book.getGenres();
-        var genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("Could not find Genre with id" + genreId));
+        var genre = genreRepository.findById(genreId).block();
         genres.add(genre);
         book.setGenres(genres);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     @Override
-    public void deleteGenreFromBook(Long bookId, Long genreId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new FindItemExecption("book not found with id " + bookId));
+    public Mono<Book> deleteGenreFromBook(String bookId, String genreId) {
+        var book = bookRepository.findById(bookId).block();
         var genres = book.getGenres();
-        var genre = genreRepository.findById(genreId).orElseThrow(() -> new FindItemExecption("Could not find Genre with id" + genreId));
+        var genre = genreRepository.findById(genreId).block();
         genres.remove(genre);
         book.setGenres(genres);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
 

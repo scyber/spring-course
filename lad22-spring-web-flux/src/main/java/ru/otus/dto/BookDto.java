@@ -2,6 +2,7 @@ package ru.otus.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
@@ -11,9 +12,10 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class BookDto {
 
-    private Long id;
+    private String id;
     private String title;
     private List<Author> authors;
     private List<Genre> genres;

@@ -1,6 +1,10 @@
 package ru.otus.services;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -9,30 +13,30 @@ import java.util.List;
 
 
 public interface LibraryService {
-    Page<Book> findPage(Integer page, Integer size);
-    List<Book> getAllBooks();
-    Book getBookById(Long id);
-    Book addBook(Book book);
-    void deleteBook(Long id);
-    void updateBookNameById(Long id, String name);
-    List<Author> getAllAuthors();
-    Author addAuthor(String name);
-    void deleteAuthor(Long authorId);
-    List<Genre> getAllGenres();
-    Genre addGenre(String genreName);
-    void deleteGenre(Long genreId);
+    Mono<Page<Book>> findPage(PageRequest request);
+    Flux<Book> getAllBooks();
+    Mono<Book> getBookById(String id);
+    Mono<Book> addBook(Book book);
+    Mono<Void> deleteBook(String id);
+    Mono<Void> updateBookNameById(String id, String name);
+    Flux<Author> getAllAuthors();
+    Mono<Author> addAuthor(String name);
+    Mono<Void> deleteAuthor(String authorId);
+    Flux<Genre> getAllGenres();
+    Mono<Genre> addGenre(String genreName);
+    Mono<Void> deleteGenre(String genreId);
 
-    List<Comment> getAllComments();
-    Comment addComment(Book book, String text);
-    List<Comment> findCommentsByBookId(Long bookId);
-    void deleteCommentById(Long commentId);
-    void updateCommentById(Long commentId, String text);
-    void addAuthorForBook(Long bookId, Long authorId);
+    Flux<Comment> getAllComments();
+    Mono<Comment> addComment(Book book, String text);
+    Flux<Comment> findCommentsByBookId(String bookId);
+    Mono<Void> deleteCommentById(String commentId);
+    Mono<Void> updateCommentById(String commentId, String text);
+    Mono<Book> addAuthorForBook(String bookId, String authorId);
 
-    void deleteAuthorFromBook(Long bookId, Long authorId);
+    Mono<Book> deleteAuthorFromBook(String bookId, String authorId);
 
-    void addGenreForBook(Long bookId, Long genreId);
+    Mono<Book> addGenreForBook(String bookId, String genreId);
 
-    void deleteGenreFromBook(Long bookId, Long genreId);
+    Mono<Book> deleteGenreFromBook(String bookId, String genreId);
 
 }

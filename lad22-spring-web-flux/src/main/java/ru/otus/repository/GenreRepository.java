@@ -2,19 +2,23 @@ package ru.otus.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.domain.Genre;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenreRepository extends JpaRepository<Genre,Long> {
+public interface GenreRepository extends ReactiveCrudRepository<Genre,String> {
 
-    Genre save(Genre domain);
+ 
 
-    List<Genre> findAll();
+    Flux<Genre> findAll();
 
-    Optional<Genre> findById(@Param("id") Long id);
+    Mono<Genre> findById(@Param("id") String id);
 
-    List<Genre> findByName(@Param("name") String name);
+    Flux<Genre> findByName(@Param("name") String name);
 
-    void deleteById(@Param("id") Long id);
+    Mono<Void> deleteById(@Param("id") String id);
 }

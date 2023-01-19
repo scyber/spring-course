@@ -1,8 +1,9 @@
 package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,17 +22,14 @@ public class CommentsRestController {
     private final LibraryService libraryService;
 
     @GetMapping("/api/comments")
-    public List<Comment> getAllComments() {
+    public Flux<Comment> getAllComments() {
         return libraryService.getAllComments();
     }
 
     @PostMapping("/api/comments/")
-    public ResponseEntity<Comment> saveComment(@ModelAttribute("book") BookDto bookDto, @RequestParam("title") String title,
+    public Mono<Comment> saveComment(@ModelAttribute("book") BookDto bookDto, @RequestParam("title") String title,
                                                BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(libraryService.addComment(bookDto.toDomainObject(), title), HttpStatus.OK);
-        }
+       
+    	return libraryService.addComment(bookDto.toDomainObject(), title);
     }
 }

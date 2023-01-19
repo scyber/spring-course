@@ -1,9 +1,6 @@
 spring:
     main:
       allow-circular-references: true
-    datasource:
-      url: jdbc:h2:mem:testdb
-      initialization-mode: never
     jpa:
       generate-ddl: true
       hibernate:
@@ -16,9 +13,16 @@ spring:
        path: /h2-console
        settings:
          web-allow-others: true
-    shell:
-      interactive:
-        enabled: false
+    data:
+     mongodb:
+      database: library
+      authentication-database: admin
+      username: root
+      password: example
+      port: 27017
+      host: localhost
+      #uri: mongodb://localhost
+
 logging:
   level:
     org:

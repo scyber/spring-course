@@ -1,29 +1,29 @@
 package ru.otus.repository;
 
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.repository.query.Param;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
-import java.util.List;
-import java.util.Optional;
 
 
-public interface AuthorRepository extends JpaRepository<Author,Long> {
+public interface AuthorRepository extends ReactiveMongoRepository<Author,String> {
 
-    Author save(Author domain);
+    Mono<Author> save(Author domain);
 
-    List<Author> findAll();
+    Flux<Author> findAll();
 
-    Optional<Author> findById(Long id);
+    Mono<Author> findById(Long id);
 
-    @Query("select a from Author a where a.name = :name")
-    List<Author> findByName(@Param("name") String name);
+    //@Query("select a from Author a where a.name = :name")
+    Flux<Author> findByname(String name);
 
-    void deleteById(@Param("id") Long id);
+    Mono<Void> deleteById(@Param("id") String id);
 
     @Modifying
     @Query("update Author a set a.name = :name where a.id = :id")
-    void updateNameById(@Param("id") long id, @Param("name") String name);
+    Mono<Void> updateNameById(@Param("id") String id, @Param("name") String name);
 }
