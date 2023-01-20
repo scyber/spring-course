@@ -2,6 +2,8 @@ package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
+
+import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +19,8 @@ public class BookRestController {
     private final BookRepository bookRepository;
 
     @GetMapping(value = "/api/books")
-    public Mono<Page<Book>> findAll(PageRequest request) {
+    public Publisher<Page<Book>> findAll(@RequestParam("page") int page, @RequestParam("size") int size) {
+    	var request = PageRequest.of(page, size);
         return this.bookRepository.findAllBy(request)
         		.collectList()
         		.zipWith(this.bookRepository.count())
