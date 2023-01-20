@@ -1,6 +1,7 @@
 package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.reactivestreams.Publisher;
@@ -25,6 +26,11 @@ public class BookRestController {
         		.collectList()
         		.zipWith(this.bookRepository.count())
         		.map(t -> new PageImpl<>(t.getT1(), request,t.getT2()));
+    }
+    
+    @GetMapping("/api/book")
+    public Flux<Book> fildAll(){
+		return this.bookRepository.findAll();
     }
 
     @GetMapping(value = "/api/book/{id}")
