@@ -1,27 +1,18 @@
 spring:
     main:
       allow-circular-references: true
-    jpa:
-      generate-ddl: true
-      hibernate:
-        ddl-auto: none
-      show-sql: true
-      defer-datasource-initialization: true
-    h2:
-     console:
-       enabled: true
-       path: /h2-console
-       settings:
-         web-allow-others: true
-    data:
-     mongodb:
-      database: library
-      authentication-database: admin
-      username: root
-      password: example
-      port: 27017
-      host: localhost
-      #uri: mongodb://localhost
+    mongodb:
+      embedded:
+        version: 5.0.0 
+#    data:
+#     mongodb:
+#      database: library
+#      authentication-database: admin
+#      username: root
+#      password: example
+#      port: 27017
+#      host: localhost
+#      #uri: mongodb://localhost
 
 logging:
   level:

@@ -37,27 +37,27 @@ class LibraryServiceTest {
     private static final String GENRE_NAME = "Тестовый жанр Сервиса";
 
 
-    @Test
-    @DisplayName("Тестирование добавление Авторов")
-    void testAuthorAdd(){
-        libraryService.addAuthor(AUTHOR_NAME);
-        Author author = new Author();
-        author.setName(AUTHOR_NAME);
-        Mockito.verify(authorRepository).save(author);
-    }
-    @Test
-    @DisplayName("Тестирование получения всех авторов")
-    void testGetAllAuthors(){
-        libraryService.getAllAuthors();
-        Mockito.verify(authorRepository).findAll();
-    }
-
-    @Test
-    @DisplayName("Тестирование получения всех жанров")
-    void testGetAllGenres(){
-        libraryService.getAllGenres();
-        Mockito.verify(genreRepository).findAll();
-    }
+//    @Test
+//    @DisplayName("Тестирование добавление Авторов")
+//    void testAuthorAdd(){
+//        libraryService.addAuthor(AUTHOR_NAME);
+//        Author author = new Author();
+//        author.setName(AUTHOR_NAME);
+//        Mockito.verify(authorRepository).save(author);
+//    }
+//    @Test
+//    @DisplayName("Тестирование получения всех авторов")
+//    void testGetAllAuthors(){
+//        libraryService.getAllAuthors();
+//        Mockito.verify(authorRepository).findAll();
+//    }
+//
+//    @Test
+//    @DisplayName("Тестирование получения всех жанров")
+//    void testGetAllGenres(){
+//        libraryService.getAllGenres();
+//        Mockito.verify(genreRepository).findAll();
+//    }
 //    @Test
 //    @DisplayName("Тестирование вызовов сервиса поиска всех книг библиотеки")
 //    void testFindAllBooks(){

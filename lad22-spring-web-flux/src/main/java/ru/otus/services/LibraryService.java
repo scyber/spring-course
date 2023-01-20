@@ -17,8 +17,9 @@ public interface LibraryService {
     Flux<Book> getAllBooks();
     Mono<Book> getBookById(String id);
     Mono<Book> addBook(Book book);
-    Mono<Void> deleteBook(String id);
-    Mono<Void> updateBookNameById(String id, String name);
+    Mono<Book> deleteBook(Book book);
+    Mono<Void> deleteBookById(String id);
+    Mono<Book> updateBookNameById(String id, String name);
     Flux<Author> getAllAuthors();
     Mono<Author> addAuthor(String name);
     Mono<Void> deleteAuthor(String authorId);
@@ -30,7 +31,7 @@ public interface LibraryService {
     Mono<Comment> addComment(Book book, String text);
     Flux<Comment> findCommentsByBookId(String bookId);
     Mono<Void> deleteCommentById(String commentId);
-    Mono<Void> updateCommentById(String commentId, String text);
+    Mono<Comment> updateCommentById(String commentId, String text);
     Mono<Book> addAuthorForBook(String bookId, String authorId);
 
     Mono<Book> deleteAuthorFromBook(String bookId, String authorId);

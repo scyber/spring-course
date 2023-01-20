@@ -23,7 +23,4 @@ public interface AuthorRepository extends ReactiveMongoRepository<Author,String>
 
     Mono<Void> deleteById(@Param("id") String id);
 
-    @Modifying
-    @Query("update Author a set a.name = :name where a.id = :id")
-    Mono<Void> updateNameById(@Param("id") String id, @Param("name") String name);
 }
