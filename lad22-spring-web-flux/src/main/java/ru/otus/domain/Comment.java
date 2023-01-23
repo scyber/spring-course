@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
+
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
 
 
 @Data
@@ -18,7 +20,7 @@ public class Comment {
     @Id
     private String id;
 
-    @DBRef
+    @DocumentReference
     private Book book;
 
     private String title;

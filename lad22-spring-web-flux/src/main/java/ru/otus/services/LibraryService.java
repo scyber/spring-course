@@ -28,7 +28,7 @@ public interface LibraryService {
     Mono<Void> deleteGenre(String genreId);
 
     Flux<Comment> getAllComments();
-    Mono<Comment> addComment(Book book, String text);
+    Mono<Comment> addComment(String bookId, String text);
     Flux<Comment> findCommentsByBookId(String bookId);
     Mono<Void> deleteCommentById(String commentId);
     Mono<Comment> updateCommentById(String commentId, String text);

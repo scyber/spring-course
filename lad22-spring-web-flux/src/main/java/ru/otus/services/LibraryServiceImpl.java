@@ -1,13 +1,12 @@
 package ru.otus.services;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
@@ -20,6 +19,7 @@ import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
 
 @Component
+@Log4j2
 public class LibraryServiceImpl implements LibraryService {
 
 	private final BookRepository bookRepository;
@@ -38,7 +38,8 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Page<Book>> findPage(PageRequest request) {
-		return bookRepository.findAllBy(request).collectList().zipWith(this.bookRepository.count())
+		return bookRepository.findAllBy(request)
+				.collectList().zipWith(this.bookRepository.count())
 				.map(t -> new PageImpl<>(t.getT1(), request, t.getT2()));
 	}
 
@@ -49,17 +50,6 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Book> addBook(Book book) {
-
-		var authorsIdList = book.getAuthors().stream().map(a -> a.getId()).collect(Collectors.toList());
-
-		var authorsRecivedList = new ArrayList<Author>();
-		authorRepository.findAllById(authorsIdList).collectList().subscribe(authorsRecivedList::addAll);
-		var genresIdList = book.getGenres().stream().map(a -> a.getId()).collect(Collectors.toList());
-		var genreRecievedList = new ArrayList<Genre>();
-		genreRepository.findAllById(genresIdList).collectList().subscribe(genreRecievedList::addAll);
-
-		book.setGenres(genreRecievedList);
-		book.setAuthors(authorsRecivedList);
 		return bookRepository.save(book);
 	}
 
@@ -75,9 +65,10 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Book> updateBookNameById(String id, String title) {
-		var book = bookRepository.findById(id).block();
-		book.setTitle(title);
-		return bookRepository.save(book);
+		return bookRepository.findById(id).mapNotNull(b -> {
+			b.setTitle(title);
+			return b;
+		}).flatMap(bookRepository::save);
 	}
 
 	@Override
@@ -121,19 +112,20 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	@Override
-	public Mono<Comment> addComment(Book book, String text) {
+	public Mono<Comment> addComment(String bookId, String title) {
+		return this.bookRepository.findById(bookId).mapNotNull(b -> {
+			log.debug("book for add comment found ID " + b.getId());
+			var comment = new Comment();
+			comment.setTitle(title);
+			comment.setBook(b);
+			return comment;
+		}).flatMap(this.commentRepository::save);
 
-		var bookSaved = bookRepository.findById(book.getId()).block();
-		var commment = new Comment();
-		commment.setBook(bookSaved);
-		commment.setTitle(text);
-		return commentRepository.save(commment);
 	}
 
 	@Override
 	public Flux<Comment> findCommentsByBookId(String bookId) {
-		var book = bookRepository.findById(bookId).block();
-		return commentRepository.findAllBy(book);
+		return this.commentRepository.findAllByBookId(bookId);
 	}
 
 	@Override
@@ -150,23 +142,23 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	@Override
-	@Transactional
 	public Mono<Book> addAuthorForBook(String bookId, String authorId) {
-		var book = bookRepository.findById(bookId).block();
-		var authors = book.getAuthors();
-		var author = authorRepository.findById(authorId).block();
-		authors.add(author);
-		book.setAuthors(authors);
-		return bookRepository.save(book);
+	  return this.bookRepository.findById(bookId).map(b -> {
+			var authorsForUpdate = b.getAuthors();
+			var authorNew = this.authorRepository.findById(authorId).block();
+			authorsForUpdate.add(authorNew);
+			b.setAuthors(authorsForUpdate);
+			return b;
+		}).flatMap(this.bookRepository::save);
 	}
 
 	@Override
 	public Mono<Book> deleteAuthorFromBook(String bookId, String authorId) {
-		var book = bookRepository.findById(bookId).block();
-		var authors = book.getAuthors();
-		var author = authorRepository.findById(authorId).block();
-		authors.remove(author);
-		return bookRepository.save(book);
+		return this.bookRepository.findById(bookId).map(b -> {
+			var authorsForUpdate = b.getAuthors().stream().filter(a -> a.getId() != authorId).collect(Collectors.toList());
+			b.setAuthors(authorsForUpdate);
+			return b;
+		}).flatMap(this.bookRepository::save);
 	}
 
 	@Override
@@ -177,18 +169,18 @@ public class LibraryServiceImpl implements LibraryService {
 			b.setGenres(genres);
 			return b;
 		}).flatMap(bookRepository::save);
-		
+
 	}
 
 	@Override
 	public Mono<Book> deleteGenreFromBook(String bookId, String genreId) {
-		
+
 		return bookRepository.findById(bookId).map(book -> {
 			var genres = book.getGenres().stream().filter(g -> g.getId() != genreId).collect(Collectors.toList());
 			book.setGenres(genres);
 			return book;
 		}).flatMap(bookRepository::save);
-			
+
 	}
 
 	@Override
