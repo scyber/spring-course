@@ -7,11 +7,14 @@ import reactor.core.publisher.Mono;
 
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
+import ru.otus.dto.BookDto;
+import ru.otus.repository.BookRepository;
 import ru.otus.services.LibraryService;
 
 @RestController
@@ -21,16 +24,20 @@ public class BookRestController {
 
 
 	private final LibraryService libraryService;
+	private final BookRepository bookRepository;
 
     @GetMapping(value = "/api/books")
     public Mono<Page<Book>> findAll(@RequestParam("page") int page, @RequestParam("size") int size) {
     	var request = PageRequest.of(page, size);
-        return this.libraryService.findPage(request);
+    	
+        return this.bookRepository.findAllBy(request)
+				.collectList().zipWith(this.bookRepository.count())
+				.map(t -> new PageImpl<>(t.getT1(), request, t.getT2()));
     }
     
     @GetMapping("/api/book")
     public Flux<Book> fildAll(){
-		return this.libraryService.getAllBooks();
+		return this.bookRepository.findAll();
     }
 
     @GetMapping(value = "/api/book/{id}")
@@ -40,7 +47,7 @@ public class BookRestController {
     
     @PostMapping("/api/book/{bookId}")
     public Mono<Comment> saveComment(@PathVariable String bookId, @RequestBody String title) {
-    	log.info("getting params bookId " + bookId + " title comment " + title);
+    	log.info("getting  bookId " + bookId + " title comment " + title);
     	return this.libraryService.addComment(bookId, title);
     }
 

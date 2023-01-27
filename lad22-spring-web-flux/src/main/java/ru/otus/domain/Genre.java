@@ -3,8 +3,10 @@ package ru.otus.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Genre {
 
     @Id
+    @MongoId(targetType = FieldType.OBJECT_ID)
     private String id;
 
     private String name;
@@ -21,8 +24,8 @@ public class Genre {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+//    @Override
+//    public String toString() {
+//        return name;
+//    }
 }

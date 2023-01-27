@@ -45,27 +45,34 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Flux<Book> getAllBooks() {
-		return bookRepository.findAll();
+		this.bookRepository.findAll().mapNotNull(b -> {
+			log.info("book title " + b.getTitle());
+			log.info("authors" + b.getAuthors());
+			log.info("genres " + b.getGenres());
+			return b;
+			});
+		
+		return this.bookRepository.findAll();
 	}
 
 	@Override
 	public Mono<Book> addBook(Book book) {
-		return bookRepository.save(book);
+		return this.bookRepository.save(book);
 	}
 
 	@Override
 	public Mono<Book> getBookById(String bookId) {
-		return bookRepository.findById(bookId);
+		return this.bookRepository.findById(bookId);
 	}
 
 	@Override
 	public Mono<Book> deleteBook(Book book) {
-		return bookRepository.delete(book).thenReturn(book);
+		return this.bookRepository.delete(book).thenReturn(book);
 	}
 
 	@Override
 	public Mono<Book> updateBookNameById(String id, String title) {
-		return bookRepository.findById(id).mapNotNull(b -> {
+		return this.bookRepository.findById(id).mapNotNull(b -> {
 			b.setTitle(title);
 			return b;
 		}).flatMap(bookRepository::save);
@@ -73,42 +80,42 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Flux<Author> getAllAuthors() {
-		return authorRepository.findAll();
+		return this.authorRepository.findAll();
 	}
 
 	@Override
 	public Mono<Author> addAuthor(String authorName) {
 		Author author = new Author();
 		author.setName(authorName);
-		return authorRepository.save(author);
+		return this.authorRepository.save(author);
 	}
 
 	@Override
 	public Mono<Void> deleteAuthor(String authorId) {
-		return authorRepository.deleteById(authorId);
+		return this.authorRepository.deleteById(authorId);
 	}
 
 	@Override
 	public Flux<Genre> getAllGenres() {
-		return genreRepository.findAll();
+		return this.genreRepository.findAll();
 	}
 
 	@Override
 	public Mono<Genre> addGenre(String genreName) {
 		Genre genre = new Genre();
 		genre.setName(genreName);
-		return genreRepository.save(genre);
+		return this.genreRepository.save(genre);
 	}
 
 	@Override
 	@Transactional
 	public Mono<Void> deleteGenre(String genreId) {
-		return genreRepository.deleteById(genreId);
+		return this.genreRepository.deleteById(genreId);
 	}
 
 	@Override
 	public Flux<Comment> getAllComments() {
-		return commentRepository.findAll();
+		return this.commentRepository.findAll();
 	}
 
 	@Override
@@ -130,12 +137,12 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Void> deleteCommentById(String commentId) {
-		return commentRepository.deleteById(commentId);
+		return this.commentRepository.deleteById(commentId);
 	}
 
 	@Override
 	public Mono<Comment> updateCommentById(String commentId, String text) {
-		return commentRepository.findById(commentId).map(comment -> {
+		return this.commentRepository.findById(commentId).map(comment -> {
 			comment.setTitle(text);
 			return comment;
 		}).flatMap(commentRepository::save);
@@ -155,7 +162,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public Mono<Book> deleteAuthorFromBook(String bookId, String authorId) {
 		return this.bookRepository.findById(bookId).map(b -> {
-			var authorsForUpdate = b.getAuthors().stream().filter(a -> a.getId() != authorId).collect(Collectors.toList());
+			var authorsForUpdate = b.getAuthors().stream().filter(a -> a.getId().toString() != authorId ).collect(Collectors.toList());
 			b.setAuthors(authorsForUpdate);
 			return b;
 		}).flatMap(this.bookRepository::save);
@@ -163,7 +170,7 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Book> addGenreForBook(String bookId, String genreId) {
-		return bookRepository.findById(bookId).map(b -> {
+		return this.bookRepository.findById(bookId).map(b -> {
 			var genres = b.getGenres();
 			genreRepository.findById(genreId).doOnEach(g -> genres.add(g.get()));
 			b.setGenres(genres);
@@ -175,7 +182,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public Mono<Book> deleteGenreFromBook(String bookId, String genreId) {
 
-		return bookRepository.findById(bookId).map(book -> {
+		return this.bookRepository.findById(bookId).map(book -> {
 			var genres = book.getGenres().stream().filter(g -> g.getId() != genreId).collect(Collectors.toList());
 			book.setGenres(genres);
 			return book;
@@ -185,7 +192,7 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public Mono<Void> deleteBookById(String id) {
-		return bookRepository.deleteById(id);
+		return this.bookRepository.deleteById(id);
 	}
 
 }

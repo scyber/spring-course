@@ -7,29 +7,34 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
 import ru.otus.repository.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @SpringBootTest
 class LibraryServiceTest {
+	
     @MockBean
     private BookRepository bookRepository;
+    
     @MockBean
     private AuthorRepository authorRepository;
+    
     @MockBean
     private GenreRepository genreRepository;
+    
     @Autowired
     private LibraryService libraryService;
 
-    private static final long BOOK_ID = 1L;
-    private static final long AUTHOR_ID = 1L;
-    private static final long GENRE_ID = 1L;
+    private static final String BOOK_ID = UUID.randomUUID().toString();
+    private static final String AUTHOR_ID = UUID.randomUUID().toString();
+    private static final String GENRE_ID = UUID.randomUUID().toString();
 
     private static final String AUTHOR_NAME = "Тестовый Автор Сервиса";
     private static final String BOOK_NAME = "Тестовая книга Сервиса";
@@ -96,8 +101,8 @@ class LibraryServiceTest {
 //        var genre = new Genre();
 //        genre.setName(GENRE_NAME);
 //        genre.setId(GENRE_ID);
-//        Mockito.when(genreRepository.findById(GENRE_ID)).thenReturn(Optional.of(genre));
-//        Mockito.when(authorRepository.findById(AUTHOR_ID)).thenReturn(Optional.of(author));
+//        Mockito.when(genreRepository.findById(GENRE_ID)).thenReturn(Mono.just(genre));
+//        Mockito.when(authorRepository.findById(AUTHOR_ID)).thenReturn(Mono.just(author));
 //        var book = new Book();
 //        book.setTitle(BOOK_NAME);
 //        book.setAuthors(List.of(author));
