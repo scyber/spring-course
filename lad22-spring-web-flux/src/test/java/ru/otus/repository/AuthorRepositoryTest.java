@@ -17,7 +17,7 @@ import ru.otus.domain.Author;
 
 
 
-@DataJpaTest
+
 @ExtendWith(SpringExtension.class)
 @Disabled
 class AuthorRepositoryTest {

@@ -1,7 +1,4 @@
 spring:
-    jpa:
-      hibernate:
-        ddl-auto: none
     main:
       allow-circular-references: true
       allow-bean-definition-overriding: true

@@ -1,12 +1,22 @@
 package ru.otus.services;
 
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MongoDBContainer;
 
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
@@ -18,19 +28,10 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
+@ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class LibraryServiceTest {
 	
-    @MockBean
-    private BookRepository bookRepository;
-    
-    @MockBean
-    private AuthorRepository authorRepository;
-    
-    @MockBean
-    private GenreRepository genreRepository;
-    
-    @Autowired
-    private LibraryService libraryService;
+   
 
     private static final String BOOK_ID = UUID.randomUUID().toString();
     private static final String AUTHOR_ID = UUID.randomUUID().toString();
@@ -42,6 +43,29 @@ class LibraryServiceTest {
     private static final String GENRE_NAME = "Тестовый жанр Сервиса";
 
 
+    private static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
+
+    @BeforeAll
+    static void setUp() {
+        mongoDBContainer.start();
+    }
+
+    @AfterAll
+    static void clean() {
+        mongoDBContainer.stop();
+    }
+
+    @Test
+    @DisplayName("Общая проверка контекста")
+    void bookDaoTest() {
+
+    }
+    
 //    @Test
 //    @DisplayName("Тестирование добавление Авторов")
 //    void testAuthorAdd(){

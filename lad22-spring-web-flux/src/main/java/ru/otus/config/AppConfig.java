@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
+import com.github.cloudyrock.mongock.Mongock;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.connection.ClusterSettings;
@@ -29,8 +30,8 @@ import ru.otus.repository.BookRepository;
 import ru.otus.repository.CommentRepository;
 import ru.otus.repository.GenreRepository;
 import ru.otus.services.LibraryService;
-//import com.github.cloudyrock.mongock.Mongock;
-//import com.github.cloudyrock.mongock.SpringMongockBuilder;
+import com.github.cloudyrock.mongock.Mongock;
+import com.github.cloudyrock.mongock.SpringMongockBuilder;
 //import com.mongodb.client.MongoClient;
 
 
@@ -39,12 +40,16 @@ import ru.otus.services.LibraryService;
 public class AppConfig {
 
 
-//	static final String CHANGELOGS_PACKAGE = "ru.otus.mongock";
-//
+	static final String CHANGELOGS_PACKAGE = "ru.otus.mongock";
+	
+	
 //	@Bean
 //	public Mongock mongock(MongoProps mongoProps, MongoClient mongoClient) {
-//		return new SpringMongockBuilder(mongoClient, mongoProps.getDatabase(), CHANGELOGS_PACKAGE).build();
-//	}
+//        return new SpringMongockBuilder(mongoClient, mongoProps.getDatabase(), CHANGELOGS_PACKAGE)
+//                .build();
+//    }
+	
+	
 
     @Bean
     Book initBookCreation(LibraryService libraryService, BookRepository bookRepository,
@@ -77,30 +82,30 @@ public class AppConfig {
         return savedBook;
     }
 	
-//	@Bean
-//	MongoClient mongoClient() {
-//		
-//		ConnectionString connectionString = new ConnectionString("mongodb://localhost");
-//
-//		MongoClientSettings.Builder builder = MongoClientSettings.builder()
-//				.applyConnectionString(connectionString);
-//				
-//				//.add(ClusterSettings.builder().applyConnectionString(connectionString))
-//				
-//				//.connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
-//				//.serverSettings(ServerSettings.builder().applyConnectionString(connectionString).build())
-//				//.credentialList(connectionString.getCredentialList())
-//				//.sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
-//				//.socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build());
-//
-//		MongoClientSettings settings = builder.codecRegistry(MongoClients.getDefaultCodecRegistry()).build();
-//
-//		return MongoClients.create(settings);
-//	}
+	@Bean
+	MongoClient mongoClient() {
+		
+		ConnectionString connectionString = new ConnectionString("mongodb://localhost");
+
+		MongoClientSettings.Builder builder = MongoClientSettings.builder()
+				.applyConnectionString(connectionString);
+				
+				//.add(ClusterSettings.builder().applyConnectionString(connectionString))
+				
+				//.connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
+				//.serverSettings(ServerSettings.builder().applyConnectionString(connectionString).build())
+				//.credentialList(connectionString.getCredentialList())
+				//.sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
+				//.socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build());
+
+		MongoClientSettings settings = builder.codecRegistry(MongoClients.getDefaultCodecRegistry()).build();
+
+		return MongoClients.create(settings);
+	}
 //	
-//	@Bean
-//	ReactiveMongoTemplate reactiveMongoTemplate(MongoClient mongoClient, MappingMongoConverter mappingMongoConverter) {
-//		return new ReactiveMongoTemplate(new SimpleReactiveMongoDatabaseFactory(mongoClient, "test"),
-//				mappingMongoConverter);
-//	}
+	@Bean
+	ReactiveMongoTemplate reactiveMongoTemplate(MongoClient mongoClient, MappingMongoConverter mappingMongoConverter) {
+		return new ReactiveMongoTemplate(new SimpleReactiveMongoDatabaseFactory(mongoClient, "test"),
+				mappingMongoConverter);
+	}
 }
