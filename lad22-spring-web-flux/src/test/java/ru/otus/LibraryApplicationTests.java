@@ -10,7 +10,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 
 @SpringBootTest
-@ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
+//@ImportAutoConfiguration(exclude = EmbeddedMongoAutoConfiguration.class)
 class LibraryApplicationTests {
 
 //    private static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.0");

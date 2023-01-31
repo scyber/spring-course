@@ -8,6 +8,6 @@ public interface CommentRepositoryCustom {
 
 	Mono<Comment> updateCommentById(String id, String title);
 	Flux<Comment> deleteCommentsByBookId(String bookId);
-	Flux<Comment> getCommentsByBookId(String bookId);
+	Flux<Comment> findCommentsByBookId(String bookId);
 	Mono<Comment> addCommentByBookId(String bookId, String text);
 }

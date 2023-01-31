@@ -20,15 +20,13 @@ import java.util.List;
 public class Book {
 
     @Id
-    @MongoId(targetType = FieldType.OBJECT_ID)
+    //@MongoId(targetType = FieldType.OBJECT_ID)
     private String id;
 
     private String title;
 
-    //@DocumentReference//(lookup = "{ '_id' : ?#{#target} }", collection = "authors" )
     private List<Author> authors;
 
-    //@DocumentReference//(collection = "genres", db = "test", lookup = "{ '_id' : ?#{#gerne.id} }")
     private List<Genre> genres;
 
     public Book(String title) {

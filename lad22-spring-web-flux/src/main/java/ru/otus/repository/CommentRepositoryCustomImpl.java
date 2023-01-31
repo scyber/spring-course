@@ -1,16 +1,16 @@
 package ru.otus.repository;
 
+
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import com.mongodb.client.result.UpdateResult;
-
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 
 @Component
@@ -36,7 +36,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
 
 
 	@Override
-	public Flux<Comment> getCommentsByBookId(String bookId) {
+	public Flux<Comment> findCommentsByBookId(String bookId) {
 		var query = new Query().addCriteria(Criteria.where("book.id").is(bookId));
 		return this.reactiveMongoTemplate.find(query, Comment.class,"comments");
 	}
@@ -44,10 +44,13 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
 
 	@Override
 	public Mono<Comment> addCommentByBookId(String bookId, String text) {
-		var query = new Query().addCriteria(Criteria.where("book.id").is(bookId));
-		var update = new Update();
-		update.addToSet(text);
-		return this.reactiveMongoTemplate.findAndModify(query, update, Comment.class);
+		var comment = new Comment();
+		comment.setTitle(text);
+		this.reactiveMongoTemplate.findById(bookId, Book.class).subscribe(b -> {
+			comment.setBook(b);
+		});
+		
+		return this.reactiveMongoTemplate.insert(comment, "comments");
 		
 	}
 
