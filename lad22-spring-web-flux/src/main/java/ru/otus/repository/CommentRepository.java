@@ -19,6 +19,4 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment,Strin
 
     Flux<Comment> findAllBy(@Param("book") Book book);
 
-    @Query(value = "{'book.id' : ?0 }")
-    Flux<Comment> findAllByBookId(String bookId);
 }

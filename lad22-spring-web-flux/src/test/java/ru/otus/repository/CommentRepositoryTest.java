@@ -70,6 +70,7 @@ class CommentRepositoryTest {
 	}
 
 	@Test
+	@DisplayName("Тестирование добавления комментария через custom реализацию")
 	void addCommentByBookId() {
 		var book = new Book();
 		book.setTitle(TITLE_OF_BOOK);
@@ -78,8 +79,6 @@ class CommentRepositoryTest {
 		var comment = commentRepository.addCommentByBookId(bookId, TITLE_INS_COMMENT).block();
 		Assertions.assertEquals(TITLE_INS_COMMENT, comment.getTitle());
 		var comments = commentRepository.findAll().collect(Collectors.toList()).block();
-		var foundTitle = comments.stream().map(c -> c.getTitle()).collect(Collectors.toList()).get(0);
-		Assertions.assertEquals(TITLE_INS_COMMENT, foundTitle);
-
+		Assertions.assertTrue(comments.contains(comment));
 	}
 }
