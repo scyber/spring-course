@@ -42,10 +42,11 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
 	public Mono<Comment> addCommentByBookId(String bookId, String text) {
 		var comment = new Comment();
 		comment.setTitle(text);
-		var book = this.reactiveMongoTemplate.findById(bookId, Book.class).blockOptional()
-				.orElseThrow(() -> new FindItemException("book not found with id " + bookId));
-		comment.setBook(book);
-		return this.reactiveMongoTemplate.save(comment);
+		return this.reactiveMongoTemplate.findById(bookId, Book.class).flatMap(book -> {
+			comment.setBook(book);
+			return this.reactiveMongoTemplate.save(comment);
+		});
+
 	}
 
 }
