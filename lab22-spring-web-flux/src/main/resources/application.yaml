@@ -1,0 +1,23 @@
+spring:
+    main:
+      allow-circular-references: true
+#    mongodb:
+#      embedded:
+#        version: 5.0.0
+    data:
+     mongodb:
+      # database: library
+      authentication-database: admin
+      #username: root
+      #password: example
+      port: 27017
+      host: localhost
+      #uri: mongodb://localhost
+
+debug: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
