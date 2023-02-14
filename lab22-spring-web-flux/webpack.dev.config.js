@@ -38,7 +38,7 @@ module.exports = {
         }
         
         
-    }
+    },
 
     module: {
         rules: [
@@ -54,7 +54,14 @@ module.exports = {
                         ]
                     }
                 }
-            }
+            },
+          {
+              test: /\.(less|css)$/,
+              use: [
+                    'style-loader',
+                    'css-loader'
+                  ]
+          }
         ]
     },
     plugins: [
