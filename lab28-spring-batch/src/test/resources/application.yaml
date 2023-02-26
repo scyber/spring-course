@@ -2,12 +2,16 @@ spring:
     jpa:
       hibernate:
         ddl-auto: none
+    batch:
+      job:
+        enabled: false      
     datasource:
       url: jdbc:h2:mem:testdb
       initialization-mode: always
     main:
       allow-circular-references: true
       allow-bean-definition-overriding: true
+    
 #    h2:
 #      console:
 #        enabled: true

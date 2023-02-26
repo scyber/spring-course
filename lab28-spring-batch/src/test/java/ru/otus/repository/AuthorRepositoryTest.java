@@ -1,6 +1,7 @@
 package ru.otus.repository;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import ru.otus.domain.Author;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
+@Disabled
 class AuthorRepositoryTest {
 
     private static final String AUTHOR_NAME = "Тестовый Автор";

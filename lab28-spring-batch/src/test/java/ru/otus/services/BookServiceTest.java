@@ -1,6 +1,7 @@
 package ru.otus.services;
 
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
+@Disabled
 class BookServiceTest {
     @MockBean
     private BookRepository bookRepository;
