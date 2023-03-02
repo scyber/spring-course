@@ -1,16 +1,18 @@
 package ru.otus.config;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.services.ConsoleIOService;
 
-import javax.servlet.ServletContext;
 
 @Configuration
 public class AppConfig {
 
-    @Autowired
-    private ServletContext servletContext;
+	@Bean
+    public ConsoleIOService consoleIOService(){
+        return new ConsoleIOService(System.in,System.out);
+    }
 
 
 }

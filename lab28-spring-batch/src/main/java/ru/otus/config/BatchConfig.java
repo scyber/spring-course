@@ -9,11 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @EnableBatchProcessing
 @Configuration
 public class BatchConfig {
-    @Bean
+	
+	@Bean
     public JobRegistryBeanPostProcessor postProcessor(JobRegistry jobRegistry) {
         var processor = new JobRegistryBeanPostProcessor();
         processor.setJobRegistry(jobRegistry);
         return processor;
     }
+    
+   
 
 }

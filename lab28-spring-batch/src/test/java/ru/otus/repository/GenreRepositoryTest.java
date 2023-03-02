@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Disabled
 class GenreRepositoryTest {
 
     private static final String GENRE_NAME = "Тестовый Автор";

@@ -7,177 +7,276 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.database.HibernateCursorItemReader;
-import org.springframework.batch.item.database.builder.HibernateCursorItemReaderBuilder;
-import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
+import org.springframework.batch.item.data.RepositoryItemReader;
+import org.springframework.batch.item.data.RepositoryItemWriter;
+import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
+import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.lang.NonNull;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import ru.otus.domain.Author;
 import ru.otus.domain.Book;
+import ru.otus.domain.Genre;
+import ru.otus.export.ExportedAuthor;
+import ru.otus.export.ExportedBook;
+import ru.otus.export.ExportedGenre;
+import ru.otus.listeners.AuthorProcessListener;
+import ru.otus.listeners.AuthorReadListener;
+import ru.otus.listeners.ExportedAuthorWriteListener;
+import ru.otus.listeners.BatchExecutionJobListener;
+import ru.otus.listeners.BookProcessListener;
+import ru.otus.listeners.BookReadListener;
+import ru.otus.listeners.ExportedBookWriteListener;
+import ru.otus.listeners.ExportedGenreWriteListener;
+import ru.otus.listeners.GenreProcessListener;
+import ru.otus.listeners.GenreReadListener;
+import ru.otus.repository.AuthorRepository;
+import ru.otus.repository.ExportBookRepository;
+import ru.otus.repository.ExportGenreRepository;
+import ru.otus.repository.BookRepository;
+import ru.otus.repository.ExportAuthorRepository;
+import ru.otus.repository.GenreRepository;
 import ru.otus.services.CleanUpService;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.Function;
-
+import java.util.stream.Collectors;
 
 @Configuration
+@EntityScan("ru.otus.domain")
 public class JobConfig {
-    private static final int CHUNK_SIZE = 5;
-    private final Logger logger = LoggerFactory.getLogger("Batch");
+	
+	
+	private static final int CHUNK_BOOK_EXPORT_SIZE = 5;
+	private static final int CHUNK_AUTHOR_EXPORT_SIZE = 1;
+	private static final int CHUNK_GENRE_EXPORT_SIZE = 2;
+	
+	public static final String OUTPUT_FILE_NAME = "outputFileName";
+	public static final String INPUT_FILE_NAME = "inputFileName";
+	public static final String EXPORT_BOOKS_JOB = "ExportBooksJob";
+	public static final String EXPORT_AUTHORS_JOB = "ExportAuthorsJob";
+	public static final String EXPORT_GENRES_JOB = "ExportGenresJob";
+	public static final String EXPORT_COMMENTS_JOB = "ExportCommentsJob";
 
-    public static final String OUTPUT_FILE_NAME = "outputFileName";
-    public static final String INPUT_FILE_NAME = "inputFileName";
-    public static final String IMPORT_BOOK_JOB = "importBookJob";
-    private Function<Book,Book> transferBook = (b) -> b;
+	@Autowired
+	private JobBuilderFactory jobBuilderFactory;
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+	@Autowired
+	private StepBuilderFactory stepBuilderFactory;
 
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
+	@Autowired
+	private CleanUpService cleanUpService;
 
-    @Autowired
-    private CleanUpService cleanUpService;
+	@Autowired
+	private AuthorRepository authorRepository;
 
-    @StepScope
-    @Bean
-    public HibernateCursorItemReader<Book> reader(){
-        String query = "select b.id, b.title, b.author_id, b.genre_id from books b";
-        return new HibernateCursorItemReaderBuilder<Book>()
-                .name("bookReader")
-                .fetchSize(10)
-                .queryString(query)
-                .build();
-    }
+	@Autowired
+	private ExportAuthorRepository exportAuthorRepository;
 
+	@Autowired
+	private GenreRepository genreRepository;
 
-    @StepScope
-    @Bean
-    public ItemProcessor<Book, Book> processor( /* HappyBirthdayService happyBirthdayService */) {
-    	return transferBook::apply;
-        //return happyBirthdayService::doHappyBirthday;
-    }
+	@Autowired
+	private ExportGenreRepository exportGenreRepository;
 
-    @StepScope
-    @Bean
-    public FlatFileItemWriter<Book> writer(@Value("#{jobParameters['" + OUTPUT_FILE_NAME + "']}") String outputFileName) {
+	@Autowired
+	private BookRepository bookRepository;
 
-        return new FlatFileItemWriterBuilder<Book>()
-                .name("BookWriter")
-                .resource(new FileSystemResource(outputFileName))
-                .lineAggregator(new DelimitedLineAggregator<>())
-                .build();
-    }
+	@Autowired
+	private ExportBookRepository exportBookRepository;
 
+	@Autowired
+	private BookReadListener bookReadListener;
+	
+	@Autowired
+	private AuthorReadListener authorReadListener;
+	
+	@Autowired
+	private GenreReadListener genreReadListener;
 
-    @Bean
-    public MethodInvokingTaskletAdapter cleanUpTasklet() {
-        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
+	@Autowired
+	private ExportedBookWriteListener exportedBookWriteListener;
+	
+	@Autowired
+	private ExportedAuthorWriteListener exportedAuthorWriteListener;
+	
+	@Autowired
+	private ExportedGenreWriteListener exportedGenreWriteListener;
 
-        adapter.setTargetObject(cleanUpService);
-        adapter.setTargetMethod("cleanUp");
+	@Autowired
+	private BookProcessListener bookProcessListener;
+	
+	@Autowired
+	private AuthorProcessListener authorProcessListener;
+	
+	@Autowired
+	private GenreProcessListener genreProcessListener;
+	
+	@Autowired
+	private BatchExecutionJobListener batchExecutionJobListener;
 
-        return adapter;
-    }
+	@StepScope
+	@Bean
+	public RepositoryItemReader<Book> bookReader() {
+		Map<String, Sort.Direction> sorts = Map.of("id", Direction.ASC);
 
+		var reader = new RepositoryItemReaderBuilder<Book>().name("bookReader").repository(bookRepository).sorts(sorts)
+				.pageSize(CHUNK_BOOK_EXPORT_SIZE).methodName("findAll").arguments(new ArrayList<>()).build();
 
-    @Bean
-    public Job importUserJob(Step transformBookStep, Step cleanUpStep) {
-        return jobBuilderFactory.get(IMPORT_BOOK_JOB)
-                .incrementer(new RunIdIncrementer())
-                .flow(transformBookStep)
-                .next(cleanUpStep)
-                .end()
-                .listener(new JobExecutionListener() {
-                    @Override
-                    public void beforeJob(@NonNull JobExecution jobExecution) {
-                        logger.info("Начало job");
-                    }
+		return reader;
+	}
 
-                    @Override
-                    public void afterJob(@NonNull JobExecution jobExecution) {
-                        logger.info("Конец job");
-                    }
-                })
-                .build();
-    }
+	@StepScope
+	@Bean
+	public RepositoryItemReader<Author> authorReader() {
+		Map<String, Sort.Direction> sorts = Map.of("id", Direction.ASC);
 
-    @Bean
-    public Step transformBookStep(ItemReader<Book> reader, FlatFileItemWriter<Book> writer,
-                                     ItemProcessor<Book, Book> itemProcessor) {
-        return stepBuilderFactory.get("step1")
-                .<Book, Book>chunk(CHUNK_SIZE)
-                .reader(reader)
-                .processor(itemProcessor)
-                .writer(writer)
-                .listener(new ItemReadListener<>() {
-                    public void beforeRead() {
-                        logger.info("Начало чтения");
-                    }
+		var reader = new RepositoryItemReaderBuilder<Author>().name("authorReader").repository(authorRepository)
+				.sorts(sorts).methodName("findAll").arguments(new ArrayList<>()).build();
 
-                    public void afterRead(@NonNull Book o) {
-                        logger.info("Конец чтения");
-                    }
+		return reader;
+	}
 
-                    public void onReadError(@NonNull Exception e) {
-                        logger.info("Ошибка чтения");
-                    }
-                })
-                .listener(new ItemWriteListener<>() {
-                    public void beforeWrite(@NonNull List list) {
-                        logger.info("Начало записи");
-                    }
+	@StepScope
+	@Bean
+	public RepositoryItemReader<Genre> genreReader() {
+		Map<String, Sort.Direction> sorts = Map.of("id", Direction.ASC);
 
-                    public void afterWrite(@NonNull List list) {
-                        logger.info("Конец записи");
-                    }
+		var reader = new RepositoryItemReaderBuilder<Genre>().name("genreReader").repository(genreRepository)
+				.sorts(sorts).methodName("findAll").arguments(new ArrayList<>()).build();
 
-                    public void onWriteError(@NonNull Exception e, @NonNull List list) {
-                        logger.info("Ошибка записи");
-                    }
-                })
-                .listener(new ItemProcessListener<>() {
-                    public void beforeProcess(Book o) {
-                        logger.info("Начало обработки");
-                    }
+		return reader;
+	}
 
-                    public void afterProcess(@NonNull Book o, Book o2) {
-                        logger.info("Конец обработки");
-                    }
+	@StepScope
+	@Bean
+	public RepositoryItemWriter<ExportedBook> bookWriter() {
 
-                    public void onProcessError(@NonNull Book o, @NonNull Exception e) {
-                        logger.info("Ошибка обработки");
-                    }
-                })
-                .listener(new ChunkListener() {
-                    public void beforeChunk(@NonNull ChunkContext chunkContext) {
-                        logger.info("Начало пачки");
-                    }
+		return new RepositoryItemWriterBuilder<ExportedBook>().repository(exportBookRepository).methodName("save")
+				.build();
 
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        logger.info("Конец пачки");
-                    }
+	}
 
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки");
-                    }
-                })
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
-                .build();
-    }
+	@StepScope
+	@Bean
+	public RepositoryItemWriter<ExportedAuthor> authorWriter() {
 
-    @Bean
-    public Step cleanUpStep() {
-        return this.stepBuilderFactory.get("cleanUpStep")
-                .tasklet(cleanUpTasklet())
-                .build();
-    }
+		return new RepositoryItemWriterBuilder<ExportedAuthor>().repository(exportAuthorRepository).methodName("save")
+				.build();
+
+	}
+
+	@StepScope
+	@Bean
+	public RepositoryItemWriter<ExportedGenre> genreWriter() {
+
+		return new RepositoryItemWriterBuilder<ExportedGenre>().repository(exportGenreRepository).methodName("save")
+				.build();
+
+	}
+
+	@StepScope
+	@Bean
+	public ItemProcessor<Book, ExportedBook> bookExportProcessor() {
+		return convertToBookExported::apply;
+	}
+
+	@StepScope
+	@Bean
+	public ItemProcessor<Author, ExportedAuthor> authorExportProcessor() {
+		return convertToAuthorExported::apply;
+	}
+
+	@StepScope
+	@Bean
+	public ItemProcessor<Genre, ExportedGenre> genreExportProcessor() {
+		return convertToGenreExported::apply;
+	}
+
+	@Bean
+	public MethodInvokingTaskletAdapter cleanUpTasklet() {
+		
+		MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
+		adapter.setTargetObject(cleanUpService);
+		adapter.setTargetMethod("cleanUp");
+
+		return adapter;
+	}
+
+	@Bean
+	public Job exportAuthorJob(Step transformAuthorStep, Step cleanUpStep) {
+		return jobBuilderFactory.get(EXPORT_AUTHORS_JOB).incrementer(new RunIdIncrementer()).flow(transformAuthorStep)
+				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+	}
+
+	@Bean
+	public Job exportBookJob(Step transformBookStep, Step cleanUpStep) {
+		return jobBuilderFactory.get(EXPORT_BOOKS_JOB).incrementer(new RunIdIncrementer()).flow(transformBookStep)
+				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+	}
+	
+	@Bean
+	public Job exportGenreJob(Step transformGenreStep, Step cleanUpStep) {
+		return jobBuilderFactory.get(EXPORT_GENRES_JOB).incrementer(new RunIdIncrementer()).flow(transformGenreStep)
+				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+	}
+
+	@Bean
+	public Step transformAuthorStep(ItemReader<Author> reader, RepositoryItemWriter<ExportedAuthor> writer,
+			ItemProcessor<Author, ExportedAuthor> itemProcessor) {
+		return stepBuilderFactory.get("step1").<Author, ExportedAuthor>chunk(CHUNK_AUTHOR_EXPORT_SIZE).reader(reader).processor(itemProcessor)
+				.writer(writer).listener(authorReadListener).listener(exportedAuthorWriteListener).listener(authorProcessListener).build();
+
+	}
+
+	@Bean
+	public Step transformBookStep(ItemReader<Book> reader, RepositoryItemWriter<ExportedBook> writer,
+			ItemProcessor<Book, ExportedBook> itemProcessor) {
+		return stepBuilderFactory.get("step1").<Book, ExportedBook>chunk(CHUNK_BOOK_EXPORT_SIZE).reader(reader)
+				.processor(itemProcessor).writer(writer).listener(bookReadListener).listener(exportedBookWriteListener)
+				.listener(bookProcessListener).build();
+	}
+	
+	@Bean
+	public Step transformGenreStep(ItemReader<Genre> reader, RepositoryItemWriter<ExportedGenre> writer, ItemProcessor<Genre,ExportedGenre> itemProcessor) {
+		return stepBuilderFactory.get("step1").<Genre, ExportedGenre>chunk(CHUNK_GENRE_EXPORT_SIZE).reader(reader)
+				.processor(itemProcessor).writer(writer).listener(genreReadListener).listener(exportedGenreWriteListener)
+				.listener(genreProcessListener).build();
+	}
+
+	@Bean
+	public Step cleanUpStep() {
+		return this.stepBuilderFactory.get("cleanUpStep").tasklet(cleanUpTasklet()).build();
+	}
+
+	private Function<Author, ExportedAuthor> convertToAuthorExported = a -> {
+		var expAuthor = new ExportedAuthor();
+		expAuthor.setId(a.getId().toString());
+		expAuthor.setName(a.getName());
+		return expAuthor;
+	};
+
+	private Function<Genre, ExportedGenre> convertToGenreExported = g -> {
+		var expGenre = new ExportedGenre();
+		expGenre.setId(g.getId().toString());
+		expGenre.setName(g.getName());
+		return expGenre;
+	};
+
+	private Function<Book, ExportedBook> convertToBookExported = b -> {
+		var exportedBook = new ExportedBook();
+		exportedBook.setId(b.getId().toString());
+		exportedBook.setTitle(b.getTitle());
+		var authorsToExported = b.getAuthors().stream().map(convertToAuthorExported).collect(Collectors.toList());
+		var genresToExported = b.getGenres().stream().map(convertToGenreExported).collect(Collectors.toList());
+		exportedBook.setAuthors(authorsToExported);
+		exportedBook.setGenres(genresToExported);
+		return exportedBook;
+	};
 }

@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Disabled
 class BookRepositoryTest {
 
     private final static String BOOK_NAME = "ТЕСТОВАЯ КНИГА";

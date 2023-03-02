@@ -15,7 +15,6 @@ import ru.otus.domain.Comment;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Disabled
 class CommentRepositoryTest {
 
     @Autowired

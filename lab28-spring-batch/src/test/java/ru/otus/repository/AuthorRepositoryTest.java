@@ -20,7 +20,6 @@ import ru.otus.domain.Author;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Disabled
 class AuthorRepositoryTest {
 
     private static final String AUTHOR_NAME = "Тестовый Автор";

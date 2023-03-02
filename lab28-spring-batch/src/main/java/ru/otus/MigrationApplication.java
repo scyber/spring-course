@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration
 @SpringBootApplication
 @EnableJpaRepositories("ru.otus.repository")
-public class LibraryApplication {
+public class MigrationApplication {
 
 	public static void main(String[] args) {
-	 SpringApplication.run(LibraryApplication.class, args);
+	 SpringApplication.run(MigrationApplication.class, args);
 	}
 
 }
