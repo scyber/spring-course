@@ -8,7 +8,7 @@ import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.services.ConsoleIOService;
+import ru.otus.services.ImputStreamService;
 
 import static ru.otus.config.JobConfig.*;
 
@@ -22,7 +22,7 @@ public class BatchCommands {
 
 	private final JobLauncher jobLauncher;
 	private final JobExplorer jobExplorer;
-	private final ConsoleIOService ioService;
+	private final ImputStreamService ioService;
 
 	@ShellMethod(value = "startMigrationAuthors", key = "smb-job")
 	public void startMigrationBooksJob() throws Exception {

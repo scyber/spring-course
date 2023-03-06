@@ -1,13 +1,10 @@
 package ru.otus.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.data.RepositoryItemReader;
@@ -42,7 +39,6 @@ import ru.otus.repository.ExportGenreRepository;
 import ru.otus.repository.BookRepository;
 import ru.otus.repository.ExportAuthorRepository;
 import ru.otus.repository.GenreRepository;
-import ru.otus.services.CleanUpService;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
@@ -57,8 +53,6 @@ public class JobConfig {
 	private static final int CHUNK_AUTHOR_EXPORT_SIZE = 1;
 	private static final int CHUNK_GENRE_EXPORT_SIZE = 2;
 	
-	public static final String OUTPUT_FILE_NAME = "outputFileName";
-	public static final String INPUT_FILE_NAME = "inputFileName";
 	public static final String EXPORT_BOOKS_JOB = "ExportBooksJob";
 	public static final String EXPORT_AUTHORS_JOB = "ExportAuthorsJob";
 	public static final String EXPORT_GENRES_JOB = "ExportGenresJob";
@@ -69,9 +63,6 @@ public class JobConfig {
 
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
-
-	@Autowired
-	private CleanUpService cleanUpService;
 
 	@Autowired
 	private AuthorRepository authorRepository;
@@ -200,31 +191,21 @@ public class JobConfig {
 	}
 
 	@Bean
-	public MethodInvokingTaskletAdapter cleanUpTasklet() {
-		
-		MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
-		adapter.setTargetObject(cleanUpService);
-		adapter.setTargetMethod("cleanUp");
-
-		return adapter;
-	}
-
-	@Bean
-	public Job exportAuthorJob(Step transformAuthorStep, Step cleanUpStep) {
+	public Job exportAuthorJob(Step transformAuthorStep) {
 		return jobBuilderFactory.get(EXPORT_AUTHORS_JOB).incrementer(new RunIdIncrementer()).flow(transformAuthorStep)
-				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+				.end().listener(batchExecutionJobListener).build();
 	}
 
 	@Bean
-	public Job exportBookJob(Step transformBookStep, Step cleanUpStep) {
+	public Job exportBookJob(Step transformBookStep) {
 		return jobBuilderFactory.get(EXPORT_BOOKS_JOB).incrementer(new RunIdIncrementer()).flow(transformBookStep)
-				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+				.end().listener(batchExecutionJobListener).build();
 	}
 	
 	@Bean
-	public Job exportGenreJob(Step transformGenreStep, Step cleanUpStep) {
+	public Job exportGenreJob(Step transformGenreStep) {
 		return jobBuilderFactory.get(EXPORT_GENRES_JOB).incrementer(new RunIdIncrementer()).flow(transformGenreStep)
-				.next(cleanUpStep).end().listener(batchExecutionJobListener).build();
+				.end().listener(batchExecutionJobListener).build();
 	}
 
 	@Bean
@@ -250,10 +231,6 @@ public class JobConfig {
 				.listener(genreProcessListener).build();
 	}
 
-	@Bean
-	public Step cleanUpStep() {
-		return this.stepBuilderFactory.get("cleanUpStep").tasklet(cleanUpTasklet()).build();
-	}
 
 	private Function<Author, ExportedAuthor> convertToAuthorExported = a -> {
 		var expAuthor = new ExportedAuthor();
