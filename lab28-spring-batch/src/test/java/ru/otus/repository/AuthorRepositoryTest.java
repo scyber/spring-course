@@ -1,19 +1,13 @@
 package ru.otus.repository;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Author;
 
 
@@ -30,6 +24,8 @@ class AuthorRepositoryTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+    
+
 
     @Test
     @DisplayName("Тестирование записи Автора в репозиторий")
@@ -81,4 +77,5 @@ class AuthorRepositoryTest {
         var updatedAuthor = authorRepository.findById(id).get();
         Assertions.assertEquals(authorSaved,updatedAuthor);
     }
+    
 }

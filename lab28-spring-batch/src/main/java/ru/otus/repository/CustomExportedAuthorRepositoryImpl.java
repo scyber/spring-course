@@ -1,9 +1,6 @@
 package ru.otus.repository;
 
 import java.util.List;
-import java.util.Optional;
-
-
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,7 +11,7 @@ import ru.otus.export.ExportedAuthor;
 
 @RequiredArgsConstructor
 @Component
-public class ExportAuthorRepositoryCustomImpl implements CustomExportedAuthorRepository {
+public class CustomExportedAuthorRepositoryImpl implements CustomExportedAuthorRepository {
 	
 	private final MongoTemplate mongoTemplate;
 
