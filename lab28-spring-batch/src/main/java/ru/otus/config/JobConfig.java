@@ -12,7 +12,6 @@ import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
@@ -23,6 +22,7 @@ import ru.otus.domain.Genre;
 import ru.otus.export.ExportedAuthor;
 import ru.otus.export.ExportedBook;
 import ru.otus.export.ExportedGenre;
+import ru.otus.exportfunctions.ExportConvertor;
 import ru.otus.listeners.AuthorProcessListener;
 import ru.otus.listeners.AuthorReadListener;
 import ru.otus.listeners.ExportedAuthorWriteListener;
@@ -41,11 +41,10 @@ import ru.otus.repository.ExportAuthorRepository;
 import ru.otus.repository.GenreRepository;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+
 
 @Configuration
-@EntityScan("ru.otus.domain")
 public class JobConfig {
 	
 	
@@ -56,7 +55,7 @@ public class JobConfig {
 	public static final String EXPORT_BOOKS_JOB = "ExportBooksJob";
 	public static final String EXPORT_AUTHORS_JOB = "ExportAuthorsJob";
 	public static final String EXPORT_GENRES_JOB = "ExportGenresJob";
-	public static final String EXPORT_COMMENTS_JOB = "ExportCommentsJob";
+	
 
 	@Autowired
 	private JobBuilderFactory jobBuilderFactory;
@@ -111,6 +110,9 @@ public class JobConfig {
 	
 	@Autowired
 	private BatchExecutionJobListener batchExecutionJobListener;
+	
+	@Autowired
+	private ExportConvertor exportConverter;
 
 	@StepScope
 	@Bean
@@ -175,19 +177,19 @@ public class JobConfig {
 	@StepScope
 	@Bean
 	public ItemProcessor<Book, ExportedBook> bookExportProcessor() {
-		return convertToBookExported::apply;
+		return exportConverter.convertToBookExported::apply;
 	}
 
 	@StepScope
 	@Bean
 	public ItemProcessor<Author, ExportedAuthor> authorExportProcessor() {
-		return convertToAuthorExported::apply;
+		return exportConverter.convertToAuthorExported::apply;
 	}
 
 	@StepScope
 	@Bean
 	public ItemProcessor<Genre, ExportedGenre> genreExportProcessor() {
-		return convertToGenreExported::apply;
+		return exportConverter.convertToGenreExported::apply;
 	}
 
 	@Bean
@@ -232,28 +234,5 @@ public class JobConfig {
 	}
 
 
-	private Function<Author, ExportedAuthor> convertToAuthorExported = a -> {
-		var expAuthor = new ExportedAuthor();
-		expAuthor.setId(a.getId().toString());
-		expAuthor.setName(a.getName());
-		return expAuthor;
-	};
-
-	private Function<Genre, ExportedGenre> convertToGenreExported = g -> {
-		var expGenre = new ExportedGenre();
-		expGenre.setId(g.getId().toString());
-		expGenre.setName(g.getName());
-		return expGenre;
-	};
-
-	private Function<Book, ExportedBook> convertToBookExported = b -> {
-		var exportedBook = new ExportedBook();
-		exportedBook.setId(b.getId().toString());
-		exportedBook.setTitle(b.getTitle());
-		var authorsToExported = b.getAuthors().stream().map(convertToAuthorExported).collect(Collectors.toList());
-		var genresToExported = b.getGenres().stream().map(convertToGenreExported).collect(Collectors.toList());
-		exportedBook.setAuthors(authorsToExported);
-		exportedBook.setGenres(genresToExported);
-		return exportedBook;
-	};
+	
 }
