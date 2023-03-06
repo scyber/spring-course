@@ -54,7 +54,7 @@ export default class BookEditor extends Component {
                                         {
                                             this.state.content.length === 0 ?
                                                 <tr align="center">
-                                                    <td colSpan="6">No Book Available</td>
+                                                    <td colSpan="6">No Books Available</td>
                                                 </tr> :
                                                 this.state.content.map(
                                                     (book) => (
