@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import ru.otus.export.ExportedGenre;
 
-public interface ExportGenreRepository extends MongoRepository<ExportedGenre,String> {
+public interface ExportGenreRepository extends MongoRepository<ExportedGenre,String>, CustomExportedGenreRepository {
 	
 }
