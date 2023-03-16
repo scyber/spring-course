@@ -20,6 +20,8 @@ spring:
       interactive:
         enabled: false
 logging:
+  file:
+    name: actuator.log
   level:
     org:
       springframework:
@@ -32,3 +34,5 @@ management:
       show-components: always
       status:
         order: "fatal,down,out-of-service,unknown,up"
+    logfile:
+      enabled: true
