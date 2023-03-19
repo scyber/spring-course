@@ -28,11 +28,20 @@ logging:
         web: DEBUG
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, logfile"
   endpoint:
     health:
-      show-details: always
-      show-components: always
-      status:
-        order: "fatal,down,out-of-service,unknown,up"
-    logfile:
-      enabled: true
+        show-details: always
+        show-components: always
+        status:
+          order: "fatal,down,out-of-service,unknown,up"
+  logging:
+    level:
+      root: info
+      logfile:
+        enabled: true
+        file:
+          name: actuator.log

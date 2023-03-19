@@ -12,12 +12,12 @@ public class BookRecordsHealthIndicator extends AbstractHealthIndicator {
 
     private final BookRepository bookRepository;
 
-    private int getNumBookRecords() {
-        return bookRepository.findAll().size();
+    private long getNumBookRecords() {
+        return bookRepository.count();
     }
 
     @Override
-    protected void doHealthCheck(Health.Builder builder) throws Exception {
+    protected void doHealthCheck(Health.Builder builder) {
         var numOfBookRecords = getNumBookRecords();
         if(numOfBookRecords > 0) {
             builder.withDetail("books records",numOfBookRecords ).status("Up").build();
