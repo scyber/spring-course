@@ -1,10 +1,13 @@
 package ru.otus.services;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.BatchSize;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.clients.LibraryClient;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -19,23 +22,16 @@ import java.util.stream.Collectors;
 
 
 @Component
+@RequiredArgsConstructor
 public class LibraryServiceImpl implements LibraryService {
+
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final CommentRepository commentRepository;
 
-
-    public LibraryServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-                              GenreRepository genreRepository, CommentRepository commentRepository) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.genreRepository = genreRepository;
-        this.commentRepository = commentRepository;
-
-    }
-
+    private final LibraryClient libraryClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -45,12 +41,12 @@ public class LibraryServiceImpl implements LibraryService {
                 PageRequest.of(page - 1, size));
     }
 
-    @Override
-    @BatchSize(size = 10)
-    @Transactional(readOnly = true)
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
-    }
+//    @Override
+//    @BatchSize(size = 10)
+//    @Transactional(readOnly = true)
+//    public List<Book> getAllBooks() {
+//        return bookRepository.findAll();
+//    }
 
     @Override
     @Transactional

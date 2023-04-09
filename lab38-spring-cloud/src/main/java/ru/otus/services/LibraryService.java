@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LibraryService {
     Page<Book> findPage(Integer page, Integer size);
-    List<Book> getAllBooks();
+    //List<Book> getAllBooks();
     Book getBookById(Long id);
     Book addBook(Book book);
     void deleteBook(Long id);

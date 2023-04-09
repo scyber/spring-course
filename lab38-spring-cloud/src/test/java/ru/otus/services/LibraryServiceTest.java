@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.otus.clients.LibraryClient;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -24,6 +25,9 @@ class LibraryServiceTest {
     private AuthorRepository authorRepository;
     @MockBean
     private GenreRepository genreRepository;
+
+    @MockBean
+    private LibraryClient libraryClient;
     @Autowired
     private LibraryService libraryService;
 
@@ -58,14 +62,7 @@ class LibraryServiceTest {
         libraryService.getAllGenres();
         Mockito.verify(genreRepository).findAll();
     }
-    @Test
-    @DisplayName("Тестирование вызовов сервиса поиска всех книг библиотеки")
-    void testFindAllBooks(){
-        var books = new ArrayList<Book>();
-        Mockito.when(bookRepository.findAll()).thenReturn(books);
-        libraryService.getAllBooks();
-        Mockito.verify(bookRepository).findAll();
-    }
+
     @Test
     @DisplayName("Тестирование вызова поиска книги по ID")
     void testFindBookById(){
