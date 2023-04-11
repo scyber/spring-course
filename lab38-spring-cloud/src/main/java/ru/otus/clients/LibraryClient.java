@@ -1,8 +1,5 @@
 package ru.otus.clients;
 
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
@@ -38,14 +35,13 @@ public interface LibraryClient {
     @RequestMapping(method = RequestMethod.POST, value = "/books")
     void updateBookTitleById(@RequestParam("id") Long id, @RequestParam("title") String title);
 
-
-    @RequestMapping (method = RequestMethod.GET, name = "/authors")
+    @RequestMapping (method = RequestMethod.GET, value = "/authors")
     List<Author> getAllAuthors();
 
-    @RequestMapping(method = RequestMethod.GET, name = "/genres")
+    @RequestMapping(method = RequestMethod.GET, value = "/genres")
     List<Genre> getAllGenres();
 
-    @RequestMapping(method = RequestMethod.GET, name = "/comments")
+    @RequestMapping(method = RequestMethod.GET, value = "/comments")
     List<Comment> getAllComments();
 
 }

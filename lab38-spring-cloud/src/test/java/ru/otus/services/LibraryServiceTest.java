@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.clients.LibraryClient;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -24,8 +23,6 @@ class LibraryServiceTest {
     @MockBean
     private GenreRepository genreRepository;
 
-    @MockBean
-    private LibraryClient libraryClient;
     @Autowired
     private LibraryService libraryService;
 
