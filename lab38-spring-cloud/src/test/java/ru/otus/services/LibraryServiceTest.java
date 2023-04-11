@@ -12,8 +12,6 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
 import ru.otus.repository.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

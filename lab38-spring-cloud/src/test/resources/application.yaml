@@ -15,10 +15,6 @@ spring:
 #        settings:
 #          web-allow-others: true
 #
-    shell:
-      interactive:
-        enabled: false
-    logging:
-      level:
-        org:
-          springframework: trace
+
+feign:
+  url: "http://localhost:9090/api"

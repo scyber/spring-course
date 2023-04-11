@@ -39,7 +39,7 @@ export default class Book extends Component {
             authors : filteredAuthors,
             genres: filteredGenres
          };
-         axios.post("/api/books", book).then(response => {
+         axios.post("/hystrix/api/books", book).then(response => {
                         console.log("response data " + response.data);
                         if(response.data != null){
                             this.setState({show: true});

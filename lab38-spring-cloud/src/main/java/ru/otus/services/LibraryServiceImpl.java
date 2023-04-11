@@ -5,6 +5,7 @@ import org.hibernate.annotations.BatchSize;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.clients.LibraryClient;
@@ -25,20 +26,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LibraryServiceImpl implements LibraryService {
 
-
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final CommentRepository commentRepository;
 
-    private final LibraryClient libraryClient;
 
     @Override
     @Transactional(readOnly = true)
     @BatchSize(size = 10)
-    public Page<Book> findPage(Integer page, Integer size) {
+    public Page<Book> findPage(Pageable pageable) {
         return bookRepository.findAll(
-                PageRequest.of(page - 1, size));
+                pageable);
     }
 
 //    @Override

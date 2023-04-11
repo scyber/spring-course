@@ -28,7 +28,7 @@ export default class BookComponent extends Component{
         this.getBooksByPagination(this.state.currentPage);
     }
     getBooksByPagination(currentPage){
-        axios.get("/api/books",{
+        axios.get("/hystrix/api/books",{
             params: {
             page: currentPage,
             size : this.state.recordPerPage
@@ -78,7 +78,7 @@ export default class BookComponent extends Component{
         }
     };
     deleteBook = (bookId) =>{
-        axios.delete("/api/books/", {
+        axios.delete("/hystrix/api/books/", {
             params :{id : bookId}
         })
         .then(response => response.data).then(data =>{ if(data !== null) {

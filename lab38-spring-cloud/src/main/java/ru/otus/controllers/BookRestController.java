@@ -2,7 +2,7 @@ package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ public class BookRestController {
     private final LibraryService libraryService;
 
     @GetMapping(value = "/api/books")
-    public Page<Book> findAll(Integer page, Integer size) {
-        return libraryService.findPage(page,size);
+    public Page<Book> findAll(Pageable pageable) {
+        return libraryService.findPage(pageable);
     }
 
     @GetMapping(value = "/api/book")

@@ -1,6 +1,7 @@
 package ru.otus.services;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -9,7 +10,7 @@ import java.util.List;
 
 
 public interface LibraryService {
-    Page<Book> findPage(Integer page, Integer size);
+    Page<Book> findPage(Pageable pageable);
     //List<Book> getAllBooks();
     Book getBookById(Long id);
     Book addBook(Book book);
