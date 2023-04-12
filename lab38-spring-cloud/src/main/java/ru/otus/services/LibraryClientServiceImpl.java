@@ -65,6 +65,7 @@ public class LibraryClientServiceImpl implements LibraryClientService {
         return libraryClient.getAllGenres();
     }
 
+    @HystrixCommand
     @Override
     public List<Comment> getAllComments() {
         return libraryClient.getAllComments();
@@ -75,4 +76,5 @@ public class LibraryClientServiceImpl implements LibraryClientService {
         var emptyBookPage = new PageImpl<>(emptyList);
         return emptyBookPage;
     }
+
 }
