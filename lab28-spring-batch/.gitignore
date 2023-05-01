@@ -1,0 +1,9 @@
+/.settings/
+/.classpath
+/.project
+/node_modules/
+/node/
+.project
+.classpath
+/.factorypath
+/spring-shell.log
