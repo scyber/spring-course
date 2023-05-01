@@ -1,0 +1,29 @@
+spring:
+    main:
+      allow-circular-references: true
+    sql:
+      init:
+        mode: always
+    datasource:
+      driverClassName: org.postgresql.Driver
+      #driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://host.docker.internal:5432/db
+      username: postgres
+      password: postgres
+      initialization-mode: always
+    jpa:
+      generate-ddl: true
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+      defer-datasource-initialization: true
+
+    shell:
+      interactive:
+        enabled: false
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+debug: true
