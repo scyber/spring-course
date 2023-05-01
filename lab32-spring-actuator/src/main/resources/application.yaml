@@ -1,0 +1,47 @@
+spring:
+    main:
+      allow-circular-references: true
+    datasource:
+      url: jdbc:h2:mem:testdb
+      initialization-mode: never
+    jpa:
+      generate-ddl: true
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+      defer-datasource-initialization: true
+    h2:
+     console:
+       enabled: true
+       path: /h2-console
+       settings:
+         web-allow-others: true
+    shell:
+      interactive:
+        enabled: false
+logging:
+  file:
+    name: actuator.log
+  level:
+    org:
+      springframework:
+        web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, logfile, metrics"
+  endpoint:
+    health:
+        show-details: always
+        show-components: always
+        status:
+          order: "fatal,down,out-of-service,unknown,up"
+  logging:
+    level:
+      root: info
+      logfile:
+        enabled: true
+        file:
+          name: actuator.log
