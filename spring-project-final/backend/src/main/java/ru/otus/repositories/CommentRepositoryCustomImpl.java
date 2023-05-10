@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
-import ru.otus.exeptions.FindItemException;
+
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
 
 	@Override
 	public Mono<Comment> updateCommentById(String id, String title) {
-		var query = new Query().addCriteria(Criteria.where("id").in(id));
+		var query = new Query().addCriteria(Criteria.where("_id").is(id));
 		var update = new Update();
 		update.set("title", title);
 		return this.reactiveMongoTemplate.findAndModify(query, update, Comment.class);
@@ -34,7 +34,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
 
 	@Override
 	public Flux<Comment> findCommentsByBookId(String bookId) {
-		var query = new Query().addCriteria(Criteria.where("book.id").is(bookId));
+		var query = new Query().addCriteria(Criteria.where("book._id").is(bookId));
 		return this.reactiveMongoTemplate.find(query, Comment.class, "comments");
 	}
 
