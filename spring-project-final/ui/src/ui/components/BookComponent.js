@@ -105,7 +105,6 @@ export default class BookComponent extends Component{
             <table className="table table-bordered border-info shadow">
                 <thead>
                     <tr>
-                    <th>#</th>
                     <th>Book Title</th>
                     <th>Book Authors</th>
                     <th>Book Genres</th>
@@ -117,7 +116,6 @@ export default class BookComponent extends Component{
                         books.map(
                             (book,index) =>(
                                 <tr>
-                                    <td>{book.id}</td>
                                     <td>{book.title}</td>
                                     <td>{book.authors.map((author) =><li>{author.name}</li>)}</td>
                                     <td>{book.genres.map((genre) =><li>{genre.name}</li>)}</td>

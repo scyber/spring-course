@@ -7,16 +7,13 @@ import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
 
 
-public interface AuthorRepository extends ReactiveMongoRepository<Author,String> {
+public interface AuthorRepository extends ReactiveMongoRepository<Author,String>,AuthorRepositoryCustom {
 
     Mono<Author> save(Author domain);
 
     Flux<Author> findAll();
 
-    Mono<Author> findById(Long id);
-
-    //@Query("select a from Author a where a.name = :name")
-    Flux<Author> findByname(String name);
+    Mono<Author> findById(String id);
 
     Mono<Void> deleteById(@Param("id") String id);
 

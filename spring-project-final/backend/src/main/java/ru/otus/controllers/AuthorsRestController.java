@@ -37,4 +37,14 @@ public class AuthorsRestController {
         return this.authorsRepository.deleteById(id);
     }
 
+    @GetMapping(value = "/api/author/{id}")
+    public Mono<Author> findById(@PathVariable("id") String id){
+        return authorsRepository.findById(id);
+    }
+
+    @GetMapping(value = "/api/author")
+    public Flux<Author> findByName(@RequestParam("name") String name){
+        return authorsRepository.findByName(name);
+    }
+
 }
