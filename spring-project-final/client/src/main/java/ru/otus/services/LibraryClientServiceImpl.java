@@ -46,13 +46,13 @@ public class LibraryClientServiceImpl implements LibraryClientService {
         libraryClient.deleteBookById(id);
     }
 
-    @HystrixCommand(fallbackMethod = "failGetAllAuthors")
+    @HystrixCommand()
     @Override
     public Book updateBookTitleById(String bookId, String title) {
       return libraryClient.updateBookTitleById(bookId,title);
     }
 
-    @HystrixCommand
+    @HystrixCommand(fallbackMethod = "failGetAllAuthors")
     @Override
     public List<Author> getAllAuthors() {
         return libraryClient.getAllAuthors();
@@ -70,7 +70,7 @@ public class LibraryClientServiceImpl implements LibraryClientService {
         return libraryClient.getAllComments();
     }
 
-    private Page<Book> failGetAllBooks(){
+    private Page<Book> failGetAllBooks(Integer page, Integer size){
         var emptyList = new ArrayList<Book>();
         var emptyBookPage = new PageImpl<>(emptyList);
         return emptyBookPage;
