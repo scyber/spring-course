@@ -1,4 +1,4 @@
-package ru.otus.repositories;
+package ru.otus.repository;
 
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

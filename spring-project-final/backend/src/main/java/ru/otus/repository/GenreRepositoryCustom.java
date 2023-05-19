@@ -1,4 +1,4 @@
-package ru.otus.repositories;
+package ru.otus.repository;
 
 import reactor.core.publisher.Flux;
 import ru.otus.domain.Genre;

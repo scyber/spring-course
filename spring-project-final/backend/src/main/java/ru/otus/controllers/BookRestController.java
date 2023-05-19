@@ -11,8 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
-import ru.otus.repositories.BookRepository;
-import ru.otus.repositories.CommentRepository;
+import ru.otus.repository.BookRepository;
+import ru.otus.repository.CommentRepository;
 
 
 @RestController

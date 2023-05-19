@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.otus.config.LibraryLoadBalancingConfiguration;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
@@ -25,7 +23,7 @@ public interface LibraryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/books")
     Page<Book> getBooks(Pageable pageable);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/book")
+    @RequestMapping(method = RequestMethod.GET, value = "/books/{id}")
     Optional<Book> getBookById(@PathVariable("id") String id);
 
     @RequestMapping(method = RequestMethod.POST, value = "/books", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -46,4 +44,27 @@ public interface LibraryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/comments")
     List<Comment> getAllComments();
 
+    @RequestMapping(method = RequestMethod.GET, value = "/genres/{id}")
+    Genre getGenreById(@PathVariable("id") String id);
+
+    @RequestMapping( method = RequestMethod.POST, value = "/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    Genre saveAndUpdateGenre(@RequestBody Genre genre);
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/genres/{id}")
+    void deleteGenreById(@PathVariable("id") String id);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/authors", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    Author saveAndUpdateAuthor(@RequestBody Author author);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/authors/{id}")
+    Author getAuthorById(@PathVariable("id") String id);
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/authors/{id}")
+    void deleteAuthorById(@PathVariable("id") String id);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    Comment addComment(@PathVariable("bookId") String bookId, @RequestBody Comment comment);
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/comment/{commentId}")
+    void deleteComment(@PathVariable("commentId") String commentId);
 }

@@ -52,6 +52,52 @@ public class LibraryClientServiceImpl implements LibraryClientService {
       return libraryClient.updateBookTitleById(bookId,title);
     }
 
+    @HystrixCommand
+    @Override
+    public Genre saveAndUpdateGenre(Genre genre) {
+        return libraryClient.saveAndUpdateGenre(genre);
+    }
+
+    @HystrixCommand
+    @Override
+    public Genre getGenreById(String id) {
+        return libraryClient.getGenreById(id);
+    }
+
+    @HystrixCommand
+    @Override
+    public void deleteGenreById(String id) {
+        libraryClient.deleteGenreById(id);
+    }
+
+    @HystrixCommand
+    @Override
+    public Author saveAndUpdateAuthor(Author author) {
+        return libraryClient.saveAndUpdateAuthor(author);
+    }
+
+    @HystrixCommand
+    @Override
+    public Author getAuthorById(String id) {
+        return libraryClient.getAuthorById(id);
+    }
+
+    @HystrixCommand
+    @Override
+    public void deleteAuthorById(String id) {
+        libraryClient.deleteAuthorById(id);
+    }
+
+    @Override
+    public void deleteCommentById(String commentId) {
+        libraryClient.deleteComment(commentId);
+    }
+
+    @Override
+    public Comment addCommentByBookId(String bookId, Comment comment) {
+        return libraryClient.addComment(bookId, comment);
+    }
+
     @HystrixCommand(fallbackMethod = "failGetAllAuthors")
     @Override
     public List<Author> getAllAuthors() {

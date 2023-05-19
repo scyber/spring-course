@@ -1,14 +1,13 @@
-import React, {Component} from 'react'
-import NavigationBar from './NavigationBar'
-import Footer from './Footer'
-import {Outlet} from 'react-router-dom'
-import {Button, Card, Col, Form} from 'react-bootstrap'
+import React, {Component} from 'react';
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
+import {Outlet} from 'react-router-dom';
+import {Button, Card, Col, Form} from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare, faSave, faUndo } from "@fortawesome/free-solid-svg-icons";
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated'
-import axios from 'axios'
-import  CustomToast from './CustomToast';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+import axios from 'axios';
 
 const animatedComponents = makeAnimated();
 
@@ -88,7 +87,6 @@ export default class Book extends Component {
         return (
             <div>
                 <div style={{"display" : true ? "block" : "none"}}>
-                    <CustomToast children ={{show: this.state.show, type : this.state.type}}/>
                 </div>
                 <div className="AddBook">
                     <div>

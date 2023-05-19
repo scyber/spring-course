@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Genre;
-import ru.otus.repositories.GenreRepository;
+import ru.otus.repository.GenreRepository;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class GenreRestController {
     	return this.genreRepository.deleteById(id);
     }
 
-    @GetMapping(value = "/api/genre/{id}")
+    @GetMapping(value = "/api/genres/{id}")
     public Mono<Genre> getById(@PathVariable("id") String id){
         return this.genreRepository.findById(id);
     }

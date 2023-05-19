@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
@@ -64,5 +62,44 @@ public class ClientLibraryRestController {
         return libraryClientService.getAllComments();
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/client/api/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Genre saveAndUpdateGenre(@RequestBody Genre genre){
+        return libraryClientService.saveAndUpdateGenre(genre);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/client/api/genres/{id}")
+    public Genre getGenreById(@PathVariable("id") String id){
+        return libraryClientService.getGenreById(id);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/genres/{genreId}")
+    public void deleteGenre(@PathVariable("genreId") String genreId ){
+        libraryClientService.deleteGenreById(genreId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/client/api/authors/{authorId}")
+    public Author getAuthorById(@PathVariable("authorId") String authorId){
+        return libraryClientService.getAuthorById(authorId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/client/api/authors", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Author addAuthor(@RequestBody Author author){
+        return libraryClientService.saveAndUpdateAuthor(author);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/authors/{authorId}")
+    public void deleteAuthor(@PathVariable("authorId") String authorId){
+        libraryClientService.deleteAuthorById(authorId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/client/api/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Comment addCommentByBookId(@PathVariable("bookId") String bookId, Comment comment){
+       return libraryClientService.addCommentByBookId(bookId,comment);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/comment/{commentId}")
+    public void deleteCommentById(@PathVariable("commentId") String commentId){
+        libraryClientService.deleteCommentById(commentId);
+    }
 
 }

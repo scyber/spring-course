@@ -1,4 +1,5 @@
-package ru.otus.repositories;
+package ru.otus.repository;
+
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -6,17 +7,17 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-import ru.otus.domain.Genre;
+import ru.otus.domain.Author;
 
-@Component
 @RequiredArgsConstructor
-public class GenreRepositoryCustomImpl implements GenreRepositoryCustom{
+@Component
+public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom{
 
     private final ReactiveMongoTemplate mongoTemplate;
 
     @Override
-    public Flux<Genre> findByName(String name) {
+    public Flux<Author> findByName(String name) {
         var query = new Query().addCriteria(Criteria.where("name").is(name));
-        return mongoTemplate.find(query,Genre.class);
+        return mongoTemplate.find(query, Author.class);
     }
 }

@@ -1,4 +1,4 @@
-package ru.otus.repositories;
+package ru.otus.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;

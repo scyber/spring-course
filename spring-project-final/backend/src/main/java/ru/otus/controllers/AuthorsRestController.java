@@ -4,10 +4,9 @@ package ru.otus.controllers;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import org.springframework.http.MediaType;
 import ru.otus.domain.Author;
-import ru.otus.repositories.AuthorRepository;
+import ru.otus.repository.AuthorRepository;
 
 
 
@@ -37,7 +36,7 @@ public class AuthorsRestController {
         return this.authorsRepository.deleteById(id);
     }
 
-    @GetMapping(value = "/api/author/{id}")
+    @GetMapping(value = "/api/authors/{id}")
     public Mono<Author> findById(@PathVariable("id") String id){
         return authorsRepository.findById(id);
     }

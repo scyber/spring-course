@@ -1,6 +1,28 @@
 spring:
-    main:
-      allow-circular-references: true
+  main:
+    allow-circular-references: true
+  sql:
+    init:
+      platform: postgresql
+      schema-locations: classpath:schema-postgresql.sql
+      mode: always
+  datasource:
+    driverClassName: org.postgresql.Driver
+    #driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+    #schema-locations: classpath:schema-postgresql.sql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: true
+  http:
+    log-request-details: true
 
 server:
   port: 9090
@@ -46,6 +68,7 @@ management:
         enabled: true
         file:
           name: actuator.log
+debug: enabled
 
 logging:
   level:
