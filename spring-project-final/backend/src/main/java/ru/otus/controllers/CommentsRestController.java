@@ -1,6 +1,8 @@
 package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import reactor.core.publisher.Flux;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import ru.otus.repository.CommentRepository;
 public class CommentsRestController {
 
     private final CommentRepository commentRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentsRestController.class);
     
     @RequestMapping(method = RequestMethod.GET, value = "/api/comments")
     public Flux<Comment> getAllComments() {
@@ -29,6 +32,7 @@ public class CommentsRestController {
     @RequestMapping(method = RequestMethod.POST, value = "/api/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Mono<Comment> saveComment(@PathVariable("bookId") String bookId, @RequestBody Comment comment){
         var title = comment.getTitle();
+        LOGGER.info("Comment incoming has title " + title);
         return  this.commentRepository.addCommentByBookId(bookId,title);
     }
 
