@@ -25,16 +25,19 @@ public interface LibraryClientService {
     Genre saveAndUpdateGenre(Genre genre);
 
     Genre getGenreById(String id);
+
     void deleteGenreById(String genreId);
 
     Author saveAndUpdateAuthor(Author author);
 
     Author getAuthorById(String id);
+
     void deleteAuthorById(String id);
 
     void deleteCommentById(String commentId);
 
     Comment addCommentByBookId(String bookId, Comment comment);
+
     List<Author> getAllAuthors();
 
     List<Genre> getAllGenres();

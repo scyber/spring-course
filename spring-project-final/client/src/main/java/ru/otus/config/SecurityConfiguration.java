@@ -23,12 +23,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-            .antMatchers("/")
-            .antMatchers("/swagger/swagger-ui.html")
-            .antMatchers("/webjars/springfox-swagger-ui/**")
-            .antMatchers("/swagger-resources/**")
-            .antMatchers("/v2/api-docs")
-            .antMatchers("/h2-console/**");
+                .antMatchers("/")
+                .antMatchers("/swagger/swagger-ui.html")
+                .antMatchers("/webjars/springfox-swagger-ui/**")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/v2/api-docs")
+                .antMatchers("/h2-console/**");
     }
 
     @Override
@@ -43,9 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/client/api/comments/**").hasAnyRole("USER", "ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE,  "/client/api/genres/**", "/client/api/authors/**", "/client/api/books/**", "/client/api/comments/**" , "/client/api/comment/**").hasRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/client/api/genres/**", "/client/api/authors/**", "/client/api/books/**", "/client/api/comments/**", "/client/api/comment/**").hasRole("ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/client/api/books/**" , "/client/api/authors/**", "/client/api/genres/**" ).hasRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/client/api/books/**", "/client/api/authors/**", "/client/api/genres/**").hasRole("ADMIN")
                 .and()
                 .authorizeRequests().antMatchers("/**").authenticated()
                 .and()

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class FeignClientInterceptor implements RequestInterceptor {
 
 
-
     @Override
     public void apply(RequestTemplate requestTemplate) {
 

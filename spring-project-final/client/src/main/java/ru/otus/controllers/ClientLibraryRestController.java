@@ -12,7 +12,6 @@ import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
 import ru.otus.services.LibraryClientService;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -26,28 +25,28 @@ public class ClientLibraryRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(ClientLibraryRestController.class);
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/books")
-    Page<Book> getBooks(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
-        return libraryClientService.getPagebleBooks(page,size);
+    Page<Book> getBooks(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+        return libraryClientService.getPagebleBooks(page, size);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/books/{bookId}")
-    Optional<Book> getBookById(@PathVariable("bookId") String bookId){
+    Optional<Book> getBookById(@PathVariable("bookId") String bookId) {
         return libraryClientService.getBookById(bookId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/books", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    Book saveAndUpdateBook(@RequestBody Book book){
+    Book saveAndUpdateBook(@RequestBody Book book) {
         return libraryClientService.saveAndUpdateBook(book);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/books/{bookId}")
-    void deleteBookById(@PathVariable("bookId") String bookId){
+    void deleteBookById(@PathVariable("bookId") String bookId) {
         libraryClientService.deleteBookById(bookId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/books/{bookId}")
-    void updateBookTitleById(@PathVariable("bookId") String bookId, @RequestBody String title){
-        libraryClientService.updateBookTitleById(bookId,title);
+    void updateBookTitleById(@PathVariable("bookId") String bookId, @RequestBody String title) {
+        libraryClientService.updateBookTitleById(bookId, title);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/authors")
@@ -56,53 +55,53 @@ public class ClientLibraryRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/genres")
-    public List<Genre> getGenres(){
+    public List<Genre> getGenres() {
         return libraryClientService.getAllGenres();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/comments")
-    public List<Comment> getComments(){
+    public List<Comment> getComments() {
         return libraryClientService.getAllComments();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Genre saveAndUpdateGenre(@RequestBody Genre genre){
+    public Genre saveAndUpdateGenre(@RequestBody Genre genre) {
         return libraryClientService.saveAndUpdateGenre(genre);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/genres/{id}")
-    public Genre getGenreById(@PathVariable("id") String id){
+    public Genre getGenreById(@PathVariable("id") String id) {
         return libraryClientService.getGenreById(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/genres/{genreId}")
-    public void deleteGenre(@PathVariable("genreId") String genreId ){
+    public void deleteGenre(@PathVariable("genreId") String genreId) {
         libraryClientService.deleteGenreById(genreId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client/api/authors/{authorId}")
-    public Author getAuthorById(@PathVariable("authorId") String authorId){
+    public Author getAuthorById(@PathVariable("authorId") String authorId) {
         return libraryClientService.getAuthorById(authorId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/authors", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Author addAuthor(@RequestBody Author author){
+    public Author addAuthor(@RequestBody Author author) {
         return libraryClientService.saveAndUpdateAuthor(author);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/authors/{authorId}")
-    public void deleteAuthor(@PathVariable("authorId") String authorId){
+    public void deleteAuthor(@PathVariable("authorId") String authorId) {
         libraryClientService.deleteAuthorById(authorId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Comment addCommentByBookId(@PathVariable("bookId") String bookId, @RequestBody Comment comment){
+    public Comment addCommentByBookId(@PathVariable("bookId") String bookId, @RequestBody Comment comment) {
         LOGGER.info("comment title  " + comment.getTitle());
-       return libraryClientService.addCommentByBookId(bookId,comment);
+        return libraryClientService.addCommentByBookId(bookId, comment);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/comment/{commentId}")
-    public void deleteCommentById(@PathVariable("commentId") String commentId){
+    public void deleteCommentById(@PathVariable("commentId") String commentId) {
         libraryClientService.deleteCommentById(commentId);
     }
 

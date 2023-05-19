@@ -11,6 +11,7 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class LibraryClientServiceImpl implements LibraryClientService {
     @HystrixCommand(fallbackMethod = "failGetAllBooks")
     @Override
     public Page<Book> getPagebleBooks(Integer page, Integer size) {
-       return libraryClient.getBooks(PageRequest.of(page,size));
+        return libraryClient.getBooks(PageRequest.of(page, size));
     }
 
     @HystrixCommand
@@ -49,7 +50,7 @@ public class LibraryClientServiceImpl implements LibraryClientService {
     @HystrixCommand()
     @Override
     public Book updateBookTitleById(String bookId, String title) {
-      return libraryClient.updateBookTitleById(bookId,title);
+        return libraryClient.updateBookTitleById(bookId, title);
     }
 
     @HystrixCommand
@@ -116,18 +117,18 @@ public class LibraryClientServiceImpl implements LibraryClientService {
         return libraryClient.getAllComments();
     }
 
-    private Page<Book> failGetAllBooks(Integer page, Integer size){
+    private Page<Book> failGetAllBooks(Integer page, Integer size) {
         var emptyList = new ArrayList<Book>();
         var emptyBookPage = new PageImpl<>(emptyList);
         return emptyBookPage;
     }
 
-    private List<Author> failGetAllAuthors(){
+    private List<Author> failGetAllAuthors() {
         var emptyAuthorsList = new ArrayList<Author>();
         return emptyAuthorsList;
     }
 
-    private List<Genre> failGetAllGenres(){
+    private List<Genre> failGetAllGenres() {
         var emptyEngere = new ArrayList<Genre>();
         return emptyEngere;
     }

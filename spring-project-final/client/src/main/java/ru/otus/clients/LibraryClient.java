@@ -12,10 +12,11 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
+
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = "library-service", url = "${feign.url}" )
+@FeignClient(name = "library-service", url = "${feign.url}")
 @LoadBalancerClient(name = "library-service", configuration = LibraryLoadBalancingConfiguration.class)
 public interface LibraryClient {
 
@@ -35,7 +36,7 @@ public interface LibraryClient {
     @RequestMapping(method = RequestMethod.POST, value = "/books")
     Book updateBookTitleById(@PathVariable("id") String id, @RequestParam("title") String title);
 
-    @RequestMapping (method = RequestMethod.GET, value = "/authors")
+    @RequestMapping(method = RequestMethod.GET, value = "/authors")
     List<Author> getAllAuthors();
 
     @RequestMapping(method = RequestMethod.GET, value = "/genres")
@@ -47,7 +48,7 @@ public interface LibraryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/genres/{id}")
     Genre getGenreById(@PathVariable("id") String id);
 
-    @RequestMapping( method = RequestMethod.POST, value = "/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.POST, value = "/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
     Genre saveAndUpdateGenre(@RequestBody Genre genre);
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/genres/{id}")

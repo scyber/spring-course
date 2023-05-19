@@ -40,7 +40,7 @@ public class AppConfig {
     private final LibraryUserRepository libraryUserRepository;
 
     @Bean
-   UserDetailsService userDetailsService() {
+    UserDetailsService userDetailsService() {
         return new LibraryUserDetailsService(libraryUserRepository);
     }
 
@@ -78,13 +78,13 @@ public class AppConfig {
     @DependsOn("libraryUserAuthorityRepository")
     public AclAuthorizationStrategy aclAuthorizationStrategy() {
         SimpleGrantedAuthority[] authorities = libraryUserAuthorityRepository.findAll()
-            .stream()
-            .map(a -> new SimpleGrantedAuthority(a.getAuthority()))
-            .collect(Collectors.toList()).stream()
-            .toArray(SimpleGrantedAuthority[]::new);
+                .stream()
+                .map(a -> new SimpleGrantedAuthority(a.getAuthority()))
+                .collect(Collectors.toList()).stream()
+                .toArray(SimpleGrantedAuthority[]::new);
         var testLibraryAuthority = libraryUserAuthorityRepository.findAll();
         LOGGER.info("Size from Repository " + testLibraryAuthority.size());
-        Arrays.stream(authorities).forEach( a -> LOGGER.info("Authority " + a.getAuthority()));
+        Arrays.stream(authorities).forEach(a -> LOGGER.info("Authority " + a.getAuthority()));
         LOGGER.info("Authorities size " + authorities.length);
         return new AclAuthorizationStrategyImpl(authorities);
 

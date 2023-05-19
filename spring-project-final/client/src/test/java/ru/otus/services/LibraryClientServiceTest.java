@@ -8,8 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import ru.otus.clients.LibraryClient;
 import ru.otus.domain.Book;
-import java.util.UUID;
 
+import java.util.UUID;
 
 
 @SpringBootTest
@@ -27,7 +27,7 @@ class LibraryClientServiceTest {
     @Test
     void getPagebleBooks() {
         libraryClientService.getPagebleBooks(1, 2);
-        Mockito.verify(libraryClient).getBooks(PageRequest.of(1,2));
+        Mockito.verify(libraryClient).getBooks(PageRequest.of(1, 2));
     }
 
     @Test
@@ -51,8 +51,8 @@ class LibraryClientServiceTest {
 
     @Test
     void updateBookTitleById() {
-        libraryClientService.updateBookTitleById(BOOK_ID,BOOK_TITLE);
-        Mockito.verify(libraryClient).updateBookTitleById(BOOK_ID,BOOK_TITLE);
+        libraryClientService.updateBookTitleById(BOOK_ID, BOOK_TITLE);
+        Mockito.verify(libraryClient).updateBookTitleById(BOOK_ID, BOOK_TITLE);
     }
 
     @Test

@@ -21,22 +21,22 @@ public class ACLGrantService {
 
     public void applyACLGranting(ObjectIdentity identity) {
         Authentication authentication = SecurityContextHolder.getContext()
-            .getAuthentication();
+                .getAuthentication();
         final Sid owner = new PrincipalSid(authentication);
         final Sid roleAdmin = new GrantedAuthoritySid("ROLE_ADMIN");
         final Sid roleUser = new GrantedAuthoritySid("ROLE_USER");
         MutableAcl acl = mutableAclService.createAcl(identity);
         acl.setOwner(owner);
         acl.insertAce(acl.getEntries()
-                          .size(), BasePermission.READ, roleAdmin, true);
+                .size(), BasePermission.READ, roleAdmin, true);
         acl.insertAce(acl.getEntries()
-                          .size(), BasePermission.WRITE, roleAdmin, true);
+                .size(), BasePermission.WRITE, roleAdmin, true);
         acl.insertAce(acl.getEntries()
-                          .size(), BasePermission.DELETE, roleAdmin, true);
+                .size(), BasePermission.DELETE, roleAdmin, true);
         acl.insertAce(acl.getEntries()
-                          .size(), BasePermission.ADMINISTRATION, roleAdmin, true);
+                .size(), BasePermission.ADMINISTRATION, roleAdmin, true);
         acl.insertAce(acl.getEntries()
-                          .size(), BasePermission.READ, roleUser, true);
+                .size(), BasePermission.READ, roleUser, true);
         mutableAclService.updateAcl(acl);
 
     }
