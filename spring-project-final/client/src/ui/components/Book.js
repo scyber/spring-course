@@ -27,8 +27,8 @@ export default class Book extends Component {
         this.submitBook = this.submitBook.bind(this);
     }
     componentDidMount(){
-            this.getAuthors();
-            this.getGenres();
+            this.loadAuthors();
+            this.loadGenres();
     }
     submitBook (event) {
         event.preventDefault();
@@ -61,7 +61,7 @@ export default class Book extends Component {
     bookChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
     }
-    getAuthors(){
+    loadAuthors(){
          axios.get(this.baseURL+"/client/api/authors")
                 .then(response => response.data)
                 .then((data) => {
@@ -71,7 +71,7 @@ export default class Book extends Component {
                   console.log(response);
                 });
      }
-    getGenres(){
+    loadGenres(){
         axios.get(this.baseURL+"/client/api/genres")
               .then(response => response.data)
               .then((data) => {
