@@ -39,10 +39,6 @@ public class AppConfig {
     private final DataSource dataSource;
     private final LibraryUserRepository libraryUserRepository;
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new LibraryUserDetailsService(libraryUserRepository);
-    }
 
     @Bean
     public JdbcMutableAclService aclService() {
