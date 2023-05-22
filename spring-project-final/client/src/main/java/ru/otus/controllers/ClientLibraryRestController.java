@@ -59,11 +59,6 @@ public class ClientLibraryRestController {
         return libraryClientService.getAllGenres();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/client/api/comments")
-    public List<Comment> getComments() {
-        return libraryClientService.getAllComments();
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/client/api/genres", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Genre saveAndUpdateGenre(@RequestBody Genre genre) {
         return libraryClientService.saveAndUpdateGenre(genre);
@@ -94,15 +89,5 @@ public class ClientLibraryRestController {
         libraryClientService.deleteAuthorById(authorId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/client/api/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Comment addCommentByBookId(@PathVariable("bookId") String bookId, @RequestBody Comment comment) {
-        LOGGER.info("comment title  " + comment.getTitle());
-        return libraryClientService.addCommentByBookId(bookId, comment);
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/comment/{commentId}")
-    public void deleteCommentById(@PathVariable("commentId") String commentId) {
-        libraryClientService.deleteCommentById(commentId);
-    }
 
 }

@@ -7,11 +7,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Book;
 
-public interface BookRepository extends ReactiveMongoRepository<Book,String>, BookRepositoryCustom {
+public interface BookRepository extends ReactiveMongoRepository<Book, String> {
 
     Mono<Book> findById(String id);
+
     Mono<Void> deleteById(String id);
+
     Mono<Void> delete(Book book);
+
     Flux<Book> findAllBy(Pageable pageable);
 
+    Flux<Book> findByTitle(String title);
 }

@@ -2,6 +2,7 @@ package ru.otus.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.repository.query.Param;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.data.domain.Page;
@@ -33,11 +34,6 @@ public class BookRestController {
 				.collectList().zipWith(this.bookRepository.count())
 				.map(t -> new PageImpl<>(t.getT1(), request, t.getT2()));
     }
-    
-    @GetMapping("/api/book")
-    public Flux<Book> fildAll(){
-		return this.bookRepository.findAll();
-    }
 
     @GetMapping(value = "/api/books/{id}")
     public Mono<Book> findById(@PathVariable("id") String id) {
@@ -59,5 +55,10 @@ public class BookRestController {
     public Mono<Void> deleteById(@PathVariable("id") String id) {
         return this.bookRepository.deleteById(id);
         
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/book")
+    public Flux<Book> getByTitle(@RequestParam("title") String title){
+        return this.bookRepository.findByTitle(title);
     }
 }
