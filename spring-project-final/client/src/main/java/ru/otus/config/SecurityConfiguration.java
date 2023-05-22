@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -45,7 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/client/api/comments/**").hasAnyRole("USER", "ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/client/api/genres/**", "/client/api/authors/**", "/client/api/books/**", "/client/api/comments/**", "/client/api/comment/**").hasRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/client/api/genres/**", "/client/api/authors/**").hasRole("ADMIN")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE,  "/client/api/books/**", "/client/api/comments/**", "/client/api/comment/**").hasAnyRole("ADMIN")
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/client/api/books/**", "/client/api/authors/**", "/client/api/genres/**").hasRole("ADMIN")
                 .and()
