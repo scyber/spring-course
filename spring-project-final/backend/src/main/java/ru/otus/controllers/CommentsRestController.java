@@ -41,4 +41,9 @@ public class CommentsRestController {
         return this.commentRepository.deleteById(commentId);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/comment")
+    public Flux<Comment> deleteCommentsByBookId(@RequestParam("bookId") String bookId){
+        return this.commentRepository.deleteCommentsByBookId(bookId);
+    }
+
 }
