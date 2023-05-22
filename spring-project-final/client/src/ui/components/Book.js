@@ -40,7 +40,7 @@ export default class Book extends Component {
             authors : filteredAuthors,
             genres: filteredGenres
          };
-         axios.post(this.baseURL+"/client/api/books", book).then(response => {
+         axios.post(this.baseURL+"/api/client/books", book).then(response => {
                         console.log("response data " + response.data);
                         if(response.data != null){
                             this.setState({show: true});
@@ -62,7 +62,7 @@ export default class Book extends Component {
         this.setState({[event.target.name]: event.target.value});
     }
     loadAuthors(){
-         axios.get(this.baseURL+"/client/api/authors")
+         axios.get(this.baseURL+"/api/client/authors")
                 .then(response => response.data)
                 .then((data) => {
                 this.setState({authors: data});
@@ -72,7 +72,7 @@ export default class Book extends Component {
                 });
      }
     loadGenres(){
-        axios.get(this.baseURL+"/client/api/genres")
+        axios.get(this.baseURL+"/api/client/genres")
               .then(response => response.data)
               .then((data) => {
                 this.setState({genres :data});

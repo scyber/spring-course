@@ -7,30 +7,29 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.domain.Comment;
 import ru.otus.services.LibraryClientService;
-
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(originPatterns = "*")
-public class CommentsRestController {
+public class ClientCommentsRestController {
 
     private final LibraryClientService libraryClientService;
-    private final static Logger LOGGER = LoggerFactory.getLogger(ClientLibraryRestController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClientBookRestController.class);
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/client/api/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.POST, value = "/api/client/comments/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Comment addCommentByBookId(@PathVariable("bookId") String bookId, @RequestBody Comment comment) {
         LOGGER.info("comment title  " + comment.getTitle());
         return libraryClientService.addCommentByBookId(bookId, comment);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/client/api/comment/{commentId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/client/comment/{commentId}")
     public void deleteCommentById(@PathVariable("commentId") String commentId) {
         libraryClientService.deleteCommentById(commentId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/client/api/comments")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/client/comments")
     public List<Comment> getComments() {
         return libraryClientService.getAllComments();
     }

@@ -1,4 +1,4 @@
-package ru.otus.clients;
+package ru.otus.services;
 
 
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @FeignClient(name = "library-service", url = "${feign.url}")
 @LoadBalancerClient(name = "library-service", configuration = LibraryLoadBalancingConfiguration.class)
-public interface LibraryClient {
+public interface LibraryServiceClient {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/books")

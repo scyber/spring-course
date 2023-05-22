@@ -30,7 +30,7 @@ export default class BookComponent extends Component{
         this.getBooksByPagination(this.state.currentPage);
     }
     getBooksByPagination(currentPage){
-        axios.get(this.baseURL + "/client/api/books",{
+        axios.get(this.baseURL + "/api/client/books",{
             params: {
             page: currentPage,
             size : this.state.recordPerPage
@@ -81,7 +81,7 @@ export default class BookComponent extends Component{
         }
     };
     deleteBook = (bookId) =>{
-        axios.delete(this.baseURL + "/client/api/books/"+ bookId)
+        axios.delete(this.baseURL + "/api/client/books/"+ bookId)
         .then(response => response.data).then(data =>{ if(data !== null) {
             this.setState({show: true});
             setTimeout(() => this.setState({show: false}), 3000);
