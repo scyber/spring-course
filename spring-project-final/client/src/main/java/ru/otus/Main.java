@@ -8,7 +8,7 @@ import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboar
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableAutoConfiguration
-@EnableFeignClients(basePackages = "ru.otus.clients")
+@EnableFeignClients(basePackages = "ru.otus.services")
 @EnableHystrixDashboard
 @EnableHystrix
 @SpringBootApplication

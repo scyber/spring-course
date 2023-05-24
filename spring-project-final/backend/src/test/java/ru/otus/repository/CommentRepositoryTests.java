@@ -8,17 +8,11 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
-import ru.otus.domain.Author;
 import ru.otus.domain.Book;
-import ru.otus.domain.Genre;
 
 
 @DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
-class CustomRepositoryTests {
-
-    private static final String AUTHOR_NAME = "Test Author";
-
-    private static final String GENRE_NAME = "Test Genre";
+class CommentRepositoryTests {
 
     private static final String BOOK_TITLE = "Test Title";
 
@@ -30,21 +24,15 @@ class CustomRepositoryTests {
     private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
-
-    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
     private CommentRepository commentRepository;
 
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
+    private static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
+    private static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
     }
 
@@ -56,36 +44,6 @@ class CustomRepositoryTests {
     @AfterAll
     static void clean() {
         mongoDBContainer.stop();
-    }
-
-    @Test
-    @DisplayName("Testing Custom Author Repository find Author by Name")
-    public void testCustomAuthorRepository(){
-        var author = new Author();
-        author.setName(AUTHOR_NAME);
-        var savedAuthor = authorRepository.save(author).block();
-        var foundAuthors = authorRepository.findByName(AUTHOR_NAME).collectList().block();
-        Assertions.assertTrue(foundAuthors.contains(savedAuthor));
-    }
-
-    @Test
-    @DisplayName("Testing Custom Genre repository find Genre by Name")
-    public void testCustomGenreRepository(){
-        var genre = new Genre();
-        genre.setName(GENRE_NAME);
-        var savedGenre = genreRepository.save(genre).block();
-        var foundGenre = genreRepository.findByName(GENRE_NAME).collectList().block();
-        Assertions.assertTrue(foundGenre.contains(savedGenre));
-    }
-
-    @Test
-    @DisplayName("Test BookRepositoryCustom find Book by Title")
-    public void testFindBookByTitle(){
-        var book = new Book();
-        book.setTitle(BOOK_TITLE);
-        var savedBook = bookRepository.save(book).block();
-        var foundBooks = bookRepository.findByTitle(BOOK_TITLE).collectList().block();
-        Assertions.assertTrue(foundBooks.contains(savedBook));
     }
 
     @Test
