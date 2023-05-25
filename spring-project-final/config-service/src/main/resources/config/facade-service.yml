@@ -1,0 +1,16 @@
+server:
+  port: 9090
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+
+zuul:
+  prefix: "/common"
+  strip-prefix: false
+  routes:
+    genres:
+      serviceId: backend-service
+      path: /api/genres
+      strip-prefix: false

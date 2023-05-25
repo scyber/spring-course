@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger/swagger-ui.html")
                 .antMatchers("/webjars/springfox-swagger-ui/**")
                 .antMatchers("/hystrix/**")
-                .antMatchers("/v2/api-docs")
+                .antMatchers("/eureka/**")
                 .antMatchers("/h2-console/**");
     }
 
@@ -43,13 +43,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/login-form-processing").anonymous()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/client/comments/**").hasAnyRole("USER", "ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/comments/**").hasAnyRole("USER", "ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/client/genres/**", "/api/client/authors/**").hasRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/genres/**", "/api/authors/**").hasRole("ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE,  "/api/client/books/**", "/api/client/comments/**", "/api/client/comment/**").hasAnyRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.DELETE,  "/api/books/**", "/api/comments/**", "/api/comment/**").hasAnyRole("ADMIN")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/client/books/**", "/api/client/authors/**", "/api/client/genres/**").hasRole("ADMIN")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/books/**", "/api/authors/**", "/api/genres/**").hasRole("ADMIN")
                 .and()
                 .authorizeRequests().antMatchers("/**").authenticated()
                 .and()
