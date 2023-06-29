@@ -3,14 +3,12 @@ server:
 
 eureka:
   client:
-    register-with-eureka: false
     fetch-registry: true
 
 zuul:
   prefix: "/common"
-  strip-prefix: false
+  strip-prefix: true
   routes:
-    genres:
+    api:
       serviceId: backend-service
-      path: /api/genres
       strip-prefix: false

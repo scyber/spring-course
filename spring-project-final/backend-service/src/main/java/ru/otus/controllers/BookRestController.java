@@ -61,4 +61,19 @@ public class BookRestController {
     public Flux<Book> getByTitle(@RequestParam("title") String title){
         return this.bookRepository.findByTitle(title);
     }
+
+    @PutMapping(value = "/api/books/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Mono<Book> updateBook(@RequestBody Book book ){
+        return this.bookRepository.save(book);
+    }
+
+    @PatchMapping(value = "/api/books/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Mono<Book> patchBook(@RequestBody Book book){
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "api/hello")
+    public String hello(){
+        return "Hello proxy";
+    }
 }
