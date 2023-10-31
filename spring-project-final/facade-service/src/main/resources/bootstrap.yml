@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: facade-service
+  cloud:
+    config:
+      fail-fast: true
+  main:
+    allow-circular-references: true
+  sql:
+    init:
+      platform: postgresql
+      schema-locations: classpath:schema-postgresql.sql
+      mode: always
+  datasource:
+    driverClassName: org.postgresql.Driver
+    #driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+    #schema-locations: classpath:schema-postgresql.sql
+    initialization-mode: always
+    initialize: true
+
+server:
+  port: 9090
+
+#debug: true

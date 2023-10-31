@@ -1,0 +1,77 @@
+spring:
+  main:
+    allow-circular-references: true
+  sql:
+    init:
+      platform: postgresql
+      schema-locations: classpath:schema-postgresql.sql
+      mode: always
+  datasource:
+    driverClassName: org.postgresql.Driver
+    #driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+    #schema-locations: classpath:schema-postgresql.sql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: true
+  http:
+    log-request-details: true
+
+server:
+  port: 9090
+
+feign:
+  url: "http://localhost:9091/api"
+  client:
+    config:
+      default:
+        connectionTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 5000
+
+  dashboard:
+    proxy-stream-allow-list:
+      - '*'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, logfile, metrics, hystrix.stream"
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      status:
+        order: "fatal,down,out-of-service,unknown,up"
+  logging:
+    level:
+      root: info
+      logfile:
+        enabled: true
+        file:
+          name: actuator.log
+debug: enabled
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
